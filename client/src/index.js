@@ -7,7 +7,7 @@ import { reduxFirestore, getFirestore } from 'redux-firestore';
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 
 import App from './App';
-import './index.css';
+// import './index.css';
 import * as serviceWorker from './serviceWorker';
 import allReducers from './store';
 import firebaseConfig from './config/firebase.config';
