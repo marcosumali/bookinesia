@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import './App.css';
+import logo from './logo.svg';
+import { getData } from './store/firestore/shop/shop.actions';
 
 class App extends Component {
+  componentDidMount() {
+    // console.log('didmount', this.props.getData())
+  }
+
   render() {
     return (
       <div className="App">
@@ -25,4 +33,15 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+  }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  getData,
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps) (App);
+
+// export default App;
