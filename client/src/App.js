@@ -4,13 +4,15 @@ import { bindActionCreators } from 'redux';
 
 // import './App.css';
 // import logo from './logo.svg';
-import './assets/css/shop.css';
+// import ShopBranchesPage from './views/shop/shopBranches';
+import BranchDetailsPage from './views/shop/branchDetails';
+// import TransactionServicePage from './views/transaction/transactionService';
 import { getData } from './store/firestore/shop/shop.actions';
 
 class App extends Component {
   componentDidMount() {
     // console.log('didmount', this.props.getData())
-    console.log(process.env)
+    // console.log(process.env)
   }
 
   render() {
@@ -30,30 +32,12 @@ class App extends Component {
             Learn React
           </a>
         </header> */}
-        <h1>Bookinesia</h1>
         
-        <div className="row Shop-header Container-center">
-          <div className="col s1 Height-100 No-padding Container-center" style={{ justifyContent: 'flex-end' }}>
-              <i className="material-icons border-red">
-                arrow_back_ios
-              </i>
-          </div>
+        {/* <ShopBranchesPage /> */}
+        
+        <BranchDetailsPage />
 
-          <div className="col s2 Height-100 No-padding Container-center">
-            <img src={ process.env.PUBLIC_URL + '/img/dummy/gentology-logo.jpg' } className="No-padding Shop-logo" alt="Shop-logo" />
-          </div>
-
-          <div className="col s9 Height-100 Container-center">
-            <div className="col s12 No-padding Container-center border-red">
-                <p className="No-margin Shop-header-category border-blue">Barbershop</p>
-                <p className="No-margin Shop-header-name border-blue">Gentology</p>
-            </div>
-          </div>
-
-        </div>
-
-
-
+        {/* < TransactionServicePage /> */}
 
         
       </div>

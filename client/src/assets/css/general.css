@@ -1,0 +1,149 @@
+/* ---------- General Component ---------- */
+.Text-center {
+  text-align: center;
+}
+
+.No-padding {
+  padding: 0px !important;
+}
+
+.Padding-t-b-4 {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.Padding-b-4 {
+  padding-bottom: 4px !important;
+}
+
+.Padding-l-10 {
+  padding-left: 1em !important;
+}
+
+.Margin-t-b-4 {
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+}
+
+.Margin-t-4-b-8 {
+  margin-top: 4px !important;
+  margin-bottom: 8px !important;
+}
+
+.No-margin {
+  margin: 0px !important;
+}
+
+.Margin-b-4 {
+  margin-bottom: 4px;
+}
+
+.Margin-b-8 {
+  margin-bottom: 8px !important;
+}
+
+.Margin-r-4 {
+  margin-right: 4px !important;
+}
+
+.Margin-t-10 {
+  margin-top: 10px !important;
+}
+
+.Margin-t-15 {
+  margin-top: 15px !important;
+}
+
+.Margin-t-3-cent {
+  margin-top: 3% !important;
+}
+
+.Margin-t-5-cent {
+  margin-top: 5% !important;
+}
+
+.Height-50 {
+  height: 50% !important;
+}
+
+.Height-100 {
+  height: 100% !important;
+}
+
+.Self-flex-start {
+  align-self: flex-start
+}
+
+.Container-center {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.Container-one-line {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.Container-one-line-only {
+  display: flex;
+  flex-wrap: nowrap; 
+}
+
+.Container-center-cross {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.Container-end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.Circle-img-56 {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: solid 1px #000000;
+}
+
+.Next-button {
+  width: 100%;
+  height: 56px;
+  background-color: #5499c3;
+}
+
+.Next-text {
+  font-family: Montserrat;
+  font-size: 18px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-align: left;
+  color: #ffffff;
+}
+
+
+/* TEST CSS */
+.border-black {
+  border: 1px solid black;
+}
+
+.border-red {
+  border: 1px solid red;
+}
+
+.border-blue {
+  border: 1px solid blue;
+}
+
+.border-green {
+  border: 1px solid green;
+}
