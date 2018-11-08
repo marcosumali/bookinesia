@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import DropDownSvg from './svg/dropDownSvg';
-import DropUpSvg from './svg/dropUpSvg';
+import DropDownSvg from '../../svg/dropDownSvg';
+import DropUpSvg from '../../svg/dropUpSvg';
 import '../../../assets/css/general.css';
 import './branchDetails.css';
 

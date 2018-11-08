@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import '../branchDetails.css';
-import '../../../../assets/css/general.css';
+import '../shop/branchDetails/branchDetails.css';
+import '../../assets/css/general.css';
 
 export default class serviceSvg extends Component {
   render() {
