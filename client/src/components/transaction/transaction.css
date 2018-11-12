@@ -14,6 +14,14 @@
   padding: 10px;
 }
 
+.Card-box-no-p {
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.16);
+  border: solid 1px #EAEAEA;
+  background-color: #ffffff;
+}
+
 .Card-header {
   width: 100%;
   -webkit-text-stroke: 1px #5499c3;
@@ -26,4 +34,176 @@
   letter-spacing: normal;
   color: #5499c3;
   margin-left: 4px !important;
+}
+
+.Card-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Barber-name {
+  font-family: Montserrat;
+  font-size: 1.5em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+/* input[type="radio"] {
+  border: 2px solid #5499c3 !important;
+} */
+
+.Date-container {
+  height: 2.5em;
+  background-color: #5499c3;
+}
+
+.Previous-arrow-box {
+  height: 100%;
+}
+
+.Next-arrow-box {
+  height: 100%;
+}
+
+.Schedule-date {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Schedule-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Schedule-no {
+  font-family: Montserrat;
+  font-size: 4.5em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Confirm-text {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Confirm-text-blue {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Confirm-header {
+  -webkit-text-stroke: 1px #5499c3;
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Form-text {
+  font-family: Montserrat !important;
+  font-size: 0.75em !important;
+}
+
+.Thanks-container {
+  background-color: #5499c3;
+}
+
+.Thanks-text {
+  -webkit-text-stroke: 1px #ffffff;
+  font-family: Montserrat;
+  font-size: 1.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+
+/* Modifying Materialize CSS */
+.input-field input[type=text], 
+input[type=email]  {
+  height: 2rem;
+}
+/* label color */
+.input-field label {
+  color: #666666;
+}
+/* label focus color */
+.input-field input[type=text]:focus + label {
+  color: #5499c3;
+}
+.input-field input[type=email]:focus + label {
+  color: #5499c3;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+.input-field input[type=email]:focus {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+ /* valid color */
+.input-field input[type=text].valid {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+.input-field input[type=email].valid {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+/* invalid color */
+.input-field input[type=text].invalid {
+  border-bottom: 1px solid #F44336;
+  box-shadow: 0 1px 0 0 #F44336;
+}
+/* icon prefix focus color */
+.input-field .prefix.active {
+  color: #5499c3;
 }

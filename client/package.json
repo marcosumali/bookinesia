@@ -7,6 +7,7 @@
     "firebase-admin": "^6.1.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-materialize": "^2.4.8",
     "react-redux": "^5.1.0",
     "react-redux-firebase": "^2.1.9",
     "react-scripts": "2.1.1",
