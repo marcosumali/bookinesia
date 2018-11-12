@@ -6,7 +6,10 @@ import { bindActionCreators } from 'redux';
 // import logo from './logo.svg';
 // import ShopBranchesPage from './views/shop/shopBranches';
 // import BranchDetailsPage from './views/shop/branchDetails';
-import TransactionServicePage from './views/transaction/transactionService';
+// import TransactionServicePage from './views/transaction/transactionService';
+// import TransactionBarberPage from './views/transaction/transactionBarber';
+// import TransactionConfirmPage from './views/transaction/transactionConfirm';
+import TransactionSuccessPage from './views/transaction/transactionSuccess';
 import { getData } from './store/firestore/shop/shop.actions';
 
 class App extends Component {
@@ -37,8 +40,13 @@ class App extends Component {
         
         {/* <BranchDetailsPage /> */}
 
-        < TransactionServicePage />
+        {/* <TransactionServicePage /> */}
 
+        {/* <TransactionBarberPage /> */}
+
+        {/* <TransactionConfirmPage /> */}
+
+        <TransactionSuccessPage />
         
       </div>
     );

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import Data from '../../../assets/data/dummy/barber';
 import DropDownSvg from '../../svg/dropDownSvg';
 import DropUpSvg from '../../svg/dropUpSvg';
 import '../../../assets/css/general.css';
@@ -9,172 +10,7 @@ export default class contentBarber extends Component {
   constructor() {
     super()
     this.state = {
-      data: [{
-        name: 'Chandler',
-        picture: '/assets/svg/barber0.svg',
-        job: 'barber',
-        schedule: [{
-          day: 'Monday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Tuesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Wednesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Thursday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Friday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Satudary',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Sunday',
-          startHour: '10.00',
-          endHour: '22.00'
-        }]
-      },{
-        name: 'Joey',
-        picture: '/assets/svg/barber1.svg',
-        job: 'barber',
-        schedule: [{
-          day: 'Monday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Tuesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Wednesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Thursday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Friday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Satudary',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Sunday',
-          startHour: '10.00',
-          endHour: '22.00'
-        }]
-      }, {
-        name: 'Barney',
-        picture: '/assets/svg/barber2.svg',
-        job: 'barber',
-        schedule: [{
-          day: 'Monday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Tuesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Wednesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Thursday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Friday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Satudary',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Sunday',
-          startHour: '10.00',
-          endHour: '22.00'
-        }]
-      },{
-        name: 'Richard',
-        picture: '/assets/svg/barber3.svg',
-        job: 'barber',
-        schedule: [{
-          day: 'Monday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Tuesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Wednesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Thursday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Friday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Satudary',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Sunday',
-          startHour: '10.00',
-          endHour: '22.00'
-        }]
-      },{
-        name: 'Phoebe',
-        picture: '/assets/svg/barber4.svg',
-        job: 'barber',
-        schedule: [{
-          day: 'Monday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Tuesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Wednesday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Thursday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Friday',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Satudary',
-          startHour: '10.00',
-          endHour: '22.00'
-        },{
-          day: 'Sunday',
-          startHour: '10.00',
-          endHour: '22.00'
-        }]
-      }], 
+      data: Data, 
       barbers: []
     }
 
@@ -212,23 +48,23 @@ export default class contentBarber extends Component {
       })
     }
 
-    console.log(barbers)
+    // console.log(barbers)
+  }
+
+  handleData = () => {
+    this.state.data && this.state.data.map((data, index) => {
+      this.createState(index, data.name, data.picture, data.schedule)
+      return '';
+    })
   }
   
   componentWillMount() {
-    // for (let i = 0; i < this.state.data.length; i++) {
-    //   this.createState(i, 'Test', 'Monday' )
-    // }
-    this.state.data.map((data, index) => {
-      this.createState(index, data.name, data.picture, data.schedule)
-      return data;
-    })
+    this.handleData()
   }
 
   componentDidMount() {
     console.log('from content barber', this.state)
   }
-
 
   render() {
     return (

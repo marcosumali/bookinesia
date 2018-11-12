@@ -10,7 +10,7 @@ import LocationSvg from '../../svg/locationSvg';
 
 export default class detailsCard extends Component {
   render() {
-    console.log('from card', this.props);
+    // console.log('from card', this.props);
     return (
       <div className="Card-container">
         <div className="col s12 Card-box">

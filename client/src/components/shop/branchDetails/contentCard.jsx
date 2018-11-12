@@ -9,7 +9,7 @@ import LocationContent from './contentLocation';
 
 export default class detailsContent extends Component {
   render() {
-    console.log('from content', this.props)
+    // console.log('from content', this.props)
     return (
       <div className="Content-card">
         {/* Purpose of Content Card is to route the exact section with the correct content details from the server */}
