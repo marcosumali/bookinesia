@@ -18,6 +18,14 @@
   color: #5499c3;
 }
 
+.Text-capitalize {
+  text-transform: capitalize;
+}
+
+.Text-uppercase {
+  text-transform: uppercase;
+}
+
 .Text-center {
   text-align: center;
 }
@@ -43,7 +51,7 @@
 }
 
 .Padding-l-10 {
-  padding-left: 1em !important;
+  padding-left: 0.625em !important;
 }
 
 .Padding-left-check {
@@ -227,10 +235,24 @@
 }
 
 .Circle-img-56 {
-  width: 56px;
-  height: 56px;
+  width: 3.5em;
+  height: 3.5em;
   border-radius: 50%;
-  border: solid 1px #000000;
+  border: solid 1px #EAEAEA;
+}
+
+.Loading-circle-56 {
+  background-color: #EAEAEA;
+  width: 3.5em;
+  height: 3.5em;
+  border-radius: 50%;
+}
+
+.Loading-circle-64 {
+  background-color: #EAEAEA;
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
 }
 
 .Next-button {

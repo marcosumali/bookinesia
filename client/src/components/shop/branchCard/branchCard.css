@@ -14,6 +14,13 @@
   border-radius: 5px 5px 0px 0px;
 }
 
+.Loading-branch-image {
+  background-color: #EAEAEA;
+  width: 100%;
+  height: 190px;
+  border-radius: 5px 5px 0px 0px;
+}
+
 .Branch-description-box {
   width: 100%;
   height: 52px;
@@ -36,6 +43,35 @@
   color: #5499c3;
 }
 
+.Loading-branch-name {
+  background-color: #EAEAEA;
+  width: 5em;
+  height: 1em;
+  border-radius: 5px;
+}
+
+.Loading-branch-status {
+  background-color: #EAEAEA;
+  width: 3em;
+  height: 1em;
+  border-radius: 5px;
+}
+
+.Loading-branch-hours {
+  background-color: #EAEAEA;
+  width: 7em;
+  height: 0.75em;
+  border-radius: 5px; 
+}
+
+.Loading-book-box {
+  background-color: #EAEAEA;
+  width: 100%;
+  height: 1.875em;
+  border-radius: 5px; 
+}
+
+
 .Branch-opening-hours {
   font-family: Montserrat;
   font-size: 0.75em;
@@ -48,11 +84,19 @@
 }
 
 .Branch-status-box {
-  width: 30px;
-  height: 14px;
+  width: 1.875em;
+  height: 1em;
   border-radius: 3px;
   background-color: #5499c3;
-  margin-left: 10px;
+  margin-left: 0.625em;
+}
+
+.Branch-status-box-close {
+  width: 1.875em;
+  height: 1em;
+  border-radius: 3px;
+  background-color: #b5b5b5;
+  margin-left: 0.625em;
 }
 
 .Branch-status {

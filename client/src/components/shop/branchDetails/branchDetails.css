@@ -1,8 +1,14 @@
 /* ---------- Shop Branch Details Page ---------- */
 .Branch-details-image {
   width: 100%;
-  height: 66%;
-  margin-bottom: 17px;
+  margin-bottom: 1.25em;
+}
+
+.Branch-details-image-loading {
+  width: 100%;
+  height: 14em;
+  background-color: #EAEAEA;
+  margin-bottom: 1.25em;
 }
 
 .Card-container {
@@ -17,12 +23,10 @@
   box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.16);
   border: solid 1px #EAEAEA;
   background-color: #ffffff;
-  padding: 10px;
+  padding: 0.625em;
 }
 
 .Card-svg {
-  width: 26px;
-  height: 26px;
   fill: #5499c3;
 }
 
@@ -81,6 +85,20 @@
   margin: 10px;  
 }
 
+.Hours-loading {
+  width: 100%;
+  height: 1em;
+  background-color: #EAEAEA;
+  border-radius: 5px;
+}
+
+.Services-loading {
+  width: 100%;
+  height: 1.5em;
+  background-color: #EAEAEA;
+  border-radius: 5px;
+}
+
 .Hours-w-150 {
   width: 150px !important;
 }
@@ -137,8 +155,13 @@
 
 .Location-img {
   width: 100%;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   /* height: 250px; */
 }
 
-
+.Barbers-name-loading {
+  width: 100%;
+  height: 1.5em;
+  background-color: #EAEAEA;
+  border-radius: 5px;
+}

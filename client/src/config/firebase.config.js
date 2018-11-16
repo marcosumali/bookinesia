@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
-import 'firebase/firestore'
-import 'firebase/auth'
+import 'firebase/firestore';
+import 'firebase/auth';
 
 // Initialize Firebase
 const config = {
@@ -14,22 +14,5 @@ const config = {
 
 firebase.initializeApp(config);
 firebase.firestore().settings({ timestampsInSnapshots: true });
-
-// const db = firebase.firestore();
-// const settings = {/* your settings... */ timestampsInSnapshots: true};
-// db.settings(settings);
-
-// db.collection('Shop').get()
-// .then((snapshot) => {
-//   // console.log('ini snapshot', snapshot)
-//   snapshot.forEach((doc) => {
-//     // console.log('ini doc',doc);
-//     console.log('ini doc',doc.id, '=>', doc.data());
-//   });
-//   // dispatch(getDataReducer(snapshot))
-// })
-// .catch((err) => {
-//   console.log('Error getting documents', err);
-// });
 
 export default firebase;
