@@ -1,16 +1,17 @@
 /* ---------- Shop Header Component ---------- */
 .Shop-header-container {
   width: 100%;
-  height: 84px;
+  height: 5.25em;
   border-bottom: solid 1px #EAEAEA;
   background-color: #ffffff;
-  margin-bottom: 17px !important;
+  margin-bottom: 1em !important;
 }
 
 .Shop-logo {
-  width: 64px;
-  height: 64px;
+  width: 4em;
+  height: 4em;
   border-radius: 50%;
+  border: 1px solid #EAEAEA;
 }
 
 .Shop-header-center {
@@ -46,6 +47,20 @@
   letter-spacing: normal;
   text-align: left;
   color: #5499c3;
+}
+
+.Loading-box-name {
+  background-color: #EAEAEA;
+  width: 14em;
+  height: 1.5em;
+  border-radius: 5px;
+}
+
+.Loading-box-category {
+  background-color: #EAEAEA;
+  width: 10em;
+  height: 1em;
+  border-radius: 5px;
 }
 
 .Back-arrow {

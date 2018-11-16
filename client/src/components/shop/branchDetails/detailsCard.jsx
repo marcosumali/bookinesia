@@ -18,16 +18,16 @@ export default class detailsCard extends Component {
           <div className="col s12 Container-one-line Margin-b-8">
             {
             this.props.section === 'Opening Hours' ?
-              <TimeSvg />
+              <TimeSvg height="1.5em" width="1.5em" color="#5499c3" />
               :
               this.props.section === 'Services' ?
-              <ServiceSvg />
+              <ServiceSvg height="1.5em" width="1.5em" color="#5499c3" />
               :
               this.props.section === `Barber's Schedule` ?
-              <FaceSvg />
+              <FaceSvg height="1.5em" width="1.5em" color="#5499c3" />
               :
               this.props.section === 'Location' ?
-              <LocationSvg />
+              <LocationSvg height="1.5em" width="1.5em" color="#5499c3" />
               :
               <div></div>
             }
