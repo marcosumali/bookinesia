@@ -35,7 +35,10 @@ const shopDataList = (state = { ...initialState }, action) => {
         branchScheduleLoading: true,
         services: [],
         servicesExists: true,
-        servicesLoading: true,      
+        servicesLoading: true,
+        staffs: [],
+        staffsExists: true,
+        staffsLoading: true,            
       })
     case 'SET_STAFFS':
     return ({

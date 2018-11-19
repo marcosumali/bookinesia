@@ -25,6 +25,7 @@ class contentBarber extends Component {
       return '';
     })
   }
+  
   createState (staff) {
     this.state.barbers.push(staff)
   }
@@ -121,7 +122,7 @@ class contentBarber extends Component {
                     <div className="Drop-down col s1 No-margin No-padding Margin-t-10">
                       {
                         barber.showStatus === false ?
-                        <div className="animated rotateIn">
+                        <div className="animated rotateIn faster">
                           <DropDownSvg />
                         </div>
                         :

@@ -322,7 +322,7 @@ const getStaffScheduleData = (staffsData) => {
     let newStaffsData = []
     await Promise.all(staffsData.map(async (staffData) => {
       let staffId = staffData.id
-
+      
       let staffScheduleRef = firestore.collection('staffSchedule')
 
       await staffScheduleRef.where('staffId', '==', `${staffId}`).get()
