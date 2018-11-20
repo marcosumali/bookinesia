@@ -7,7 +7,7 @@ import createBrowserHistory from "history/createBrowserHistory";
 // import ShopBranchesPage from './pages/shop/shopBranches';
 // import BranchDetailsPage from './pages/shop/branchDetails';
 import HeaderPage from './pages/headerPage';
-import TransactionServicePage from './pages/transaction/transactionService';
+// import TransactionServicePage from './pages/transaction/transactionService';
 import TransactionBarberPage from './pages/transaction/transactionBarber';
 import TransactionConfirmPage from './pages/transaction/transactionConfirm';
 import TransactionSuccessPage from './pages/transaction/transactionSuccess';
@@ -25,7 +25,7 @@ class App extends Component {
           <Switch>
             <Route path="/shop/:shopName" component={ HeaderPage } />
             <Route path="/detail/:shopName/:branchName" component={ HeaderPage } />
-            <Route path="/branch/:branchname/book/service" component={ TransactionServicePage } />
+            <Route path="/book/:shopName/:branchName" component={ HeaderPage } />
             <Route path="/branch/:branchname/book/provider" component={ TransactionBarberPage } />
             <Route path="/branch/:branchname/book/confirmation" component={ TransactionConfirmPage } />
             <Route path="/branch/:branchname/book/success" component={ TransactionSuccessPage } />

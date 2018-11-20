@@ -21,6 +21,13 @@ export const setStaffs = (data) => {
   }
 }
 
+export const setRouteLink = (data) => {
+  return {
+    type: 'SET_ROUTE_LINK',
+    payload: data
+  }
+}
+
 
 // ----------------------- SHOP ACTION -----------------------
 export const getShopData = (shopName) => {
@@ -227,7 +234,7 @@ const getBranchScheduleDataFailed = (data) => {
 }
 
 
-// ----------------------- BRANCH ACTION -----------------------
+// ----------------------- SERVICE ACTION -----------------------
 export const getServicesData = (shopName, branchName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -240,6 +247,8 @@ export const getServicesData = (shopName, branchName) => {
           let servicesData = []
           snapshot.forEach(doc => {
             let data = doc.data()
+            let id = doc.id
+            data['id'] = id
             servicesData.push(data)
           })
           dispatch(getServicesDataSuccess(servicesData))
@@ -252,6 +261,7 @@ export const getServicesData = (shopName, branchName) => {
       })
   }
 }
+
 
 const getServicesDataSuccess = (data) => {
   return {

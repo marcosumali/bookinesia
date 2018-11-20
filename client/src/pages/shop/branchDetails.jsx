@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import BranchImage from '../../components/shop/branchDetails/branchImage';
 import DetailsCard from '../../components/shop/branchDetails/detailsCard';
 import NextButton from '../../components/button/nextButton';
-import { getBranchData, setParams } from '../../store/firestore/shop/shop.actions';
+import { getBranchData, setParams, setRouteLink } from '../../store/firestore/shop/shop.actions';
 
 class branchDetails extends Component {
   componentWillMount() {
@@ -15,6 +15,7 @@ class branchDetails extends Component {
     let shopName = params.shopName
     let branchName = params.branchName
     this.props.getBranchData(shopName, branchName)
+    this.props.setRouteLink(`/book/${shopName}/${branchName}`)
   }
 
   render() {
@@ -48,7 +49,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   getBranchData,
-  setParams
+  setParams,
+  setRouteLink
 }, dispatch)
 
 

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Redirect, Link } from 'react-router-dom';
 
 import '../../../assets/css/general.css';
-import './branchCard.css';
+import './shopBranches.css';
 import { getBranchesData } from '../../../store/firestore/shop/shop.actions';
 
 class branchCard extends Component {

@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import ShopHeader from '../components/shop/shopHeader/shopHeader';
 import ShopBranchesPage from '../pages/shop/shopBranches';
 import BranchDetailsPage from '../pages/shop/branchDetails';
+import TransactionServicePage from '../pages/transaction/transactionService';
 import { setParams } from '../store/firestore/shop/shop.actions';
 
 class headerPage extends Component {
@@ -24,6 +25,9 @@ class headerPage extends Component {
           :
           this.props.match.path === '/detail/:shopName/:branchName' ?
           <BranchDetailsPage currentParams={ this.props.match.params } />
+          :
+          this.props.match.path === '/book/:shopName/:branchName' ?
+          <TransactionServicePage />
           :
           <div></div>
         }

@@ -1,5 +1,6 @@
 let initialState = {
   params: {},
+  routeLink: '',
   shop: {},
   shopExists: true,
   shopLoading: true,
@@ -27,6 +28,11 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         params: action.payload
       })
+    case 'SET_ROUTE_LINK':
+      return ({
+        ...state,
+        routeLink: action.payload
+      })
     case 'CLEAR_STATE':
       return ({
         ...state,
@@ -38,7 +44,8 @@ const shopDataList = (state = { ...initialState }, action) => {
         servicesLoading: true,
         staffs: [],
         staffsExists: true,
-        staffsLoading: true,            
+        staffsLoading: true,
+        routeLink: '',
       })
     case 'SET_STAFFS':
     return ({
