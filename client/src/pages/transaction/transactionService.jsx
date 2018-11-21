@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 // import ShopHeader from '../../components/shop/shopHeader/shopHeader';
 import TransactionCard from '../../components/transaction/transactionCard';
 import NextButton from '../../components/button/nextButton';
+import { setRouteLink } from '../../store/firestore/shop/shop.actions';
 
 class transactionService extends Component {
   render() {
@@ -34,10 +35,13 @@ const mapStateToProps = state => {
     branch: state.shop.branch,
     branchLoading: state.shop.branchLoading,
     branchExists: state.shop.branchExists,
+    primaryService: state.cart.primaryService,
+    secondaryServices: state.cart.secondaryServices,
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  setRouteLink
 }, dispatch)
 
 

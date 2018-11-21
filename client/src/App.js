@@ -8,7 +8,7 @@ import createBrowserHistory from "history/createBrowserHistory";
 // import BranchDetailsPage from './pages/shop/branchDetails';
 import HeaderPage from './pages/headerPage';
 // import TransactionServicePage from './pages/transaction/transactionService';
-import TransactionBarberPage from './pages/transaction/transactionBarber';
+// import TransactionBarberPage from './pages/transaction/transactionBarber';
 import TransactionConfirmPage from './pages/transaction/transactionConfirm';
 import TransactionSuccessPage from './pages/transaction/transactionSuccess';
 import NotFoundPage from './pages/error/notFound';
@@ -25,8 +25,8 @@ class App extends Component {
           <Switch>
             <Route path="/shop/:shopName" component={ HeaderPage } />
             <Route path="/detail/:shopName/:branchName" component={ HeaderPage } />
-            <Route path="/book/:shopName/:branchName" component={ HeaderPage } />
-            <Route path="/branch/:branchname/book/provider" component={ TransactionBarberPage } />
+            <Route path="/book/now/:shopName/:branchName" component={ HeaderPage } />
+            <Route path="/book/service/:shopName/:branchName/:service" component={ HeaderPage } />
             <Route path="/branch/:branchname/book/confirmation" component={ TransactionConfirmPage } />
             <Route path="/branch/:branchname/book/success" component={ TransactionSuccessPage } />
             <Route path="/shop-not-found" component={ NotFoundPage } />

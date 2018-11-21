@@ -79,7 +79,20 @@ class detailServices extends Component {
         storeSecondaryServices.splice(checkedIndex, 1)
       }
     }
-    this.props.setSecondaryServices(storeSecondaryServices)     
+    this.props.setSecondaryServices(this.props.params, storeSecondaryServices, this.props.primaryService)     
+  }
+
+  handleCheckbox = (service) => {
+    let status = false
+    let breakStatus = false
+    this.props.secondaryServices && this.props.secondaryServices.map(storeSecondaryServiceId => {
+      if (service.id === storeSecondaryServiceId && breakStatus === false) {
+        status = true
+        breakStatus = true
+      }
+      return ''
+    })
+    return status
   }
 
   componentWillMount() {
@@ -148,7 +161,7 @@ class detailServices extends Component {
                   <div key={ 'primeService' + index } className="animated fadeIn">
                     {
                       service.type === 'primary' ?
-                      <div className="row No-margin Container-center-cross Margin-b-4" onClick={ () => this.props.setPrimaryService(service) }>
+                      <div className="row No-margin Container-center-cross Margin-b-4" onClick={ () => this.props.setPrimaryService(this.props.params, service, this.props.secondaryServices) }>
                         <p className="col s12 No-margin No-padding" >
                           <input 
                             className="radio-blue with-gap" 
@@ -156,7 +169,7 @@ class detailServices extends Component {
                             type="radio" 
                             id={ service.id } 
                             value={ service }
-                            checked={ this.props.primaryService.id === service.id }
+                            checked={ this.props.primaryService === service.id }
                             readOnly
                           />
                           <label className="col s12 No-padding Padding-left-check Card-text Text-capitalize" htmlFor={ service.id }>{ service.name } { service.description }</label>
@@ -194,6 +207,7 @@ class detailServices extends Component {
                           id={ service.id }
                           value={ service }
                           onChange={ this.handleSecondaryServices }
+                          checked={ this.handleCheckbox(service) }
                         />
                         <label className="col s12 No-padding Padding-left-check Card-text Text-capitalize" htmlFor={ service.id }>{ service.name } { service.description }</label>
                         <div className="col s12 Container-one-line No-padding Padding-left-check">

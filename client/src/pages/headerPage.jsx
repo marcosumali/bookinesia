@@ -6,6 +6,7 @@ import ShopHeader from '../components/shop/shopHeader/shopHeader';
 import ShopBranchesPage from '../pages/shop/shopBranches';
 import BranchDetailsPage from '../pages/shop/branchDetails';
 import TransactionServicePage from '../pages/transaction/transactionService';
+import TransactionBarberPage from '../pages/transaction/transactionBarber';
 import { setParams } from '../store/firestore/shop/shop.actions';
 
 class headerPage extends Component {
@@ -26,8 +27,11 @@ class headerPage extends Component {
           this.props.match.path === '/detail/:shopName/:branchName' ?
           <BranchDetailsPage currentParams={ this.props.match.params } />
           :
-          this.props.match.path === '/book/:shopName/:branchName' ?
+          this.props.match.path === '/book/now/:shopName/:branchName' ?
           <TransactionServicePage />
+          :
+          this.props.match.path === '/book/service/:shopName/:branchName/:service' ?
+          <TransactionBarberPage />
           :
           <div></div>
         }

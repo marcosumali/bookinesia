@@ -15,7 +15,7 @@ class branchDetails extends Component {
     let shopName = params.shopName
     let branchName = params.branchName
     this.props.getBranchData(shopName, branchName)
-    this.props.setRouteLink(`/book/${shopName}/${branchName}`)
+    this.props.setRouteLink(`/book/now/${shopName}/${branchName}`)
   }
 
   render() {
