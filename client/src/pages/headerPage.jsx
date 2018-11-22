@@ -30,8 +30,8 @@ class headerPage extends Component {
           this.props.match.path === '/book/now/:shopName/:branchName' ?
           <TransactionServicePage />
           :
-          this.props.match.path === '/book/service/:shopName/:branchName/:service' ?
-          <TransactionBarberPage />
+          this.props.match.path === '/book/service/:shopName/:branchName/:services' ?
+          <TransactionBarberPage currentParams={ this.props.match.params } />
           :
           <div></div>
         }

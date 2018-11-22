@@ -33,7 +33,7 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         routeLink: action.payload
       })
-    case 'CLEAR_STATE':
+    case 'CLEAR_SHOP_STATE':
       return ({
         ...state,
         branchSchedule: [],
@@ -45,7 +45,6 @@ const shopDataList = (state = { ...initialState }, action) => {
         staffs: [],
         staffsExists: true,
         staffsLoading: true,
-        routeLink: '',
       })
     case 'SET_STAFFS':
     return ({

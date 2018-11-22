@@ -60,6 +60,13 @@ class detailServices extends Component {
   //   console.log('check final state service', this.state.services)
   // }
 
+  componentWillMount() {
+    let params = this.props.params
+    let shopName = params.shopName
+    let branchName = params.branchName
+    this.props.getServicesData(shopName, branchName)
+  }
+
   handleSecondaryServices = (e) => {
     let target = e.target
     let id = target.id            // id represent key of product in firestore
@@ -93,13 +100,6 @@ class detailServices extends Component {
       return ''
     })
     return status
-  }
-
-  componentWillMount() {
-    let params = this.props.params
-    let shopName = params.shopName
-    let branchName = params.branchName
-    this.props.getServicesData(shopName, branchName)
   }
 
   render() {    
@@ -236,6 +236,7 @@ const mapStateToProps = state => {
     services: state.shop.services,
     servicesExists: state.shop.servicesExists,
     servicesLoading: state.shop.servicesLoading,
+    routeLink : state.shop.routeLink,
     primaryService: state.cart.primaryService,
     secondaryServices: state.cart.secondaryServices,
   }

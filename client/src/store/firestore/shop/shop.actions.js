@@ -1,6 +1,6 @@
 import { returnWhatDay, getStoreOpenStatus } from '../../../helpers/date';
 
-// ----------------------- GENERAL ACTION -----------------------
+// ---------------------------------------------- GENERAL ACTION ----------------------------------------------
 export const setParams = (params) => {
   return {
     type: 'SET_PARAMS',
@@ -8,9 +8,9 @@ export const setParams = (params) => {
   }
 }
 
-export const clearState = () => {
+export const clearShopState = () => {
   return {
-    type: 'CLEAR_STATE',
+    type: 'CLEAR_SHOP_STATE',
   }
 }
 
@@ -29,7 +29,7 @@ export const setRouteLink = (data) => {
 }
 
 
-// ----------------------- SHOP ACTION -----------------------
+// ---------------------------------------------- SHOP ACTION ----------------------------------------------
 export const getShopData = (shopName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -66,7 +66,7 @@ const getShopDataFailed = (data) => {
 }
 
 
-// ----------------------- BRANCH ACTION -----------------------
+// ---------------------------------------------- BRANCH ACTION ----------------------------------------------
 export const getBranchesData = (shopName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -144,7 +144,7 @@ const getBranchDataFailed = (data) => {
 }
 
 
-// ----------------------- BRANCH SCHEDULE ACTION -----------------------
+// ---------------------------------------------- BRANCH SCHEDULE ACTION ----------------------------------------------
 const getSpecificBranchScheduleData = (branchesData) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -234,7 +234,7 @@ const getBranchScheduleDataFailed = (data) => {
 }
 
 
-// ----------------------- SERVICE ACTION -----------------------
+// ---------------------------------------------- SERVICE ACTION ----------------------------------------------
 export const getServicesData = (shopName, branchName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -278,7 +278,7 @@ const getServicesDataFailed = (data) => {
 }
 
 
-// ----------------------- STAFF ACTION -----------------------
+// ---------------------------------------------- STAFF ACTION ----------------------------------------------
 export const getStaffsData = (shopName, branchName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -324,7 +324,7 @@ const getStaffsDataFailed = (data) => {
 }
 
 
-// ----------------------- STAFF SCHEDULE ACTION -----------------------
+// ---------------------------------------------- STAFF SCHEDULE ACTION ----------------------------------------------
 const getStaffScheduleData = (staffsData) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()

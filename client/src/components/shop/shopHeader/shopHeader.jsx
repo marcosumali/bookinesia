@@ -6,7 +6,8 @@ import { Redirect } from 'react-router-dom';
 import '../../../assets/css/general.css';
 import './shopHeader.css';
 import PreviousArrowSvg from '../../svg/arrowPreviousSvg';
-import { getShopData, clearState } from '../../../store/firestore/shop/shop.actions';
+import { getShopData, clearShopState } from '../../../store/firestore/shop/shop.actions';
+import { clearCartState } from '../../../store/firestore/transaction/transaction.actions';
 
 class shopHeader extends Component {
 
@@ -22,7 +23,7 @@ class shopHeader extends Component {
           this.props.shopExists ?
           <div className="Shop-header-container Container-center-cross">
             {/* Previous Arrow Section */}
-            <div className="col s2 Height-100 No-padding No-margin Container-center" onClick={ () => { this.props.history.goBack(); this.props.clearState() } }>
+            <div className="col s2 Height-100 No-padding No-margin Container-center" onClick={ () => { this.props.history.goBack(); this.props.clearShopState(); this.props.clearCartState() } }>
               <PreviousArrowSvg color="#666666" />
             </div>
 
@@ -78,7 +79,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   getShopData,
-  clearState
+  clearShopState,
+  clearCartState
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps) (shopHeader);

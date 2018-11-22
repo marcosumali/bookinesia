@@ -26,7 +26,7 @@ class App extends Component {
             <Route path="/shop/:shopName" component={ HeaderPage } />
             <Route path="/detail/:shopName/:branchName" component={ HeaderPage } />
             <Route path="/book/now/:shopName/:branchName" component={ HeaderPage } />
-            <Route path="/book/service/:shopName/:branchName/:service" component={ HeaderPage } />
+            <Route path="/book/service/:shopName/:branchName/:services" component={ HeaderPage } />
             <Route path="/branch/:branchname/book/confirmation" component={ TransactionConfirmPage } />
             <Route path="/branch/:branchname/book/success" component={ TransactionSuccessPage } />
             <Route path="/shop-not-found" component={ NotFoundPage } />

@@ -252,6 +252,13 @@
   border-radius: 50%;
 }
 
+.Circle-img-64 {
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  border: solid 1px #EAEAEA;
+}
+
 .Loading-circle-64 {
   background-color: #EAEAEA;
   width: 4em;
