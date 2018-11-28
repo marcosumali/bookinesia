@@ -266,6 +266,10 @@
   border-radius: 50%;
 }
 
+.Img-opacity-5 {
+  opacity: 0.5;
+}
+
 .Next-button {
   width: 100%;
   height: 56px;

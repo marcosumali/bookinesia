@@ -119,6 +119,17 @@
   color: #666666;
 }
 
+.Confirm-text-error {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #d00;
+}
+
 .Confirm-text-blue {
   font-family: Montserrat;
   font-size: 0.75em;
@@ -184,10 +195,33 @@
   border-radius: 5px; 
 }
 
+.Input-error {
+  border-bottom: 1px solid #d00 !important;
+  box-shadow: 0 1px 0 0 #d00 !important;
+}
+
+.Input-error:focus {
+  border-bottom: 1px solid #5499c3 !important;
+  box-shadow: 0 1px 0 0 #5499c3 !important;
+}
+
+.Input-info-error {
+  font-size: 0.75em;
+  color: #d00;
+}
+
+.Input-info {
+  font-size: 0.75em;
+  color: #bbbaba;
+}
+
 
 /* Modifying Input Text Materialize CSS */
-.input-field input[type=text], 
-input[type=email]  {
+.input-field 
+input[type=text], 
+input[type=email],
+input[type=tel],
+input[type=number]  {
   height: 2rem;
 }
 /* label color */
@@ -201,12 +235,26 @@ input[type=email]  {
 .input-field input[type=email]:focus + label {
   color: #5499c3;
 }
+.input-field input[type=number]:focus + label {
+  color: #5499c3;
+}
+.input-field input[type=tel]:focus + label {
+  color: #5499c3;
+}
 /* label underline focus color */
 .input-field input[type=text]:focus {
   border-bottom: 1px solid #5499c3;
   box-shadow: 0 1px 0 0 #5499c3;
 }
 .input-field input[type=email]:focus {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+.input-field input[type=number]:focus {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+.input-field input[type=tel]:focus {
   border-bottom: 1px solid #5499c3;
   box-shadow: 0 1px 0 0 #5499c3;
 }
@@ -219,10 +267,18 @@ input[type=email]  {
   border-bottom: 1px solid #5499c3;
   box-shadow: 0 1px 0 0 #5499c3;
 }
+.input-field input[type=number].valid {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+.input-field input[type=tel].valid {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
 /* invalid color */
 .input-field input[type=text].invalid {
-  border-bottom: 1px solid #F44336;
-  box-shadow: 0 1px 0 0 #F44336;
+  border-bottom: 1px solid #d00;
+  box-shadow: 0 1px 0 0 #d00;
 }
 /* icon prefix focus color */
 .input-field .prefix.active {

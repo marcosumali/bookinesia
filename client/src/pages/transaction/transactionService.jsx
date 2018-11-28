@@ -5,9 +5,14 @@ import { bindActionCreators } from 'redux';
 // import ShopHeader from '../../components/shop/shopHeader/shopHeader';
 import TransactionCard from '../../components/transaction/transactionCard';
 import NextButton from '../../components/button/nextButton';
-import { setRouteLink } from '../../store/firestore/shop/shop.actions';
+import { setParams } from '../../store/firestore/shop/shop.actions';
 
 class transactionService extends Component {
+  componentWillMount () {
+    let params = this.props.currentParams
+    this.props.setParams(params)
+  }
+  
   render() {
     // console.log('from trans service page', this.props)
     return (
@@ -16,12 +21,13 @@ class transactionService extends Component {
 
         <TransactionCard section="Choose Your Services" />
 
-        {/* <br></br>
+        {/* Break line is set to anticipate fix bottom over-shadow contents */}
         <br></br>
-        <br></br> */}
+        <br></br>
+        <br></br>
 
         <div className="Fix-bottom">
-          <NextButton text="Continue" />
+          <NextButton text="Continue" onPage="ServicePage" history={ this.props.history } />
         </div>
 
       </div>
@@ -31,17 +37,11 @@ class transactionService extends Component {
 
 const mapStateToProps = state => {
   return {
-    params: state.shop.params,
-    branch: state.shop.branch,
-    branchLoading: state.shop.branchLoading,
-    branchExists: state.shop.branchExists,
-    primaryService: state.cart.primaryService,
-    secondaryServices: state.cart.secondaryServices,
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  setRouteLink
+  setParams
 }, dispatch)
 
 

@@ -5,6 +5,9 @@ import { Provider } from 'react-redux'
 import thunk from 'redux-thunk';
 import { reduxFirestore, getFirestore } from 'redux-firestore';
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+import { CookiesProvider } from 'react-cookie';
+import { Router } from 'react-router-dom';
+import createBrowserHistory from "history/createBrowserHistory";
 
 import App from './App';
 // import './index.css';
@@ -21,11 +24,17 @@ const store = createStore(
   )
 );
 
+const history = createBrowserHistory();
+
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>, 
-  document.getElementById('root')
+    <CookiesProvider>
+      <Router history={history}>
+        <Provider store={store}>
+            <App />
+        </Provider>
+      </Router>
+    </CookiesProvider>
+  ,document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
 
 // import ShopHeader from '../../components/shop/shopHeader/shopHeader';
 import BranchImage from '../../components/shop/branchDetails/branchImage';
@@ -15,6 +16,7 @@ class branchDetails extends Component {
     let shopName = params.shopName
     let branchName = params.branchName
     this.props.getBranchData(shopName, branchName)
+    // To set route link even if the user refresh the page, user click continue, it will still go to service page
     this.props.setRouteLink(`/book/now/${shopName}/${branchName}`)
   }
 
@@ -23,17 +25,25 @@ class branchDetails extends Component {
     return (
       <div>
         {/* <ShopHeader shopName={ this.props.match.params.shopName } /> */}
-        <BranchImage />
 
-        <DetailsCard section="Opening Hours" />
+        {
+          this.props.branchExists ?
+          <div>
+            <BranchImage />
 
-        <DetailsCard section="Services" />
+            <DetailsCard section="Opening Hours" />
 
-        <DetailsCard section="Barber's Schedule" />
+            <DetailsCard section="Services" />
 
-        <DetailsCard section="Location" />
+            <DetailsCard section="Barber's Schedule" />
 
-        <NextButton text="Book Now" />
+            <DetailsCard section="Location" />
+
+            <NextButton text="Book Now" />
+          </div>
+          :
+          <Redirect to="/branch-not-found" />
+        }
       </div>
     )
   }

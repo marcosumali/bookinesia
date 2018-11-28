@@ -149,7 +149,7 @@ const getSpecificBranchScheduleData = (branchesData) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     
-    let newDate = new Date()
+    let newDate = new Date(Date.now())
     let dayIndex = newDate.getDay()
     let nowDay = returnWhatDay(dayIndex)
     let nowYear = newDate.getFullYear()

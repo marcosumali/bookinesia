@@ -3,15 +3,32 @@ let initialState = {
   primaryServiceExists: true,
   secondaryServices: [],
   secondaryServicesExists: true,
-  selectedServicesExists: true,
+  selectedServiceParamExists: true,
   competentStaffs: [],
   competentStaffsExists: true,
   competentStaffsLoading: true,
-  selectedStaffs: '',
+  selectedStaff: '',
+  selectedStaffLoading: true,
+  selectedStaffExists: true,
   appointments: [],
   appointmentsExists: true,
   appointmentsLoading: true,
   appointmentIndex: 0,
+  selectedAppointment: '',
+  selectedAppointmentLoading: true,
+  selectedAppointmentExists: true,
+  selectedServices: [],
+  selectedServicesLoading: true,
+  selectedServicesExists: true,
+  customerName: '',
+  customerEmail: '',
+  customerPhone: '',
+  customerNameError: false,
+  customerEmailError: false,
+  customerPhoneError: false,
+  transaction: '',
+  noServiceSelectedStatus: false,
+  hasBookStatus: false,
 }
 
 const shopDataList = (state = { ...initialState }, action) => {
@@ -25,12 +42,12 @@ const shopDataList = (state = { ...initialState }, action) => {
         appointments: [],
         appointmentsExists: true,
         appointmentsLoading: true,
-        selectedAppoinment : '',
       })
     case 'SET_PRIMARY_SERVICE_SUCCESS':
       return ({
         ...state,
         primaryService: action.payload,
+        noServiceSelectedStatus: false
       })
     case 'SET_PRIMARY_SERVICE_FAILED':
       return ({
@@ -41,6 +58,7 @@ const shopDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         secondaryServices: action.payload,
+        noServiceSelectedStatus: false
       })
     case 'SET_SECONDARY_SERVICES_FAILED':
       return ({
@@ -60,7 +78,7 @@ const shopDataList = (state = { ...initialState }, action) => {
     case 'SET_ONE_OF_SERVICE_PARAM_FAILED':
       return ({
         ...state,
-        selectedServicesExists: action.payload,
+        selectedServiceParamExists: action.payload,
       })
     case 'GET_COMPETENT_STAFFS_DATA_SUCCESS':
       return ({
@@ -76,7 +94,8 @@ const shopDataList = (state = { ...initialState }, action) => {
     case 'SET_SELECTED_STAFFS':
       return ({
         ...state,
-        selectedStaffs: action.payload,
+        selectedStaff: action.payload,
+        appointmentsLoading: true,
         appointmentIndex: 0,
       })
     case 'GET_SPECIFIC_APPOINTMENTS_DATA_SUCCESS':
@@ -94,6 +113,111 @@ const shopDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         appointmentIndex: action.payload,
+      })
+    case 'SET_SELECTED_APPOINTMENT':
+      return ({
+        ...state,
+        selectedAppointment: action.payload,
+      })
+    case 'GET_SELETED_SERVICES_PARAM_SUCCESS':
+      return ({
+        ...state,
+        selectedServices: action.payload,
+        selectedServicesLoading: false,
+      })
+    case 'GET_SELETED_SERVICES_PARAM_FAILED':
+      return ({
+        ...state,
+        selectedServicesExists: action.payload
+      })
+    case 'GET_SELETED_STAFF_PARAM_SUCCESS':
+      return ({
+        ...state,
+        selectedStaff: action.payload,
+        selectedStaffLoading: false,
+      })
+    case 'GET_SELETED_STAFF_PARAM_FAILED':
+      return ({
+        ...state,
+        selectedStaffExists: action.payload
+      })
+    case 'GET_SELETED_APPOINTMENT_PARAM_SUCCESS':
+      return ({
+        ...state,
+        selectedAppointment: action.payload,
+        selectedAppointmentLoading: false,
+      })
+    case 'GET_SELETED_APPOINTMENT_PARAM_FAILED':
+      return ({
+        ...state,
+        selectedAppointmentExists: action.payload
+      })
+    case 'SET_CUSTOMER_NAME':
+      return ({
+        ...state,
+        customerName: action.payload
+      })
+    case 'SET_CUSTOMER_EMAIL':
+      return ({
+        ...state,
+        customerEmail: action.payload
+      })
+    case 'SET_CUSTOMER_PHONE':
+      return ({
+        ...state,
+        customerPhone: action.payload
+      })
+    case 'SET_BOOK_STATUS_SUCCESS':
+      return ({
+        ...state,
+        hasBookStatus: action.payload
+      })
+    case 'SET_CUSTOMER_NAME_ERROR':
+      return ({
+        ...state,
+        customerNameError: action.payload
+      })
+    case 'SET_CUSTOMER_EMAIL_ERROR':
+      return ({
+        ...state,
+        customerEmailError: action.payload
+      })
+    case 'SET_CUSTOMER_PHONE_ERROR':
+      return ({
+        ...state,
+        customerPhoneError: action.payload
+      })
+    case 'SET_CUSTOMER_NAME_OK':
+      return ({
+        ...state,
+        customerNameError: action.payload
+      })
+    case 'SET_CUSTOMER_EMAIL_OK':
+      return ({
+        ...state,
+        customerEmailError: action.payload
+      })
+    case 'SET_CUSTOMER_PHONE_OK':
+      return ({
+        ...state,
+        customerPhoneError: action.payload
+      })
+    case 'SET_FORM_VALUE_BUID':
+      return ({
+        ...state,
+        customerName: action.payload.name,
+        customerEmail: action.payload.email,
+        customerPhone: action.payload.phone,
+      })
+    case 'SET_TRANSACTION_SUCCESS':
+      return ({
+        ...state,
+        transaction: action.payload
+      })
+    case 'SET_ERROR_NO_SERVICE_SELECTED':
+      return ({
+        ...state,
+        noServiceSelectedStatus: action.payload
       })
     default:
       return state;
