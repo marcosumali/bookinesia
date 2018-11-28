@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // import ShopHeader from '../../components/shop/shopHeader/shopHeader';
-import BranchCard from '../../components/shop/branchCard/branchCard';
+import BranchCard from '../../components/shop/shopBranches/branchCard';
 
 class shopBranches extends Component {
   render() {

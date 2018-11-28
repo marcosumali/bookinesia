@@ -1,6 +1,6 @@
 import { returnWhatDay, getStoreOpenStatus } from '../../../helpers/date';
 
-// ----------------------- GENERAL ACTION -----------------------
+// ---------------------------------------------- GENERAL ACTION ----------------------------------------------
 export const setParams = (params) => {
   return {
     type: 'SET_PARAMS',
@@ -8,9 +8,9 @@ export const setParams = (params) => {
   }
 }
 
-export const clearState = () => {
+export const clearShopState = () => {
   return {
-    type: 'CLEAR_STATE',
+    type: 'CLEAR_SHOP_STATE',
   }
 }
 
@@ -21,8 +21,15 @@ export const setStaffs = (data) => {
   }
 }
 
+export const setRouteLink = (data) => {
+  return {
+    type: 'SET_ROUTE_LINK',
+    payload: data
+  }
+}
 
-// ----------------------- SHOP ACTION -----------------------
+
+// ---------------------------------------------- SHOP ACTION ----------------------------------------------
 export const getShopData = (shopName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -59,7 +66,7 @@ const getShopDataFailed = (data) => {
 }
 
 
-// ----------------------- BRANCH ACTION -----------------------
+// ---------------------------------------------- BRANCH ACTION ----------------------------------------------
 export const getBranchesData = (shopName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -137,12 +144,12 @@ const getBranchDataFailed = (data) => {
 }
 
 
-// ----------------------- BRANCH SCHEDULE ACTION -----------------------
+// ---------------------------------------------- BRANCH SCHEDULE ACTION ----------------------------------------------
 const getSpecificBranchScheduleData = (branchesData) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     
-    let newDate = new Date()
+    let newDate = new Date(Date.now())
     let dayIndex = newDate.getDay()
     let nowDay = returnWhatDay(dayIndex)
     let nowYear = newDate.getFullYear()
@@ -227,7 +234,7 @@ const getBranchScheduleDataFailed = (data) => {
 }
 
 
-// ----------------------- BRANCH ACTION -----------------------
+// ---------------------------------------------- SERVICE ACTION ----------------------------------------------
 export const getServicesData = (shopName, branchName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -240,6 +247,8 @@ export const getServicesData = (shopName, branchName) => {
           let servicesData = []
           snapshot.forEach(doc => {
             let data = doc.data()
+            let id = doc.id
+            data['id'] = id
             servicesData.push(data)
           })
           dispatch(getServicesDataSuccess(servicesData))
@@ -252,6 +261,7 @@ export const getServicesData = (shopName, branchName) => {
       })
   }
 }
+
 
 const getServicesDataSuccess = (data) => {
   return {
@@ -268,7 +278,7 @@ const getServicesDataFailed = (data) => {
 }
 
 
-// ----------------------- STAFF ACTION -----------------------
+// ---------------------------------------------- STAFF ACTION ----------------------------------------------
 export const getStaffsData = (shopName, branchName) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -314,7 +324,7 @@ const getStaffsDataFailed = (data) => {
 }
 
 
-// ----------------------- STAFF SCHEDULE ACTION -----------------------
+// ---------------------------------------------- STAFF SCHEDULE ACTION ----------------------------------------------
 const getStaffScheduleData = (staffsData) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
@@ -322,7 +332,7 @@ const getStaffScheduleData = (staffsData) => {
     let newStaffsData = []
     await Promise.all(staffsData.map(async (staffData) => {
       let staffId = staffData.id
-
+      
       let staffScheduleRef = firestore.collection('staffSchedule')
 
       await staffScheduleRef.where('staffId', '==', `${staffId}`).get()

@@ -4,11 +4,10 @@ import { bindActionCreators } from 'redux';
 import { Redirect, Link } from 'react-router-dom';
 
 import '../../../assets/css/general.css';
-import './branchCard.css';
+import './shopBranches.css';
 import { getBranchesData } from '../../../store/firestore/shop/shop.actions';
 
 class branchCard extends Component {
-
   componentWillMount() {
     let shopName = this.props.shopName
     this.props.getBranchesData(shopName)
@@ -75,9 +74,11 @@ class branchCard extends Component {
                             <p className="Branch-opening-hours No-margin">Opening Hours: {branch.openHours}.{branch.openMinutes} - {branch.closeHours}.{branch.closeMinutes} </p>
                           </div>
                           <div className="col s4 No-padding Book-button-container Container-end">
-                            <div className="Book-button-box Container-center">
-                              <p className="Book-button-text No-margin">Book Now</p>
-                            </div>
+                            <Link to={ `/book/now/${branch.shopId}/${branch.name}` }>
+                              <div className="Book-button-box Container-center">
+                                <p className="Book-button-text No-margin">Book Now</p>
+                              </div>
+                            </Link>
                           </div>
                         </div>
                       </div>
@@ -88,7 +89,7 @@ class branchCard extends Component {
             }
           </div>
           :
-          <Redirect to="/branch-not-found"/>
+          <Redirect to="/branches-not-found"/>
         }
 
       </div>

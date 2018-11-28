@@ -4,7 +4,17 @@ function formatMoney(number) {
   return money;
 }
 
+function getTotalTransaction(selectedServices) {
+  let totalTransaction = 0
+  selectedServices && selectedServices.map((service) => {
+    totalTransaction = totalTransaction + Number(service.price)
+    return ''
+  })
+  return totalTransaction
+}
+
 
 module.exports = {
-  formatMoney
+  formatMoney,
+  getTotalTransaction
 }

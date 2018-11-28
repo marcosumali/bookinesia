@@ -129,6 +129,10 @@
   margin-bottom: 8px !important;
 }
 
+.Margin-t-8 {
+  margin-top: 0.5em !important;
+}
+
 .Margin-t-10 {
   margin-top: 10px !important;
 }
@@ -248,11 +252,22 @@
   border-radius: 50%;
 }
 
+.Circle-img-64 {
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  border: solid 1px #EAEAEA;
+}
+
 .Loading-circle-64 {
   background-color: #EAEAEA;
   width: 4em;
   height: 4em;
   border-radius: 50%;
+}
+
+.Img-opacity-5 {
+  opacity: 0.5;
 }
 
 .Next-button {

@@ -155,9 +155,14 @@
 
 .Location-img {
   width: 100%;
-  /* margin-top: 10px; */
-  /* height: 250px; */
+  height: 13em;
 }
+
+.Size-inherit {
+  width: inherit !important;
+  height: inherit !important;
+}
+
 
 .Barbers-name-loading {
   width: 100%;
