@@ -876,6 +876,7 @@ export const createNewTransaction = (customerId, props, history) => {
     let service = props.selectedServices
     let staff = props.selectedStaff
     let appointment = props.selectedAppointment
+    let appointmentId = appointment.id
     let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
@@ -885,6 +886,14 @@ export const createNewTransaction = (customerId, props, history) => {
     let status = 'booking confirmed'
     let createdDate = new Date(Date.now())
     let updatedDate = new Date(Date.now())
+    let createdBy = {
+      type: 'customer',
+      id: customerId
+    }
+    let updatedBy = {
+      type: 'customer',
+      id: customerId
+    }
     
     let newTransaction = {
       shopId,
@@ -892,7 +901,7 @@ export const createNewTransaction = (customerId, props, history) => {
       customerId,
       service,
       staff,
-      appointment,
+      appointmentId,
       name,
       phone,
       email,
@@ -901,7 +910,9 @@ export const createNewTransaction = (customerId, props, history) => {
       endDate,
       status,
       createdDate,
-      updatedDate
+      updatedDate,
+      createdBy,
+      updatedBy
     }
 
     let firestore = getFirestore()

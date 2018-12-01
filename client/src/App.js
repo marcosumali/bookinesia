@@ -4,7 +4,8 @@ import { withCookies } from 'react-cookie';
 
 import ShopHeaderPage from './pages/shopHeaderPage';
 import BranchHeaderPage from './pages/branchHeaderPage';
-import NavBarPage from './pages/navBarPage';
+import NavbarPage from './pages/navbarPage';
+import MenuHeaderPage from './pages/menuHeaderPage';
 import NotFoundPage from './pages/error/notFound';
 
 class App extends Component {
@@ -12,6 +13,10 @@ class App extends Component {
     return (
       <div className="App">
         <Switch>
+          <Route
+            exact path="/" 
+            render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
+          />
           <Route 
             path="/shop/:shopName" 
             render={ (props) => (<ShopHeaderPage {...props} cookies={this.props.cookies}/>) } 
@@ -34,7 +39,23 @@ class App extends Component {
           />
           <Route 
             path="/book/success/:transactionId" 
-            render={ (props) => (<NavBarPage {...props} cookies={this.props.cookies}/>) } 
+            render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
+          />
+          <Route 
+            path="/transactions" 
+            render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
+          />
+          <Route 
+            path="/account" 
+            render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
+          />
+          <Route 
+            path="/support" 
+            render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
+          />
+          <Route 
+            path="/transaction/details/:transactionId" 
+            render={ (props) => (<MenuHeaderPage {...props} cookies={this.props.cookies}/>) } 
           />
           <Route path="*" component={ NotFoundPage } />
         </Switch>          
