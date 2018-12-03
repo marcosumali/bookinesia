@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "firebase": "^5.5.7",
     "firebase-admin": "^6.1.0",
     "google-maps-react": "^2.0.2",
@@ -19,7 +20,8 @@
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
     "redux-firestore": "^0.5.8",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sweetalert": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

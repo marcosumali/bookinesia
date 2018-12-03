@@ -66,6 +66,10 @@
   padding: 0.625em !important;
 }
 
+.Padding-20 {
+  padding: 1.25em !important;
+}
+
 .Padding-l-b-r-10 {
   padding-left: 0.625em !important;
   padding-bottom: 0.625em !important;
@@ -226,6 +230,14 @@
 
 .Height-100 {
   height: 100% !important;
+}
+
+.Width-100 {
+  width: 100% !important;
+}
+
+.Display-flex {
+  display: flex !important;
 }
 
 .Self-flex-start {

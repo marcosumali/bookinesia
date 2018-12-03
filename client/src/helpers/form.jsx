@@ -4,6 +4,14 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+function returnPassword(string) {
+  let length = string.length
+  let password = '*'
+  let hashedPassword = password.repeat(length)
+  return hashedPassword
+}
+
 module.exports = {
-  validateEmail
+  validateEmail,
+  returnPassword
 }

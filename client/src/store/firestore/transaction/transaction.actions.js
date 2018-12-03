@@ -841,19 +841,20 @@ export const createNewCustomerAndCreateNewTransaction = (props, cookies, history
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = ''
+    let picture = ''
 
     let newCustomer = {
       name,
       phone,
       email,
-      password
+      password,
+      picture
     }
 
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer')
 
-    customerRef
-    .add(newCustomer)
+    customerRef.add(newCustomer)
     .then(ref => {
       let refId = ref.id
       setNewCookies(cookies, refId)

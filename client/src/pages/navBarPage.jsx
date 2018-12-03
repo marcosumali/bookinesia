@@ -7,6 +7,8 @@ import MenuTransactionsPage from '../pages/menu/menuTransaction';
 import MenuAccountPage from '../pages/menu/menuAccount';
 import MenuSupportPage from '../pages/menu/menuSupport';
 import HomePage from '../pages/home/homePage';
+import RegisterPage from '../pages/auth/registerPage';
+import LoginPage from '../pages/auth/loginPage';
 import { setParams } from '../store/firestore/shop/shop.actions';
 import { setCookies } from '../store/firestore/customer/customer.actions';
 import Navbar from '../components/layout/navbar';
@@ -48,6 +50,16 @@ class navBarPage extends Component {
           this.props.match.path === '/support' ?
           <div className="Padding-t-20 Background-grey" style={{ height: window.innerHeight }}>
             <MenuSupportPage currentParams={ this.props.match.params }/>
+          </div>
+          :
+          this.props.match.path === '/register' ?
+          <div className="">
+            <RegisterPage history={ this.props.history }/>
+          </div>
+          :
+          this.props.match.path === '/login' ?
+          <div className="">
+            <LoginPage history={ this.props.history }/>
           </div>
           :
           <div></div>

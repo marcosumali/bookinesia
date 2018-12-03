@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 
 // import Data from '../../assets/data/dummy/service.jsx';
 import '../../assets/css/general.css';
+import '../../assets/css/materialize/form.css';
 import './transaction.css';
 import { formatMoney } from '../../helpers/currency';
 import { getServicesData, setRouteLink, getBranchData } from '../../store/firestore/shop/shop.actions';

@@ -54,6 +54,14 @@ class App extends Component {
             render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
           />
           <Route 
+            path="/register" 
+            render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
+          />
+          <Route 
+            path="/login" 
+            render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
+          />
+          <Route 
             path="/transaction/details/:transactionId" 
             render={ (props) => (<MenuHeaderPage {...props} cookies={this.props.cookies}/>) } 
           />

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar , NavItem } from 'react-materialize';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import '../../assets/css/general.css';
 import './navbar.css';
@@ -8,12 +10,19 @@ import ShoppingCartSvg from '../svg/shoppingCartSvg';
 import SmileyFaceSvg from '../svg/smileyFaceSvg';
 import SupportSvg from '../svg/supportSvg';
 import CloseSvg from '../svg/closeSvg';
-import LoginSvg from '../svg/loginSvg';
+import RegisterButton from './registerButton';
+import LoginButton from './loginButton';
+import { handleCookies } from '../../store/firestore/customer/customer.actions';
 
-export default class navbar extends Component {
+
+class navbar extends Component {
+  componentWillMount() {
+    this.props.handleCookies('get account', this.props.cookies)
+  }
+
   render() {
     const windowInnerWidth = window.innerWidth
-    // console.log('from navbar component', this.props)
+    console.log('from navbar component', this.props)
     return (
       <div>
         {
@@ -36,22 +45,29 @@ export default class navbar extends Component {
                     <div className="Navbar-text">Home</div>
                   </div>
                 </NavItem>
-                <NavItem href="/transactions">
-                  <div className="Container-one-line Container-center-cross Height-100">
-                    <div className="Margin-r-16 Margin-t-12">
-                      <ShoppingCartSvg color="#ffffff" width="1.5em" height="1.5em" />
-                    </div>
-                    <div className="Navbar-text">Transaction</div>
+                {
+                  this.props.userExists && this.props.user !== "" ?
+                  <div className="animated fadeIn">
+                    <NavItem href="/transactions">
+                      <div className="Container-one-line Container-center-cross Height-100">
+                        <div className="Margin-r-16 Margin-t-12">
+                          <ShoppingCartSvg color="#ffffff" width="1.5em" height="1.5em" />
+                        </div>
+                        <div className="Navbar-text">Transaction</div>
+                      </div>
+                    </NavItem>
+                    <NavItem href="/account">
+                      <div className="Container-one-line Container-center-cross Height-100">
+                        <div className="Margin-r-16 Margin-t-12">
+                          <SmileyFaceSvg color="#ffffff" width="1.5em" height="1.5em" />
+                        </div>
+                        <div className="Navbar-text">Account</div>
+                      </div>
+                    </NavItem>
                   </div>
-                </NavItem>
-                <NavItem href="/account">
-                  <div className="Container-one-line Container-center-cross Height-100">
-                    <div className="Margin-r-16 Margin-t-12">
-                      <SmileyFaceSvg color="#ffffff" width="1.5em" height="1.5em" />
-                    </div>
-                    <div className="Navbar-text">Account</div>
-                  </div>
-                </NavItem>
+                  :
+                  <div></div>
+                }
                 <NavItem href="/support">
                   <div className="Container-one-line Container-center-cross Height-100">
                     <div className="Margin-r-16 Margin-t-12">
@@ -62,15 +78,18 @@ export default class navbar extends Component {
                 </NavItem>
               </div>
               <div className="Container-center Mobile-bottom">
-                <div className="Container-center Mobile-white-box-transparent Margin-b-16">
-                  <div className="Mobile-white-text">Not yet registered?</div>
-                </div>
-                <div className="Container-center Mobile-white-box-filled">
-                  <div className="Container-center Margin-r-10">
-                    <LoginSvg color="#5499c3" width="1.5em" height="1.5em" />
+                {
+                  this.props.userExists && this.props.user !== "" && this.props.user.password === "" ?
+                  <RegisterButton />
+                  :
+                  this.props.userExists === false ?
+                  <div>
+                    <RegisterButton />
+                    <LoginButton />
                   </div>
-                  <div className="Mobile-blue-text">Log In Bookinesia</div>
-                </div>
+                  :  
+                  <div></div>
+                }
               </div>
             </div>
           </Navbar>
@@ -89,12 +108,24 @@ export default class navbar extends Component {
                 </NavItem>
               </div>
               <div className="Web-right">
-                <NavItem onClick={() => console.log('test click')}>
-                  Not yet registered?
-                </NavItem>
-                <NavItem onClick={() => console.log('test click')}>
-                  Log In
-                </NavItem>
+                {
+                  this.props.userExists && this.props.user !== "" && this.props.user.password === "" ?                  
+                  <NavItem href="/register">
+                    Not yet registered?
+                  </NavItem>
+                  :
+                  this.props.userExists === false ?
+                  <div>
+                    <NavItem href="/register">
+                      Not yet registered?
+                    </NavItem>
+                    <NavItem href="/login">
+                      Log In
+                    </NavItem>
+                  </div>
+                  :
+                  <div></div>
+                }
               </div>
             </div>
           </Navbar>
@@ -103,3 +134,19 @@ export default class navbar extends Component {
     )
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    cookies: state.user.cookies,
+    user: state.user.user,
+    userExists: state.user.userExists,
+    userLoading: state.user.userLoading,
+  }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  handleCookies
+}, dispatch)
+
+
+export default connect(mapStateToProps, mapDispatchToProps) (navbar);

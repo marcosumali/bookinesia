@@ -18,6 +18,16 @@ let initialState = {
   user: '',
   userExists: true,
   userLoading: true,
+  registerCustomerName: '',
+  registerCustomerEmail: '',
+  registerCustomerPhone: '',
+  registerCustomerPassword: '',
+  registerCustomerNameError: false,
+  registerCustomerEmailError: false,
+  registerCustomerPhoneError: false,
+  registerCustomerPasswordError: false,
+  registerStatus: false,
+  authenticationStatus: false,
 }
 
 const shopDataList = (state = { ...initialState }, action) => {
@@ -90,6 +100,88 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         user: action.payload,
         userLoading: false,
+      })
+    case 'SET_CUSTOMER_DATA_FAILED':
+      return ({
+        ...state,
+        userExists: action.payload,
+      })
+    case 'SET_REGISTER_CUSTOMER_NAME':
+      return ({
+        ...state,
+        registerCustomerName: action.payload,
+      })
+    case 'SET_REGISTER_CUSTOMER_EMAIL':
+      return ({
+        ...state,
+        registerCustomerEmail: action.payload,
+      })
+    case 'SET_REGISTER_CUSTOMER_PHONE':
+      return ({
+        ...state,
+        registerCustomerPhone: action.payload,
+      })
+    case 'SET_REGISTER_CUSTOMER_PASSWORD':
+      return ({
+        ...state,
+        registerCustomerPassword: action.payload,
+      })
+    case 'SET_REGISTER_STATUS_SUCCESS':
+    return ({
+      ...state,
+      registerStatus: action.payload
+    })
+    case 'SET_REGISTER_NAME_ERROR':
+      return ({
+        ...state,
+        registerCustomerNameError: action.payload
+      })
+    case 'SET_REGISTER_EMAIL_ERROR':
+      return ({
+        ...state,
+        registerCustomerEmailError: action.payload
+      })
+    case 'SET_REGISTER_PHONE_ERROR':
+      return ({
+        ...state,
+        registerCustomerPhoneError: action.payload
+      })
+    case 'SET_REGISTER_PASSWORD_ERROR':
+      return ({
+        ...state,
+        registerCustomerPasswordError: action.payload
+      })
+    case 'SET_REGISTER_NAME_OK':
+      return ({
+        ...state,
+        registerCustomerNameError: action.payload
+      })
+    case 'SET_REGISTER_EMAIL_OK':
+      return ({
+        ...state,
+        registerCustomerEmailError: action.payload
+      })
+    case 'SET_REGISTER_PHONE_OK':
+      return ({
+        ...state,
+        registerCustomerPhoneError: action.payload
+      })
+    case 'SET_REGISTER_PASSWORD_OK':
+      return ({
+        ...state,
+        registerCustomerPasswordError: action.payload
+      })
+    case 'SET_REGISTER_FORM_VALUE_BUID':
+      return ({
+        ...state,
+        registerCustomerName: action.payload.name,
+        registerCustomerEmail: action.payload.email,
+        registerCustomerPhone: action.payload.phone,
+      })
+    case 'SET_AUTHENTICATION_STATUS':
+      return ({
+        ...state,
+        authenticationStatus: action.payload
       })
     default:
       return state;

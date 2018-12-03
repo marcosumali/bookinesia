@@ -5,7 +5,7 @@ import './account.css';
 export default class accountDetailsLoading extends Component {
   render() {
     return (
-      <div className="row No-margin Details-content-box Padding-10">
+      <div className="row No-margin Details-content-box Padding-10 Padding-l-r-20">
         {/* Header Section */}
         <div className="col s12 No-margin No-padding Padding-10 Container-center Margin-b-10">
           <div className="col s3 No-margin No-padding Container-center">

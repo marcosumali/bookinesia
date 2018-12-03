@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -6,11 +6,11 @@ import '../../../assets/css/general.css';
 import './account.css';
 import AccountCircleSvg from '../../svg/accountCircleSvg.jsx';
 import AccountDetailsLoading from './accountDetailsLoading';
-import { handleCookies } from '../../../store/firestore/customer/customer.actions';
+// import { handleCookies } from '../../../store/firestore/customer/customer.actions';
 
 class accountDetails extends Component {
   componentWillMount () {
-    this.props.handleCookies('get account', this.props.cookies)
+    // this.props.handleCookies('get account', this.props.cookies)
   }
 
   render() {
@@ -37,9 +37,9 @@ class accountDetails extends Component {
                   <div className="Account-name-text Text-capitalize">{ this.props.user.name }</div>
                 </div>
                 <div className="col s12 No-margin No-padding">
-                  <div className="col s6 No-margin No-padding">
+                  <div className="col s5 No-margin No-padding">
                     <div className="Container-center Settings-button-box">
-                      <div className="Settings-button-text">Account Settings</div>
+                      <div className="Settings-button-text">Settings</div>
                     </div>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  handleCookies
+  // handleCookies
 }, dispatch)
 
 
