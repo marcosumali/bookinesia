@@ -28,6 +28,13 @@ let initialState = {
   registerCustomerPasswordError: false,
   registerStatus: false,
   authenticationStatus: false,
+  loginCustomerPhone: '',
+  loginCustomerPassword: '',
+  loginCustomerPhoneError: false,
+  loginCustomerPasswordError: false,
+  loginStatus: false,
+  loginErrorMessage: '',
+  loadingStatus: false,
 }
 
 const shopDataList = (state = { ...initialState }, action) => {
@@ -182,6 +189,51 @@ const shopDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         authenticationStatus: action.payload
+      })
+    case 'SET_LOGIN_CUSTOMER_PHONE':
+      return ({
+        ...state,
+        loginCustomerPhone: action.payload,
+      })
+    case 'SET_LOGIN_CUSTOMER_PASSWORD':
+      return ({
+        ...state,
+        loginCustomerPassword: action.payload,
+      })
+    case 'SET_LOGIN_PHONE_ERROR':
+      return ({
+        ...state,
+        loginCustomerPhoneError: action.payload
+      })
+    case 'SET_LOGIN_PASSWORD_ERROR':
+      return ({
+        ...state,
+        loginCustomerPasswordError: action.payload
+      })
+    case 'SET_LOGIN_PHONE_OK':
+      return ({
+        ...state,
+        loginCustomerPhoneError: action.payload
+      })
+    case 'SET_LOGIN_PASSWORD_OK':
+      return ({
+        ...state,
+        loginCustomerPasswordError: action.payload
+      })
+    case 'SET_LOGIN_STATUS_SUCCESS':
+      return ({
+        ...state,
+        loginStatus: action.payload
+      })
+    case 'SET_LOGIN_ERROR':
+      return ({
+        ...state,
+        loginErrorMessage: action.payload
+      })
+    case 'SET_LOADING_STATUS':
+      return ({
+        ...state,
+        loadingStatus: action.payload
       })
     default:
       return state;

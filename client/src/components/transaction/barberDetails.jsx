@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 
+import BarberFullComponent from './barberFullyBooked';
 import Barber from '../../assets/data/dummy/barber';
 import '../../assets/css/general.css';
 import './transaction.css';
@@ -171,23 +172,28 @@ class detailBarbers extends Component {
                                 </div>
                               </div>
                               {/* Queue Schedule Section */}
-                              <div className="col s12 No-padding No-margin Container-center Queue-container Padding-l-r-10">
-                                <div className="col s12 No-padding No-margin Schedule-today-box Container-center Margin-t-b-10">
-                                  <p className="No-margin Schedule-text animated fadeIn faster">Schedule: { appointmentData.startHours }.{ appointmentData.startMinutes } - { appointmentData.endHours }.{ appointmentData.endMinutes }</p>
+                              {
+                                Number(appointmentData.currentTransaction) >= Number(appointmentData.maxQueue) ?
+                                <BarberFullComponent appointmentData={ appointmentData } />
+                                :
+                                <div className="col s12 No-padding No-margin Container-center Queue-container Padding-l-r-10">
+                                  <div className="col s12 No-padding No-margin Schedule-today-box Container-center Margin-t-b-10">
+                                    <p className="No-margin Schedule-text animated fadeIn faster">Schedule: { appointmentData.startHours }.{ appointmentData.startMinutes } - { appointmentData.endHours }.{ appointmentData.endMinutes }</p>
+                                  </div>
+                                  <div className="col s12 No-padding No-margin Container-center">
+                                    <p className="No-margin Schedule-text animated fadeIn faster">Your Queue No.</p>
+                                  </div>
+                                  <div className="col s12 No-padding No-margin Queue-no-box Container-center">
+                                    <p className="No-margin Schedule-no animated fadeIn faster">{ Number(appointmentData.currentTransaction) + 1 }</p>
+                                  </div>
+                                  <div className="col s12 No-padding No-margin Container-center Margin-b-10">
+                                    <p className="No-margin Schedule-text animated fadeIn faster">Max. Queue: { appointmentData.maxQueue } person</p>
+                                  </div>
+                                  <div className="col s12 No-padding No-margin Container-center Margin-b-24">
+                                    <p className="No-margin Schedule-text animated fadeIn faster">You're waiting in line for { appointmentData.currentTransaction } person</p>
+                                  </div>
                                 </div>
-                                <div className="col s12 No-padding No-margin Container-center Margin-b-10">
-                                  <p className="No-margin Schedule-text animated fadeIn faster">Your Queue No.</p>
-                                </div>
-                                <div className="col s12 No-padding No-margin Queue-no-box Container-center Margin-b-10">
-                                  <p className="No-margin Schedule-no animated fadeIn faster">{ Number(appointmentData.currentTransaction) + 1 }</p>
-                                </div>
-                                <div className="col s12 No-padding No-margin Container-center Margin-b-10">
-                                  <p className="No-margin Schedule-text animated fadeIn faster">Max. Queue: { appointmentData.maxQueue } person</p>
-                                </div>
-                                <div className="col s12 No-padding No-margin Container-center Margin-b-24">
-                                  <p className="No-margin Schedule-text animated fadeIn faster">You're waiting in line for { appointmentData.currentTransaction } person</p>
-                                </div>
-                              </div>    
+                              }
                             </div>
                             :
                             <div></div>

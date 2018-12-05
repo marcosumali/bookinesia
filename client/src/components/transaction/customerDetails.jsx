@@ -101,7 +101,12 @@ class customerDetails extends Component {
                       </div>
                     </div>
                     <div className="col s12 No-margin No-padding">
-                      <p className="No-margin Confirm-text">Queue No. { Number(this.props.selectedAppointment.currentTransaction)+1 }</p>
+                      {
+                        Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ?
+                        <p className="No-margin Confirm-text-full">The barber is fully booked. Please go back and select other schedule or barber to continue.</p>
+                        :
+                        <p className="No-margin Confirm-text">Queue No. { Number(this.props.selectedAppointment.currentTransaction)+1 }</p>
+                      }
                     </div>
                   </div>
                 </div>

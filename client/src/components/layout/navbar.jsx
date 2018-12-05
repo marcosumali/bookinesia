@@ -14,7 +14,6 @@ import RegisterButton from './registerButton';
 import LoginButton from './loginButton';
 import { handleCookies } from '../../store/firestore/customer/customer.actions';
 
-
 class navbar extends Component {
   componentWillMount() {
     this.props.handleCookies('get account', this.props.cookies)
@@ -79,11 +78,11 @@ class navbar extends Component {
               </div>
               <div className="Container-center Mobile-bottom">
                 {
-                  this.props.userExists && this.props.user !== "" && this.props.user.password === "" ?
+                  this.props.userExists && this.props.user !== "" && this.props.user.registeredStatus === false ?
                   <RegisterButton />
                   :
                   this.props.userExists === false ?
-                  <div>
+                  <div className="Container-center Display-flex Width-100 No-padding">
                     <RegisterButton />
                     <LoginButton />
                   </div>
@@ -97,19 +96,26 @@ class navbar extends Component {
           <Navbar className="Nav-box" brand='Bookinesia' right fixed>
             <div>              
               <div style={{ marginLeft: '10em' }}>
-                <NavItem href="/transactions">
-                  Transaction
-                </NavItem>
-                <NavItem href="/account">
-                  Account
-                </NavItem>
+                {
+                  this.props.userExists && this.props.user !== "" ?
+                  <div>
+                    <NavItem href="/transactions">
+                      Transaction
+                    </NavItem>
+                    <NavItem href="/account">
+                      Account
+                    </NavItem>
+                  </div>
+                  :
+                  <div></div>
+                }
                 <NavItem href="/support">
                   Support
                 </NavItem>
               </div>
               <div className="Web-right">
                 {
-                  this.props.userExists && this.props.user !== "" && this.props.user.password === "" ?                  
+                  this.props.userExists && this.props.user !== "" && this.props.user.registeredStatus === false ?                  
                   <NavItem href="/register">
                     Not yet registered?
                   </NavItem>

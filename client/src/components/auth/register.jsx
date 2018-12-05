@@ -10,8 +10,9 @@ import './auth.css';
 import { handleRegisterInputChanges, customerRegisterInputValidation, handleCookies } from '../../store/firestore/customer/customer.actions';
 import EyeSvg from '../svg/eyeSvg';
 import EyeOffSvg from '../svg/eyeOffSvg';
+import AuthButton from '../button/authButton';
 
-class registerPage extends Component {
+class registerComponent extends Component {
   constructor() {
     super()
     this.state = {
@@ -20,7 +21,7 @@ class registerPage extends Component {
   }
 
   componentWillMount() {
-    this.props.handleCookies('handle authentication', this.props.cookies)
+    this.props.handleCookies('handle authentication register', this.props.cookies)
     this.props.handleCookies('during register', this.props.cookies)
   }
 
@@ -30,20 +31,20 @@ class registerPage extends Component {
   passwordVisibility() {
     let x = document.getElementById("password")
     if (x.type === "password") {
-        x.type = "text"
-        this.setState({
-          'visibilityStatus': true
-        })
-      } else {
-        x.type = "password"
-        this.setState({
-          'visibilityStatus': false
-        })
-      }
+      x.type = "text"
+      this.setState({
+        'visibilityStatus': true
+      })
+    } else {
+      x.type = "password"
+      this.setState({
+        'visibilityStatus': false
+      })
+    }
   }
 
   render() {
-    console.log('from register component', this.props)
+    // console.log('from register component', this.props)
     return (
       <div>
         {
@@ -55,12 +56,17 @@ class registerPage extends Component {
           <div className="col s12 No-margin No-padding Container-center Margin-b-4">
             <div className="Auth-header">Register Now</div>
           </div>
+          
+          {
+            this.props.userExists ?
+            <div></div>
+            :
+            <div className="col s12 No-margin No-padding  Container-center">
+              <div className="Text-auth-info">Have a bookinesia account ? <a className="Text-auth-info-blue" href="/login">Sign In</a></div>
+            </div>
+          }
   
-          <div className="col s12 No-margin No-padding  Container-center Margin-b-10">
-            <div className="Text-auth-info">Have a bookinesia account ? <a className="Text-auth-info-blue" href="/login">Sign In</a></div>
-          </div>
-  
-          <form className="col s12 No-margin No-padding">
+          <form className="col s12 No-margin No-padding Margin-t-16">
             {/* Name Input */}
             <div className="input-field">
               {
@@ -205,10 +211,8 @@ class registerPage extends Component {
             <div className="Text-auth-info">Please ensure you input active contact information.</div>
           </div>
           
-          <div className="Container-center Auth-button-box" onClick={ this.props.registerStatus === false? () => this.props.customerRegisterInputValidation(this.props) : () => this.doNothing }>
-            <div className="Auth-button-text">Register</div>
-          </div>
-  
+          <AuthButton onPage="registerPage" history={ this.props.history } />
+
         </div>
         }
       </div>
@@ -228,7 +232,8 @@ const mapStateToProps = state => {
     customerPasswordError: state.user.registerCustomerPasswordError,
     cookies: state.user.cookies,
     registerStatus: state.user.registerStatus,
-    authenticationStatus: state.user.authenticationStatus
+    authenticationStatus: state.user.authenticationStatus,
+    userExists: state.user.userExists,
   }
 }
 
@@ -239,4 +244,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch)
 
 
-export default connect(mapStateToProps, mapDispatchToProps) (registerPage);
+export default connect(mapStateToProps, mapDispatchToProps) (registerComponent);

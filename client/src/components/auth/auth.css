@@ -23,6 +23,7 @@
 
 .Text-auth-info-blue {
   color: #5499c3;
+  font-weight: bold;
 }
 
 .Auth-button-box {
@@ -40,4 +41,17 @@
   line-height: 1.2;
   letter-spacing: normal;
   color: #ffffff;
+  height: 24px;
+  padding-top: 2px;
+}
+
+.Text-error {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #d00;
 }

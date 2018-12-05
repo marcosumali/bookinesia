@@ -26,7 +26,7 @@ class transactionBarber extends Component {
         <br></br>
 
         <div className="Fix-bottom">
-          <NextButton text="Continue" />
+          <NextButton text="Continue" onPage="BarberPage" />
         </div>
 
       </div>

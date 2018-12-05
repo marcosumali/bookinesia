@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const PRIVATEKEY = process.env.REACT_APP_PRIVATEKEY
 
 function getCookies(cookies) {
@@ -6,8 +7,8 @@ function getCookies(cookies) {
   return BUID
 }
 
-function setNewCookies(cookies, id) {
-  let BUID = jwt.sign(id, PRIVATEKEY)
+function setNewCookies(cookies, customerData) {
+  let BUID = jwt.sign(customerData, PRIVATEKEY)
   let todayFullDate = new Date(Date.now())
   let todayYear = todayFullDate.getFullYear()
   let todayDate = todayFullDate.getDate()
