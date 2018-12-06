@@ -21,7 +21,9 @@ class menuHeaderPage extends Component {
       <div>
         {
           this.props.match.path === '/transaction/details/:transactionId' ?
-          <div style={{ height: window.innerHeight, backgroundColor: '#EAEAEA' }}>
+          <div 
+          // style={{ height: window.innerHeight, backgroundColor: '#EAEAEA' }}
+          >
             <MenuHeader history={ this.props.history } text="Transaction Details" />
             <TransactionDetails currentParams={ this.props.match.params } />
           </div>

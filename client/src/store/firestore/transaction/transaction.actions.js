@@ -1,7 +1,7 @@
 import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail } from '../../../helpers/form';
 import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
-import { setLoadingStatus } from '../customer/customer.actions';
+import { setLoadingStatus, setAuthorizationStatus } from '../customer/customer.actions';
 
 const emptyError = 'This section must be filled.'
 const phoneMinError = 'Phone number is too short, min. 8 characters.'
@@ -906,7 +906,7 @@ export const createNewTransaction = (customerId, props) => {
     let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
-    let queueNo = Number(appointment.currentTransaction) + 1
+    let queueNo = String(Number(appointment.currentTransaction) + 1)
     let startDate = ''
     let endDate = ''
     let status = 'booking confirmed'
@@ -927,6 +927,7 @@ export const createNewTransaction = (customerId, props) => {
       service,
       staff,
       appointmentId,
+      customerId,
       name,
       phone,
       email,
@@ -961,7 +962,7 @@ export const createNewTransaction = (customerId, props) => {
   }
 }
 
-export const getTransaction = (transactionId) => {
+export const getTransaction = (transactionId, customerId) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let transaction = firestore.collection('transaction').doc(transactionId)
@@ -970,9 +971,14 @@ export const getTransaction = (transactionId) => {
     .then(doc => {
       if (doc.exists) {
         let data = doc.data()
-        dispatch(setTransactionSuccess(data))
+        // To handle authorization
+        if (customerId === data.customerId) {
+          dispatch(setTransactionSuccess(data))
+        } else {
+          dispatch(setAuthorizationStatus(false))
+        }
       } else {
-        // dispatch(setOneServiceFailed(false))
+        dispatch(setAuthorizationStatus(false))
       }
     })
     .catch(err => {

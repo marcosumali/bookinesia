@@ -1,5 +1,6 @@
 import { getCookies, verifyCookies, setNewCookies } from '../../../helpers/auth';
 import { validateEmail } from '../../../helpers/form';
+import { getTransaction } from '../transaction/transaction.actions';
 
 const bcrypt = require('bcryptjs')
 const ENV_SALTROUNDS = Number(process.env.REACT_APP_SALTROUNDS)
@@ -13,6 +14,12 @@ const emailRegisteredError = 'Email is already registered. Please sign in.'
 const loginError = 'The phone number or password you entered is incorrect. Please try again.'
 
 // ---------------------------------------------- GENERAL ACTION ----------------------------------------------
+export const clearUserState = () => {
+  return {
+    type: 'CLEAR_USER_STATE',
+  }
+}
+
 export const setCookies = (cookiesFunction) => {
   return {
     type: 'SET_COOKIES_FUNCTION',
@@ -21,7 +28,7 @@ export const setCookies = (cookiesFunction) => {
 }
 
 // To verify token during component rendering
-export const handleCookies = (purpose, cookies) => {
+export const handleCookies = (purpose, cookies, data) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let BUID = getCookies(cookies)
     if (BUID) {
@@ -33,6 +40,7 @@ export const handleCookies = (purpose, cookies) => {
       } else if (purpose === 'get transactions') {
         dispatch(getTransactionsBasedOnCustomerId(customerId))
       } else if (purpose === 'get account') {
+        dispatch(setAuthenticationStatus(true))
         dispatch(setCustomerDataSuccess(customerData))
       } else if (purpose === 'during register') {
         dispatch(setRegisterFormValueBasedOnToken(customerData))
@@ -44,8 +52,13 @@ export const handleCookies = (purpose, cookies) => {
         if (customerData.registeredStatus) {
           dispatch(setAuthenticationStatus(true))
         }
+      } else if (purpose === 'handle authorization transaction') {
+        dispatch(getTransactionDetails(data, customerId))
+      } else if (purpose === 'handle authorization success') {
+        dispatch(getTransaction(data, customerId))
       }
     } else {
+      dispatch(setAuthenticationStatus(false))
       dispatch(setCustomerDataFailed(false))
     }
   }
@@ -587,16 +600,16 @@ export const createNewCustomer = (props) => {
 // ---------------------------------------------- TRANSACTION ACTION ----------------------------------------------
 // To get transactions data based on customer id
 export const getTransactionsBasedOnCustomerId = (customerId) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let transactionRef = firestore.collection('transaction')
+    let transactions = []
 
-    transactionRef
+    await transactionRef
     .where('customerId', '==', customerId)
     .get()
     .then(snapshot => {
       if (snapshot.empty === false) {
-        let transactions = []
         snapshot.forEach(doc => {
           let data = doc.data()
           let id = doc.id
@@ -606,7 +619,6 @@ export const getTransactionsBasedOnCustomerId = (customerId) => {
           }
           transactions.push(combineData)
         })
-        dispatch(getTransactionsBasedOnCustomerIdSuccess(transactions))
       } else {
         dispatch(getTransactionsBasedOnCustomerIdFailed(false))
       }
@@ -614,6 +626,25 @@ export const getTransactionsBasedOnCustomerId = (customerId) => {
     .catch(err => {
       console.log('ERROR: get transactions based on customer id', err)
     })
+
+    await Promise.all(transactions && transactions.map(async transaction => {
+      let shopId = transaction.shopId
+      let branchId = transaction.branchId
+      let appointmentId = transaction.appointmentId
+
+      let shop = await dispatch(getTransactionShopData(shopId, false))
+      transaction['shop'] = shop
+
+      let branch = await dispatch(getTransactionBranchData(branchId, false))
+      transaction['branch'] = branch
+
+      let appointment = await dispatch(getTransactionAppointmentDataOnce(appointmentId, false))
+      transaction['appointment'] = appointment
+      
+      return ''
+    }))
+
+    await dispatch(getTransactionsBasedOnCustomerIdSuccess(transactions))
   }
 }
 
@@ -632,16 +663,20 @@ const getTransactionsBasedOnCustomerIdFailed = (data) => {
 }
 
 // To get shop data based on shop id
-export const getTransactionShopData = (shopId) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+export const getTransactionShopData = (shopId, dispatchStatus) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let shopRef = firestore.collection('shop').doc(shopId)
+    let shopData = ''
 
-    shopRef.get()
-    .then(shopDoc => {
-      if (shopDoc.exists) {
-        let shopData = shopDoc.data()
-        dispatch(getTransactionsShopDataSuccess(shopData))
+    await shopRef.get()
+    .then(doc => {
+      if (doc.exists) {
+        let data = doc.data()
+        shopData = data
+        if (dispatchStatus) {
+          dispatch(getTransactionsShopDataSuccess(data))
+        }
       } else {
         dispatch(getTransactionsShopDataFailed(false))
       }
@@ -649,6 +684,8 @@ export const getTransactionShopData = (shopId) => {
     .catch(err => {
       console.log('ERROR: get shop data in transactions', err)
     })
+
+    return shopData
   }
 }
 
@@ -667,16 +704,20 @@ const getTransactionsShopDataFailed = (data) => {
 }
 
 // To get branch data based on branch id
-export const getTransactionBranchData = (branchId) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+export const getTransactionBranchData = (branchId, dispatchStatus) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let branchRef = firestore.collection('branch').doc(branchId)
+    let branchData = ''
 
-    branchRef.get()
-    .then(branchDoc => {
-      if (branchDoc.exists) {
-        let branchData = branchDoc.data()
-        dispatch(getTransactionsBranchDataSuccess(branchData))
+    await branchRef.get()
+    .then(doc => {
+      if (doc.exists) {
+        let data = doc.data()
+        branchData = data
+        if (dispatchStatus) {
+          dispatch(getTransactionsBranchDataSuccess(data))
+        }
       } else {
         dispatch(getTransactionsBranchDataFailed(false))
       }
@@ -684,6 +725,8 @@ export const getTransactionBranchData = (branchId) => {
     .catch(err => {
       console.log('ERROR: get branch data in transactions', err)
     })
+
+    return branchData
   }
 }
 
@@ -701,17 +744,21 @@ const getTransactionsBranchDataFailed = (data) => {
   }
 }
 
-// To get appointment data based on appointment id
-export const getTransactionAppointmentData = (appointmentId) => {
+// To get real time update of ppointment data based on appointment id
+export const getTransactionAppointmentData = (appointmentId, dispatchStatus) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let appointmentRef = firestore.collection('appointment').doc(appointmentId)
-
+    
     appointmentRef
     .onSnapshot(doc => {
       if (doc.exists) {
         let data = doc.data()
-        dispatch(getTransactionsAppointmentDataSuccess(data))
+        let id = doc.id
+        data['id'] = id
+        if (dispatchStatus) {
+          dispatch(getTransactionsAppointmentDataSuccess(data))
+        }
       } else {
         dispatch(getTransactionsAppointmentDataFailed(false))
       }
@@ -733,9 +780,29 @@ const getTransactionsAppointmentDataFailed = (data) => {
   }
 }
 
+// To get once appointment data based on appointment id
+export const getTransactionAppointmentDataOnce = (appointmentId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let firestore = getFirestore()
+    let appointmentRef = firestore.collection('appointment').doc(appointmentId)
+    let appointmentData = ''
+    
+    await appointmentRef.get()
+    .then(doc => {
+      if (doc.exists) {
+        let data = doc.data()
+        let id = doc.id
+        data['id'] = id
+        appointmentData = data
+      } 
+    })
+
+    return appointmentData
+  }
+}
 
 // To get transaction data based on transaction id
-export const getTransaction = (transactionId) => {
+export const getTransactionDetails = (transactionId, customerId) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let transactionRef = firestore.collection('transaction').doc(transactionId)
@@ -749,14 +816,26 @@ export const getTransaction = (transactionId) => {
           ...data,
           id
         }
-        dispatch(getTransactionShopData(data.shopId))
-        dispatch(getTransactionBranchData(data.branchId))
-        dispatch(getTransactionAppointmentData(data.appointmentId))
-        dispatch(getTransactionSuccess(combineData))
+        // Check authorization
+        if (customerId === data.customerId) {
+          dispatch(getTransactionShopData(data.shopId, true))
+          dispatch(getTransactionBranchData(data.branchId, true))
+          dispatch(getTransactionAppointmentData(data.appointmentId, true))
+          dispatch(getTransactionSuccess(combineData))
+        } else {
+          dispatch(setAuthorizationStatus(false))
+        }
       } else {
         dispatch(getTransactionFailed(false))
       }
     })
+  }
+}
+
+export const setAuthorizationStatus = (data) => {
+  return {
+    type: 'SET_AUTHORIZATION_STATUS',
+    payload: data
   }
 }
 
@@ -771,6 +850,38 @@ const getTransactionFailed = (data) => {
   return {
     type: 'GET_TRANSACTION_DATA_FAILED',
     payload: data
+  }
+}
+
+// ---------------------------------------------- APPOINTMENT ACTION ----------------------------------------------
+export const getRealAppointmentBasedOnTransactions = (transactions) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    // let firestore = getFirestore()
+    // let transactionsWithAppointmentData = []
+
+    await Promise.all(transactions && transactions.map(transaction => {
+      // let staffId = transaction.appointment.staffId
+      // let date = transaction.appointment.date
+      // let appointmentRef = firestore.collection('appointment')
+      
+      // appointmentRef
+      // .where('staffId', '==', staffId)
+      // .where('date', '==', date)
+      // .onSnapshot(querySnapshot => {
+      //   querySnapshot.forEach(function(doc) {
+      //     if (doc.exists) {
+      //       let data = doc.data()
+      //       let id = doc.id
+      //       data['id'] = id
+      //       transaction['realAppointment'] = data
+      //       transactionsWithAppointmentData.push(transaction)
+      //       console.log('check HASIL', transactionsWithAppointmentData)
+      //     } 
+      //   })
+      // })
+      return ''
+    }))
+    await dispatch(getTransactionsBasedOnCustomerIdSuccess(transactions))
   }
 }
 

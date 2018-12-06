@@ -35,12 +35,26 @@ let initialState = {
   loginStatus: false,
   loginErrorMessage: '',
   loadingStatus: false,
+  authorizationStatus: true,
 }
 
 const shopDataList = (state = { ...initialState }, action) => {
   switch (action.type) {
     case 'CLEAR_USER_STATE':
       return ({
+        ...state,
+        shop: '',
+        shopExists: true,
+        shopLoading: true,
+        branch: '',
+        branchExists: true,
+        branchLoading: true,
+        appointment: '',
+        appointmentExists: true,
+        appointmentLoading: true,
+        transaction: '',
+        transactionExists: true,
+        transactionLoading: true,
       })
     case 'SET_COOKIES_FUNCTION':
       return ({
@@ -56,7 +70,8 @@ const shopDataList = (state = { ...initialState }, action) => {
     case 'GET_TRANSACTIONS_CUSTOMER_ID_FAILED':
       return ({
         ...state,
-        transactionsExists: action.payload
+        transactionsExists: action.payload,
+        transactionsLoading: false
       })
     case 'GET_TRANSACTIONS_SHOP_DATA_SUCCESS':
       return ({
@@ -234,6 +249,11 @@ const shopDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         loadingStatus: action.payload
+      })
+    case 'SET_AUTHORIZATION_STATUS':
+      return ({
+        ...state,
+        authorizationStatus: action.payload
       })
     default:
       return state;

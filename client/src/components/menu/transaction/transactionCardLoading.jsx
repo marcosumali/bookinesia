@@ -29,22 +29,6 @@ export default class transactionLoadingCard extends Component {
             </div>
           </div>
 
-          {/* Transaction Card Detail */}
-          <div className="col s12 No-padding No-margin Container-center Queue-container Padding-l-r-10">
-            <div className="col s12 No-padding No-margin Container-center Margin-b-8">
-              <p className="No-margin Input-loading"></p>
-            </div>
-            <div className="col s12 No-padding No-margin Queue-no-box Container-center Margin-b-8">
-              <p className="No-margin QueueNo-loading"></p>
-            </div>
-            <div className="col s12 No-padding No-margin Container-center Margin-b-10">
-              <p className="No-margin Input-loading"></p>
-            </div>
-            <div className="col s12 No-padding No-margin Container-center Margin-b-16">
-              <p className="No-margin Input-loading"></p>
-            </div>
-          </div>
-
           {/* Transaction Details Button */}
           <div className="Button-details-box-loading Container-center">
           </div>

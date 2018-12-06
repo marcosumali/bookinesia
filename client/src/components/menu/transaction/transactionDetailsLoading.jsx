@@ -7,16 +7,31 @@ export default class transactionDetailsLoading extends Component {
   render() {
     return (
       <div className="row No-margin No-padding Details-box">
-        <div className="Details-box-space"></div>
           <div className="Details-content-box">
 
             {/* Detail Header */}
-            <div className="Details-header-box Padding-10 Container-center">
+            <div className="Details-header-box Padding-10 Container-center Margin-b-10">
               <div className="col s12 No-margin No-padding Container-center Margin-b-4">
                 <div className="Loading-box-name"></div>
               </div>
               <div className="col s12 No-margin No-padding Container-center">
                 <div className="Loading-box-category"></div>
+              </div>
+            </div>
+
+            {/* Transaction Queue Detail */}
+            <div className="col s12 No-padding No-margin Container-center Queue-container Padding-l-r-10">
+              <div className="col s12 No-padding No-margin Container-center Margin-b-8">
+                <p className="No-margin Input-loading"></p>
+              </div>
+              <div className="col s12 No-padding No-margin Queue-no-box Container-center Margin-b-8">
+                <p className="No-margin QueueNo-loading"></p>
+              </div>
+              <div className="col s12 No-padding No-margin Container-center Margin-b-10">
+                <p className="No-margin Input-loading"></p>
+              </div>
+              <div className="col s12 No-padding No-margin Container-center Margin-b-16">
+                <p className="No-margin Input-loading"></p>
               </div>
             </div>
 

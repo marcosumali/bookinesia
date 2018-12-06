@@ -12,6 +12,7 @@ class authButton extends Component {
   }
 
   render() {
+    // console.log('from auth button', this.props)
     return (
       <div>
         {
@@ -54,11 +55,11 @@ const mapStateToProps = state => {
   return {
     // General Needs
     cookies: state.user.cookies,
+    loadingStatus: state.user.loadingStatus,
     // Login Section
     loginCustomerPhone: state.user.loginCustomerPhone,
     loginCustomerPassword: state.user.loginCustomerPassword,
     loginStatus: state.user.loginStatus,
-    loadingStatus: state.user.loadingStatus,
     // Register Section
     customerName: state.user.registerCustomerName,
     customerEmail: state.user.registerCustomerEmail,

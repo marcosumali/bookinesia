@@ -5,8 +5,7 @@ import { bindActionCreators } from 'redux';
 import '../../../assets/css/general.css';
 import './menuHeader.css';
 import PreviousArrowSvg from '../../svg/arrowPreviousSvg';
-import { clearShopState } from '../../../store/firestore/shop/shop.actions';
-import { clearCartState } from '../../../store/firestore/transaction/transaction.actions';
+import { clearUserState } from '../../../store/firestore/customer/customer.actions';
 
 class menuHeader extends Component {
   
@@ -19,7 +18,7 @@ class menuHeader extends Component {
           {/* Previous Arrow Section */}
           <div 
             className="col s2 Height-100 No-padding No-margin Container-center" 
-            onClick={ () => { this.props.history.goBack(); this.props.clearShopState(); this.props.clearCartState() } 
+            onClick={ () => { this.props.history.goBack(); this.props.clearUserState(); } 
           }>
             <PreviousArrowSvg color="#666666" />
           </div>
@@ -42,8 +41,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  clearShopState,
-  clearCartState
+  clearUserState
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps) (menuHeader);
