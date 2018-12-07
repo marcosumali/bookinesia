@@ -32,21 +32,32 @@ export const setCookies = (cookiesFunction) => {
   }
 }
 
+export const setWindow = (windowFunction) => {
+  return {
+    type: 'SET_WINDOW_FUNCTION',
+    payload: windowFunction
+  }
+}
+
 // To verify token during component rendering
 export const handleCookies = (purpose, cookies, data) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let BUID = getCookies(cookies)
     if (BUID) {
       let customerData = verifyCookies(BUID)
-      console.log('check BUID', purpose,  '===', customerData)
+      // console.log('check BUID', purpose,  '===', customerData)
       let customerId = customerData.id
       if (purpose === 'during input') {
         dispatch(setFormValueBasedOnToken(customerData))
       } else if (purpose === 'get transactions') {
         dispatch(getTransactionsBasedOnCustomerId(customerId))
       } else if (purpose === 'get account') {
-        dispatch(setAuthenticationStatus(true))
-        dispatch(setCustomerDataSuccess(customerData))
+        if (data === '/register') {
+          dispatch(setCustomerDataSuccess(customerData))
+        } else if (data !== '/register') {
+          dispatch(setCustomerDataSuccess(customerData))
+          dispatch(setAuthenticationStatus(true))
+        }
       } else if (purpose === 'during register') {
         dispatch(setRegisterFormValueBasedOnToken(customerData))
       } else if (purpose === 'handle authentication login') {
@@ -54,7 +65,7 @@ export const handleCookies = (purpose, cookies, data) => {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authentication register') {
-        if (customerData.registeredStatus) {
+        if (customerData.registeredStatus === true) {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authorization transaction') {
@@ -510,7 +521,7 @@ export const customerLoginValidation = (props) => {
     let phone = props.loginCustomerPhone
     let inputtedPassword = props.loginCustomerPassword
     let cookies = props.cookies
-    let history = props.history
+    let window = props.window
 
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer')
@@ -533,15 +544,17 @@ export const customerLoginValidation = (props) => {
           if (compareResult) {
             dispatch(setLoginError(''))
             setNewCookies(cookies, customerData)
-            history.push('/')
+            window.location.assign('/')
           } else {
             dispatch(setLoginError(loginError))
+            dispatch(setLoadingStatus(false))
           }
         })
       } else {
         dispatch(setLoginError(loginError))
+        dispatch(setLoadingStatus(false))
       }
-      dispatch(setLoadingStatus(false))
+      // dispatch(setLoadingStatus(false))
     })
     .catch(err => {
       console.log('ERROR: customer login validation', err)
@@ -996,7 +1009,6 @@ export const customerUpdatePassword = (customerData, props) => {
     let customerRef = firestore.collection('customer').doc(customerId)
     let password = props.customerPassword
     let cookies = props.cookies
-    let history = props.history
 
     let hashedPassword = bcrypt.hashSync(password, SALTROUNDS)
 
@@ -1006,7 +1018,7 @@ export const customerUpdatePassword = (customerData, props) => {
     .then(() => {
       setNewCookies(cookies, customerData)
       dispatch(setLoadingStatus(false))
-      history.push('/')
+      window.location.assign('/')
     })
     .catch(err => {
       console.log('ERROR: register password', err)
@@ -1024,7 +1036,6 @@ export const createNewCustomer = (props) => {
     let email = props.customerEmail
     let password = props.customerPassword
     let picture = ''
-    let history = props.history
     let cookies = props.cookies
     let registeredStatus = true
 
@@ -1044,7 +1055,7 @@ export const createNewCustomer = (props) => {
       }
       setNewCookies(cookies, customerData)
       dispatch(setLoadingStatus(false))
-      history.push('/')
+      window.location.assign('/')
     })
     .catch(err => {
       console.log('ERROR: register password', err)

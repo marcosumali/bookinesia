@@ -89,6 +89,7 @@ const mapStateToProps = state => {
     // General Needs
     cookies: state.user.cookies,
     loadingStatus: state.user.loadingStatus,
+    window: state.user.window,
     // Login Section
     loginCustomerPhone: state.user.loginCustomerPhone,
     loginCustomerPassword: state.user.loginCustomerPassword,

@@ -10,7 +10,7 @@ import HomePage from '../pages/home/homePage';
 import RegisterPage from '../pages/auth/registerPage';
 import LoginPage from '../pages/auth/loginPage';
 import { setParams } from '../store/firestore/shop/shop.actions';
-import { setCookies } from '../store/firestore/customer/customer.actions';
+import { setCookies, setWindow } from '../store/firestore/customer/customer.actions';
 import Navbar from '../components/layout/navbar';
 
 class navBarPage extends Component {
@@ -19,6 +19,7 @@ class navBarPage extends Component {
     this.props.setParams(params)
     let cookiesFunction = this.props.cookies
     this.props.setCookies(cookiesFunction)
+    this.props.setWindow(window)
   }
 
   render() {
@@ -76,7 +77,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setParams,
-  setCookies
+  setCookies,
+  setWindow
 }, dispatch)
 
 

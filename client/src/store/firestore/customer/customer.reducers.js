@@ -1,5 +1,6 @@
 let initialState = {
   cookies: '',
+  window: '',
   transactions: [],
   transactionsExists: true,
   transactionsLoading: true,
@@ -73,6 +74,11 @@ const shopDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         cookies: action.payload,
+      })
+    case 'SET_WINDOW_FUNCTION':
+      return ({
+        ...state,
+        window: action.payload,
       })
     case 'GET_TRANSACTIONS_CUSTOMER_ID_SUCCESS':
       return ({

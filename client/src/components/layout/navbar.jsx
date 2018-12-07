@@ -16,7 +16,7 @@ import { handleCookies } from '../../store/firestore/customer/customer.actions';
 
 class navbar extends Component {
   componentWillMount() {
-    this.props.handleCookies('get account', this.props.cookies)
+    this.props.handleCookies('get account', this.props.cookies, window.location.pathname)
   }
 
   render() {

@@ -24,7 +24,7 @@ class accountDetails extends Component {
               this.props.userLoading ?
               <AccountDetailsLoading />
               :
-              <div className="row No-margin Details-content-box Padding-10 Padding-l-r-20">      
+              <div className="row No-margin Details-content-box">      
                 {/* Header Section */}
                 <div className="col s12 No-margin No-padding Padding-10 Container-center Margin-b-10">
                   <div className="col s3 No-margin No-padding Container-center">

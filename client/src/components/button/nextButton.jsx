@@ -8,7 +8,6 @@ import { customerInputValidation, customerServiceInputValidation } from '../../s
 import LoadingDotSvg from '../svg/loadingDotSvg';
 
 class nextButton extends Component {
-
   doNothing() {
   }
 
@@ -70,6 +69,7 @@ const mapStateToProps = state => {
     cookies: state.user.cookies,
     routeLink: state.shop.routeLink,
     params: state.shop.params,
+    window: state.user.window,
     // Confirm Transaction Page Needs
     customerName: state.cart.customerName,
     customerEmail: state.cart.customerEmail,

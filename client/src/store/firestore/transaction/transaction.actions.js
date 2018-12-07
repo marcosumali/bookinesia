@@ -895,7 +895,6 @@ export const createNewCustomerAndCreateNewTransaction = (props) => {
 // ---------------------------------------------- TRANSACTION ACTION ----------------------------------------------
 export const createNewTransaction = (customerId, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let history = props.history
     let params = props.params
     let shopId = params.shopName
     let branchId = `${shopId}-${params.branchName}`
@@ -920,6 +919,7 @@ export const createNewTransaction = (customerId, props) => {
       type: 'customer',
       id: customerId
     }
+    let window = props.window
     
     let newTransaction = {
       shopId,
@@ -951,7 +951,7 @@ export const createNewTransaction = (customerId, props) => {
       .then(ref => {
         let refId = ref.id
         dispatch(setLoadingStatus(false))
-        history.push(`/book/success/${refId}`)
+        window.location.assign(`/book/success/${refId}`)
         dispatch(updateAppointmentCurrentTransaction(appointment))
       })
       .catch(err => {
