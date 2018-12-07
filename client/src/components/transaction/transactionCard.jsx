@@ -23,7 +23,7 @@ export default class transactionCard extends Component {
               <FaceSvg />
               :
               this.props.section === `Transaction Details` ?
-              <ShoppingCartSvg color="#5499c3" />
+              <ShoppingCartSvg color="#5499c3" width="24" height="24" />
               :
               <div></div>
             }

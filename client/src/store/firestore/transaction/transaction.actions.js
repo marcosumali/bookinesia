@@ -1,6 +1,7 @@
 import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail } from '../../../helpers/form';
 import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
+import { setLoadingStatus, setAuthorizationStatus } from '../customer/customer.actions';
 
 const emptyError = 'This section must be filled.'
 const phoneMinError = 'Phone number is too short, min. 8 characters.'
@@ -677,14 +678,16 @@ const setNoServiceSelectedError = (data) => {
 }
 
 
-// To validate customer's input form of inputting customer information
+// To validate customer's input form of inputting customer information for booking new transaction
 export const customerInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let name = props.customerName
     let phone = props.customerPhone
     let email = props.customerEmail
     let cookies = props.cookies
-    let history = props.history
+
+    // To set loading status to true
+    dispatch(setLoadingStatus(true))
 
     // Input is ERROR
     if (name.length <= 0) {
@@ -724,11 +727,14 @@ export const customerInputValidation = (props) => {
       dispatch(setHasBookSuccess(true))
       let BUID = getCookies(cookies)
       if (BUID) {
-        let customerId = verifyCookies(BUID)
-        dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props, cookies, history))
+        let customerData = verifyCookies(BUID)
+        let customerId = customerData.id
+        dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
       } else {
-        dispatch(getCustomerByPhoneAndCreateNewTransaction(phone, props, cookies, history))
+        dispatch(getCustomerByPhoneAndCreateNewTransaction(props))
       }
+    } else {
+      dispatch(setLoadingStatus(false))
     }
   }
 }
@@ -787,8 +793,11 @@ const setEmailInputOK = (data) => {
 
 // To check customer existence using input from phone form, then save new cookies, and create new transaction
 // OR create new customer and create new transaction
-export const getCustomerByPhoneAndCreateNewTransaction = (phone, props, cookies, history) => {
+export const getCustomerByPhoneAndCreateNewTransaction = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let phone = props.customerPhone
+    let cookies = props.cookies
+
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer')
 
@@ -799,11 +808,21 @@ export const getCustomerByPhoneAndCreateNewTransaction = (phone, props, cookies,
       if (snapshot.empty === false) {
         snapshot.forEach(doc => {
           let id = doc.id
-          setNewCookies(cookies, id)
-          dispatch(createNewTransaction(id, props, history))
+          let { name, phone, email, picture, password } = doc.data()
+          let registeredStatus = ''
+          if (password.length <= 0) {
+            registeredStatus = false
+          } else {
+            registeredStatus = true
+          }
+          let customerData = {
+            id, name, phone, email, picture, registeredStatus
+          }
+          setNewCookies(cookies, customerData)
+          dispatch(createNewTransaction(id, props))
         })
       } else {
-        dispatch(createNewCustomerAndCreateNewTransaction(props, cookies, history))
+        dispatch(createNewCustomerAndCreateNewTransaction(props))
       }
     })
     .catch(err => {
@@ -814,7 +833,7 @@ export const getCustomerByPhoneAndCreateNewTransaction = (phone, props, cookies,
 
 // To check customer existence using decoded ID from cookies and create new transaction
 // OR create new customer, save new cookies and create new transaction
-export const getCustomerByIdAndCreateNewTransaction = (customerId, props, cookies, history) => {
+export const getCustomerByIdAndCreateNewTransaction = (customerId, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer').doc(customerId)
@@ -823,9 +842,9 @@ export const getCustomerByIdAndCreateNewTransaction = (customerId, props, cookie
     .then(doc => {
       if (doc.exists) {
         let id = doc.id
-        dispatch(createNewTransaction(id, props, history))
+        dispatch(createNewTransaction(id, props))
       } else {
-        dispatch(createNewCustomerAndCreateNewTransaction(props, cookies, history))
+        dispatch(createNewCustomerAndCreateNewTransaction(props))
       }
     })
     .catch(err => {
@@ -835,29 +854,35 @@ export const getCustomerByIdAndCreateNewTransaction = (customerId, props, cookie
 }
 
 
-export const createNewCustomerAndCreateNewTransaction = (props, cookies, history) => {
+export const createNewCustomerAndCreateNewTransaction = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let cookies = props.cookies
     let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = ''
+    let picture = ''
+    let registeredStatus = false
 
     let newCustomer = {
       name,
       phone,
       email,
-      password
+      password,
+      picture
     }
 
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer')
 
-    customerRef
-    .add(newCustomer)
+    customerRef.add(newCustomer)
     .then(ref => {
       let refId = ref.id
-      setNewCookies(cookies, refId)
-      dispatch(createNewTransaction(refId, props, history))
+      let customerData = {
+        id: refId, name, phone, email, picture, registeredStatus
+      }
+      setNewCookies(cookies, customerData)
+      dispatch(createNewTransaction(refId, props))
     })
     .catch(err => {
       console.log('ERROR: Get and create new customer', err)
@@ -868,7 +893,7 @@ export const createNewCustomerAndCreateNewTransaction = (props, cookies, history
 
 
 // ---------------------------------------------- TRANSACTION ACTION ----------------------------------------------
-export const createNewTransaction = (customerId, props, history) => {
+export const createNewTransaction = (customerId, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let params = props.params
     let shopId = params.shopName
@@ -876,23 +901,33 @@ export const createNewTransaction = (customerId, props, history) => {
     let service = props.selectedServices
     let staff = props.selectedStaff
     let appointment = props.selectedAppointment
+    let appointmentId = appointment.id
     let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
-    let queueNo = Number(props.selectedAppointment.currentTransaction) + 1
+    let queueNo = String(Number(appointment.currentTransaction) + 1)
     let startDate = ''
     let endDate = ''
     let status = 'booking confirmed'
     let createdDate = new Date(Date.now())
     let updatedDate = new Date(Date.now())
+    let createdBy = {
+      type: 'customer',
+      id: customerId
+    }
+    let updatedBy = {
+      type: 'customer',
+      id: customerId
+    }
+    let window = props.window
     
     let newTransaction = {
       shopId,
       branchId,
-      customerId,
       service,
       staff,
-      appointment,
+      appointmentId,
+      customerId,
       name,
       phone,
       email,
@@ -901,27 +936,33 @@ export const createNewTransaction = (customerId, props, history) => {
       endDate,
       status,
       createdDate,
-      updatedDate
+      updatedDate,
+      createdBy,
+      updatedBy
     }
 
     let firestore = getFirestore()
     let transactionRef = firestore.collection('transaction')
 
-    transactionRef
-    .add(newTransaction)
-    .then(ref => {
-      let refId = ref.id
-      history.push(`/book/success/${refId}`)
-      dispatch(updateAppointmentCurrentTransaction(appointment))
-    })
-    .catch(err => {
-      console.log('ERROR: Get and create new customer', err)
-    })
+    // To handle no transaction is set more than max daily queue
+    if (Number(appointment.currentTransaction) < Number(appointment.maxQueue)) {
+      transactionRef
+      .add(newTransaction)
+      .then(ref => {
+        let refId = ref.id
+        dispatch(setLoadingStatus(false))
+        window.location.assign(`/book/success/${refId}`)
+        dispatch(updateAppointmentCurrentTransaction(appointment))
+      })
+      .catch(err => {
+        console.log('ERROR: Get and create new customer', err)
+      })
+    } 
 
   }
 }
 
-export const getTransaction = (transactionId) => {
+export const getTransaction = (transactionId, customerId) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let transaction = firestore.collection('transaction').doc(transactionId)
@@ -930,9 +971,14 @@ export const getTransaction = (transactionId) => {
     .then(doc => {
       if (doc.exists) {
         let data = doc.data()
-        dispatch(setTransactionSuccess(data))
+        // To handle authorization
+        if (customerId === data.customerId) {
+          dispatch(setTransactionSuccess(data))
+        } else {
+          dispatch(setAuthorizationStatus(false))
+        }
       } else {
-        // dispatch(setOneServiceFailed(false))
+        dispatch(setAuthorizationStatus(false))
       }
     })
     .catch(err => {

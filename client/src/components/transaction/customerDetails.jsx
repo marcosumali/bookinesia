@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 
 import '../../assets/css/general.css';
+import '../../assets/css/materialize/form.css';
 import './transaction.css';
 import CheckSvg from '../svg/checkSvg';
 import { 
@@ -100,7 +101,12 @@ class customerDetails extends Component {
                       </div>
                     </div>
                     <div className="col s12 No-margin No-padding">
-                      <p className="No-margin Confirm-text">Queue No. { Number(this.props.selectedAppointment.currentTransaction)+1 }</p>
+                      {
+                        Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ?
+                        <p className="No-margin Confirm-text-full">The barber is fully booked. Please go back and select other schedule or barber to continue.</p>
+                        :
+                        <p className="No-margin Confirm-text">Queue No. { Number(this.props.selectedAppointment.currentTransaction)+1 }</p>
+                      }
                     </div>
                   </div>
                 </div>
@@ -154,7 +160,7 @@ class customerDetails extends Component {
                     <div>
                       <input id="name" type="text" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerName }/>
                       <label htmlFor="name" className="Form-text active">Name</label>
-                      <span className="Input-info-error animated fadeIn faster">{ this.props.customerNameError }</span>
+                      <span className="Input-info-error">{ this.props.customerNameError }</span>
                     </div>
                     :
                     <div>
@@ -179,7 +185,7 @@ class customerDetails extends Component {
                     <div>
                       <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                       <label htmlFor="phone" className="Form-text active">Phone No.</label>
-                      <span className="Input-info-error animated fadeIn faster">{ this.props.customerPhoneError }</span>
+                      <span className="Input-info-error">{ this.props.customerPhoneError }</span>
                     </div>
                     :
                     <div>
@@ -204,7 +210,7 @@ class customerDetails extends Component {
                     <div>
                       <input id="email" type="email" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerEmail }/>
                       <label htmlFor="email" className="Form-text active">Email</label>
-                      <span className="Input-info-error animated fadeIn faster">{ this.props.customerEmailError }</span>
+                      <span className="Input-info-error">{ this.props.customerEmailError }</span>
                     </div>
                     :
                     <div>

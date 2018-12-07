@@ -8,7 +8,7 @@ import TransactionServicePage from '../pages/transaction/transactionService';
 import TransactionBarberPage from '../pages/transaction/transactionBarber';
 import TransactionConfirmPage from '../pages/transaction/transactionConfirm';
 import { setParams } from '../store/firestore/shop/shop.actions';
-import { setCookies } from '../store/firestore/customer/customer.actions';
+import { setCookies, setWindow } from '../store/firestore/customer/customer.actions';
 
 class branchHeaderPage extends Component {
   componentWillMount() {
@@ -16,6 +16,7 @@ class branchHeaderPage extends Component {
     this.props.setParams(params)
     let cookiesFunction = this.props.cookies
     this.props.setCookies(cookiesFunction)
+    this.props.setWindow(window)
   }
 
   render() {
@@ -50,7 +51,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setParams,
-  setCookies
+  setCookies,
+  setWindow
 }, dispatch)
 
 

@@ -1,0 +1,127 @@
+.Details-content-box {
+  background-color: #ffffff;
+  padding: 10px 20px 20px 20px
+}
+
+.Account-name-text {
+  font-family: Montserrat;
+  font-size: 1.25em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+
+.Settings-button-box {
+  border-radius: 5px;
+  background-color: #5499c3;
+  height: 1.7em !important;
+  width: 7em !important;
+  /* padding: 5px; */
+}
+
+.Form-box-white {
+  background-color: #ffffff;
+}
+
+
+.Settings-button-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Info-box {
+  border: 1px solid #EAEAEA;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.Account-info-header {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Account-info-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Blue-button {
+  background-color: #5499c3;
+  padding: 3px;
+  border-radius: 5px;
+  width: 80%;
+  height: 2em;
+}
+
+.Blue-button-pass {
+  background-color: #5499c3;
+  padding: 3px;
+  border-radius: 0px 0px 5px 5px;
+  height: 2em;
+}
+
+.White-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+
+.Grey-button {
+  background-color: #EAEAEA;
+  padding: 3px;
+  border-radius: 5px;
+  width: 80%;
+}
+
+.Black-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #000000;
+}
+
+.Text-error {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #d00;
+}
+
+.Error-box {
+  padding: 0px 10px 10px 0px !important;
+}

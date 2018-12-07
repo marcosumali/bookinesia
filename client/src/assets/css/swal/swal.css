@@ -1,0 +1,26 @@
+.swal-button,
+.swal-button--confirm {
+  background-color: #5499c3 !important;
+}
+
+.swal-title {
+  font-family: Montserrat;
+  font-size: 23px !important;
+  padding-top: 0px !important;
+  margin: 0px !important;
+  /* font-weight: normal; */
+}
+
+.swal-icon--success__ring,
+.swal-icon--success__line {
+  border-color: #f68606;
+}
+
+.swal-icon--success__line--long,
+.swal-icon--success__line--tip {
+  background-color: #f68606 !important;
+}
+
+.swal-footer {
+  margin: 0px !important;
+}
