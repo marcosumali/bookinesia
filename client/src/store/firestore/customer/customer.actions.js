@@ -1,10 +1,12 @@
 import { getCookies, verifyCookies, setNewCookies } from '../../../helpers/auth';
 import { validateEmail } from '../../../helpers/form';
 import { getTransaction } from '../transaction/transaction.actions';
+import swal from 'sweetalert';
 
 const bcrypt = require('bcryptjs')
 const ENV_SALTROUNDS = Number(process.env.REACT_APP_SALTROUNDS)
 const SALTROUNDS = bcrypt.genSaltSync(ENV_SALTROUNDS)
+
 const emptyError = 'This section must be filled.'
 const phoneMinError = 'Phone number is too short, min. 8 characters.'
 const phoneRegisteredError = 'Phone number is already registered. Please sign in.'
@@ -12,6 +14,9 @@ const passwordMinError = 'Password is too short, min. 8 characters.'
 const emailInvalidError = 'Invalid email.'
 const emailRegisteredError = 'Email is already registered. Please sign in.'
 const loginError = 'The phone number or password you entered is incorrect. Please try again.'
+const oldPasswordError = 'The old password you entered is incorrect.'
+const samePasswordError = `The new password can't be the same with your old password.`
+const notSameNewPasswordError = 'Your new password and its confirmation do not match.'
 
 // ---------------------------------------------- GENERAL ACTION ----------------------------------------------
 export const clearUserState = () => {
@@ -160,7 +165,7 @@ const setRegisterCustomerPassword = (data) => {
   }
 }
 
-// To Handle Input Changes During Registration
+// To Handle Input Changes During Login
 export const handleLoginInputChanges = (e) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let target = e.target
@@ -185,6 +190,44 @@ const setLoginCustomerPhone = (data) => {
 const setLoginCustomerPassword = (data) => {
   return {
     type: 'SET_LOGIN_CUSTOMER_PASSWORD',
+    payload: data
+  }
+}
+
+// To Handle Input Changes During Change Password
+export const handleChangePasswordInputChanges = (e) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let target = e.target
+    let inputId = target.id
+    let value = target.value
+
+    if (inputId === 'oldPassword') {
+      dispatch(setOldPassword(value))
+    } else if (inputId === 'newPassword') {
+      dispatch(setNewPassword(value))
+    } else if (inputId === 'newPasswordConfirm') {
+      dispatch(setNewPasswordConfirm(value))
+    }
+  }
+}
+
+const setOldPassword = (data) => {
+  return {
+    type: 'SET_OLD_PASSWORD',
+    payload: data
+  }
+}
+
+const setNewPassword = (data) => {
+  return {
+    type: 'SET_NEW_PASSWORD',
+    payload: data
+  }
+}
+
+const setNewPasswordConfirm = (data) => {
+  return {
+    type: 'SET_NEW_PASSWORD_CONFIRM',
     payload: data
   }
 }
@@ -424,7 +467,7 @@ export const setLoadingStatus = (data) => {
   }
 }
 
-// To set register status to true - limit customer to only able to register once each render
+// To set login status to true - limit customer to only able to login once each render
 const setLoginSuccess = (data) => {
   return {
     type: 'SET_LOGIN_STATUS_SUCCESS',
@@ -598,7 +641,7 @@ export const customerSettingsInputValidation = (props) => {
     }
     
     if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true) {
-      console.log('pass through')
+      // console.log('pass through')
       let BUID = getCookies(cookies)
       if (BUID) {
         let customerData = verifyCookies(BUID)
@@ -606,7 +649,6 @@ export const customerSettingsInputValidation = (props) => {
         dispatch(customerUpdateAccount(customerId, props))
       } else {
         dispatch(setLoadingStatus(false))
-        dispatch(setAuthorizationStatus(false))
       }
     } else {
       dispatch(setLoadingStatus(false))
@@ -687,6 +729,7 @@ export const customerUpdateAccount = (customerId, props) => {
           id, name, email, phone, picture, registeredStatus
         }      
 
+        // To handle authorization
         if (customerId === id) {
           let customerUpdateRef = firestore.collection('customer').doc(id)
           
@@ -696,14 +739,18 @@ export const customerUpdateAccount = (customerId, props) => {
             email
           })
           .then(() => {
+            swal("Account Updated", "", "success")
             setNewCookies(cookies, customerData)
-            dispatch(setLoadingStatus(false))
             history.push('/account')
           })
           .catch(err => {
             console.log('ERROR: Update customer data', err)
           })
+        } else {
+          dispatch(setAuthorizationStatus(false))
         }
+
+        dispatch(setLoadingStatus(false))
       } else {
         dispatch(setAuthorizationStatus(false))
       }
@@ -714,6 +761,205 @@ export const customerUpdateAccount = (customerId, props) => {
   
   }
 }
+
+// CHANGE PASSWORD
+// To validate customer's input form of inputting customer information when changing passwords
+export const customerChangePasswordInputValidation = (props) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let oldPassword = props.oldPassword
+    let newPassword = props.newPassword
+    let newPasswordConfirm = props.newPasswordConfirm
+    let cookies = props.cookies
+
+    // To set loading status as true
+    await dispatch(setLoadingStatus(true))
+
+    // Input is ERROR
+    if (oldPassword.length <= 0) {
+      await dispatch(setOldPasswordInputError(emptyError))
+    } 
+    
+    if (oldPassword.length > 0 && oldPassword.length < 8) {
+      await dispatch(setOldPasswordInputError(passwordMinError))
+    }
+
+    if (newPassword.length <= 0) {
+      await dispatch(setNewPasswordInputError(emptyError))
+    } 
+    
+    if (newPassword.length > 0 && newPassword.length < 8) {
+      await dispatch(setNewPasswordInputError(passwordMinError))
+    }
+
+    if (newPasswordConfirm.length <= 0) {
+      await dispatch(setNewPasswordConfirmInputError(emptyError))
+    } 
+    
+    if (newPasswordConfirm.length > 0 && newPasswordConfirm.length < 8) {
+      await dispatch(setNewPasswordConfirmInputError(passwordMinError))
+    }
+
+    // Input is OK
+    if (oldPassword.length >= 8) {
+      await dispatch(setOldPasswordInputOK(false))
+    }
+
+    if (newPassword.length >= 8) {
+      await dispatch(setNewPasswordInputOK(false))
+    }
+
+    if (newPasswordConfirm.length >= 8) {
+      await dispatch(setNewPasswordConfirmInputOK(false))
+    }
+    
+    if (oldPassword.length >= 8 && newPassword.length >= 8 && newPasswordConfirm.length >= 8) {
+      // console.log('pass through')
+      let BUID = getCookies(cookies)
+      if (BUID) {
+        let customerData = verifyCookies(BUID)
+        let customerId = customerData.id
+
+        let inputErrors = []
+        // Combination Error
+        let passwordStatus = await dispatch(passwordValidation(customerId, props))
+        if (passwordStatus === false) {
+          inputErrors.push(oldPasswordError)
+        }
+
+        if (oldPassword === newPassword) {
+          inputErrors.push(samePasswordError)
+        }
+        
+        if (newPassword !== newPasswordConfirm) {
+          inputErrors.push(notSameNewPasswordError)
+        }
+
+        await dispatch(setPasswordCheckingErrors(inputErrors))
+
+        // Combination OK
+        if (oldPassword !== newPassword && newPassword === newPasswordConfirm && passwordStatus) {
+          dispatch(customerChangePassword(customerId, props))
+        } else {
+          dispatch(setLoadingStatus(false))
+        }
+      } else {
+        dispatch(setLoadingStatus(false))
+      }
+    } else {
+      dispatch(setLoadingStatus(false))
+    }
+  }
+}
+
+// To set password erros
+const setPasswordCheckingErrors = (data) => {
+  return {
+    type: 'SET_PASSWORD_CHECKING_ERRORS',
+    payload: data
+  }
+}
+
+// To handle changes from input text if error
+const setOldPasswordInputError = (data) => {
+  return {
+    type: 'SET_OLD_PASSWORD_INPUT_ERROR',
+    payload: data
+  }
+}
+
+const setNewPasswordInputError = (data) => {
+  return {
+    type: 'SET_NEW_PASSWORD_INPUT_ERROR',
+    payload: data
+  }
+}
+
+const setNewPasswordConfirmInputError = (data) => {
+  return {
+    type: 'SET_NEW_PASSWORD_CONFIRM_INPUT_ERROR',
+    payload: data
+  }
+}
+
+// To handle changes from input text if OK
+const setOldPasswordInputOK = (data) => {
+  return {
+    type: 'SET_OLD_PASSWORD_INPUT_OK',
+    payload: data
+  }
+}
+
+const setNewPasswordInputOK = (data) => {
+  return {
+    type: 'SET_NEW_PASSWORD_INPUT_OK',
+    payload: data
+  }
+}
+
+const setNewPasswordConfirmInputOK = (data) => {
+  return {
+    type: 'SET_NEW_PASSWORD_CONFIRM_INPUT_OK',
+    payload: data
+  }
+}
+
+// To return status true or false after validating password to firestore
+export const passwordValidation = (customerId, props) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let inputtedPassword = props.oldPassword
+    let passwordStatus = false
+
+    let firestore = getFirestore()
+    let customerRef = firestore.collection('customer').doc(customerId)
+
+    await customerRef.get()
+    .then(doc => {
+      if (doc.exists) {
+        let { password } = doc.data()
+
+        let compareResult = bcrypt.compareSync(inputtedPassword, password)
+        if (compareResult) {
+          passwordStatus = true
+        } else {
+          passwordStatus = false
+        }
+      } else {
+        dispatch(setAuthorizationStatus(false))
+      }
+    })
+    .catch(err => {
+      console.log('ERROR: password validation', err)
+    })
+
+    return passwordStatus
+  }
+}
+
+// To change customer password to firestore
+export const customerChangePassword = (customerId, props) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let newPassword = props.newPassword
+    let history = props.history
+
+    let firestore = getFirestore()
+    let customerRef = firestore.collection('customer').doc(customerId)
+
+    let hashedPassword = bcrypt.hashSync(newPassword, SALTROUNDS)
+
+    customerRef.update({
+      password: hashedPassword
+    })
+    .then(() => {
+      swal("Change Password Successful", "", "success")
+      dispatch(setLoadingStatus(false))
+      history.push('/account')
+    })
+    .catch(err => {
+      console.log('ERROR: password validation', err)
+    })
+  }
+}
+
 
 
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------

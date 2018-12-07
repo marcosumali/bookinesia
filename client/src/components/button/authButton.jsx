@@ -8,7 +8,8 @@ import LoadingInfiniteSvg from '../svg/loadingInfiniteSvg';
 import { 
   customerLoginInputValidation, 
   customerRegisterInputValidation, 
-  customerSettingsInputValidation 
+  customerSettingsInputValidation,
+  customerChangePasswordInputValidation
 } from '../../store/firestore/customer/customer.actions';
 
 class authButton extends Component {
@@ -62,6 +63,20 @@ class authButton extends Component {
              }
           </div>
           :
+          this.props.onPage === 'changePasswordPage' ?
+          <div>
+             {
+              this.props.loadingStatus ?
+              <div className="Container-center Auth-button-box Margin-b-16">
+                <LoadingInfiniteSvg width="24px" height="24px"/>
+              </div>
+              :
+              <div className="Container-center Auth-button-box Margin-b-16" onClick={ () => this.props.customerChangePasswordInputValidation(this.props) }>
+                <div className="Auth-button-text">Save</div>
+              </div>
+             }
+          </div>
+          :
           <div></div>
         }
       </div>
@@ -88,13 +103,18 @@ const mapStateToProps = state => {
     settingsCustomerName: state.user.settingsCustomerName,
     settingsCustomerEmail: state.user.settingsCustomerEmail,
     settingsCustomerPhone: state.user.settingsCustomerPhone,
+    // Change Password Section
+    oldPassword: state.user.oldPassword,
+    newPassword: state.user.newPassword,
+    newPasswordConfirm: state.user.newPasswordConfirm,
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   customerLoginInputValidation,
   customerRegisterInputValidation,
-  customerSettingsInputValidation
+  customerSettingsInputValidation,
+  customerChangePasswordInputValidation
 }, dispatch)
 
 

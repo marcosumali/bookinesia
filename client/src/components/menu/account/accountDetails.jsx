@@ -81,9 +81,11 @@ class accountDetails extends Component {
                         <div className="Margin-r-4 Container-center">
                           <KeySvg width="18px" height="18px" color="#ffffff" />
                         </div>
-                        <div className="Container-center">
-                          <div className="White-text">Change Password</div>
-                        </div>
+                        <Link to="/change-password">
+                          <div className="Container-center">
+                            <div className="White-text">Change Password</div>
+                          </div>
+                        </Link>
                       </div>
                     </div>
 
@@ -105,8 +107,7 @@ class accountDetails extends Component {
                   :
                   <div></div>
                 }
-        
-      
+
               </div>
             }
           </div>

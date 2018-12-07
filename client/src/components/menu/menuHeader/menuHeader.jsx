@@ -9,7 +9,7 @@ import { clearUserState, handleCookies } from '../../../store/firestore/customer
 
 class menuHeader extends Component {
   componentWillMount() {
-    if (this.props.onPage === 'accountSettingsPage') {
+    if (this.props.getAccountStatus === 'true') {
       this.props.handleCookies('get account', this.props.cookies)
     }
   }

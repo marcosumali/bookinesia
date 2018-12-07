@@ -42,6 +42,13 @@ let initialState = {
   settingsCustomerNameError: false,
   settingsCustomerEmailError: false,
   settingsCustomerPhoneError: false,
+  oldPassword: '',
+  oldPasswordError: false,
+  newPassword: '',
+  newPasswordError: false,
+  newPasswordConfirm: '',
+  newPasswordConfirmError: false,
+  changePasswordErrors: [],
 }
 
 const shopDataList = (state = { ...initialState }, action) => {
@@ -313,7 +320,56 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         settingsCustomerPhoneError: action.payload
       })
-
+    case 'SET_OLD_PASSWORD':
+      return ({
+        ...state,
+        oldPassword: action.payload,
+      })
+    case 'SET_NEW_PASSWORD':
+      return ({
+        ...state,
+        newPassword: action.payload,
+      })
+    case 'SET_NEW_PASSWORD_CONFIRM':
+      return ({
+        ...state,
+        newPasswordConfirm: action.payload,
+      })
+    case 'SET_OLD_PASSWORD_INPUT_ERROR':
+      return ({
+        ...state,
+        oldPasswordError: action.payload
+      })
+    case 'SET_NEW_PASSWORD_INPUT_ERROR':
+      return ({
+        ...state,
+        newPasswordError: action.payload
+      })
+    case 'SET_NEW_PASSWORD_CONFIRM_INPUT_ERROR':
+      return ({
+        ...state,
+        newPasswordConfirmError: action.payload
+      })
+    case 'SET_OLD_PASSWORD_INPUT_OK':
+      return ({
+        ...state,
+        oldPasswordError: action.payload
+      })
+    case 'SET_NEW_PASSWORD_INPUT_OK':
+      return ({
+        ...state,
+        newPasswordError: action.payload
+      })
+    case 'SET_NEW_PASSWORD_CONFIRM_INPUT_OK':
+      return ({
+        ...state,
+        newPasswordConfirmError: action.payload
+      })
+    case 'SET_PASSWORD_CHECKING_ERRORS':
+      return ({
+        ...state,
+        changePasswordErrors: action.payload
+      })
 
     default:
       return state;
