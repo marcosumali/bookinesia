@@ -5,7 +5,11 @@ import { bindActionCreators } from 'redux';
 import '../../assets/css/general.css';
 import '../auth/auth.css';
 import LoadingInfiniteSvg from '../svg/loadingInfiniteSvg';
-import { customerLoginInputValidation, customerRegisterInputValidation } from '../../store/firestore/customer/customer.actions';
+import { 
+  customerLoginInputValidation, 
+  customerRegisterInputValidation, 
+  customerSettingsInputValidation 
+} from '../../store/firestore/customer/customer.actions';
 
 class authButton extends Component {
   doNothing () {
@@ -44,6 +48,20 @@ class authButton extends Component {
              }
           </div>
           :
+          this.props.onPage === 'settingsPage' ?
+          <div>
+             {
+              this.props.loadingStatus ?
+              <div className="Container-center Auth-button-box Margin-b-16 Margin-t-8">
+                <LoadingInfiniteSvg width="24px" height="24px"/>
+              </div>
+              :
+              <div className="Container-center Auth-button-box Margin-b-16 Margin-t-8" onClick={ () => this.props.customerSettingsInputValidation(this.props) }>
+                <div className="Auth-button-text">Save</div>
+              </div>
+             }
+          </div>
+          :
           <div></div>
         }
       </div>
@@ -66,12 +84,17 @@ const mapStateToProps = state => {
     customerPhone: state.user.registerCustomerPhone,
     customerPassword: state.user.registerCustomerPassword,
     registerStatus: state.user.registerStatus,
+    // Settings Section
+    settingsCustomerName: state.user.settingsCustomerName,
+    settingsCustomerEmail: state.user.settingsCustomerEmail,
+    settingsCustomerPhone: state.user.settingsCustomerPhone,
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   customerLoginInputValidation,
-  customerRegisterInputValidation
+  customerRegisterInputValidation,
+  customerSettingsInputValidation
 }, dispatch)
 
 

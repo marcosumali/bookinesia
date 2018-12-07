@@ -54,6 +54,10 @@
   padding-right: 0.25em !important ;
 }
 
+.Padding-r-8 {
+  padding-right: 0.5em !important ;
+}
+
 .Padding-l-10 {
   padding-left: 0.625em !important;
 }
@@ -98,6 +102,10 @@
 
 .Padding-t-20 {
   padding-top: 1.25em !important;
+}
+
+.Padding-t-24 {
+  padding-top: 1.5em !important;
 }
 
 .Padding-t-l-r-10 {
@@ -207,7 +215,11 @@
 }
 
 .Margin-r-4 {
-  margin-right: 4px !important;
+  margin-right: 0.25em !important;
+}
+
+.Margin-r-8 {
+  margin-right: 0.5em !important;
 }
 
 .Margin-r-10 {

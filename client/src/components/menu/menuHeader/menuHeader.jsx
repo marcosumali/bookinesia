@@ -5,10 +5,15 @@ import { bindActionCreators } from 'redux';
 import '../../../assets/css/general.css';
 import './menuHeader.css';
 import PreviousArrowSvg from '../../svg/arrowPreviousSvg';
-import { clearUserState } from '../../../store/firestore/customer/customer.actions';
+import { clearUserState, handleCookies } from '../../../store/firestore/customer/customer.actions';
 
 class menuHeader extends Component {
-  
+  componentWillMount() {
+    if (this.props.onPage === 'accountSettingsPage') {
+      this.props.handleCookies('get account', this.props.cookies)
+    }
+  }
+
   render() {
     // console.log('from menuHeader', this.props)
     return (
@@ -18,14 +23,15 @@ class menuHeader extends Component {
           {/* Previous Arrow Section */}
           <div 
             className="col s2 Height-100 No-padding No-margin Container-center" 
+            style={{ zIndex: '998' }}
             onClick={ () => { this.props.history.goBack(); this.props.clearUserState(); } 
           }>
             <PreviousArrowSvg color="#666666" />
           </div>
           
           {/* Text Section */}
-          <div className="col s10 Height-100 No-margin No-padding Container-center" >
-            <div className="Menu-header-text Text-capitalize" style={{ marginLeft: '2.5em' }}>{ this.props.text }</div>
+          <div className="col s12 No-padding Container-center" style={{ position: 'absolute', zIndex: '997' }} >
+            <div className="Menu-header-text Text-capitalize Text-center">{ this.props.text }</div>
           </div>
 
         </div>
@@ -37,11 +43,13 @@ class menuHeader extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    cookies: state.user.cookies
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  clearUserState
+  clearUserState,
+  handleCookies
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps) (menuHeader);

@@ -56,6 +56,8 @@ export const handleCookies = (purpose, cookies, data) => {
         dispatch(getTransactionDetails(data, customerId))
       } else if (purpose === 'handle authorization success') {
         dispatch(getTransaction(data, customerId))
+      } else if (purpose === 'get account settings') {
+        dispatch(setSettingFormValueBasedOnToken(customerData))
       }
     } else {
       dispatch(setAuthenticationStatus(false))
@@ -84,6 +86,14 @@ const setFormValueBasedOnToken = (data) => {
 const setRegisterFormValueBasedOnToken = (data) => {
   return {
     type: 'SET_REGISTER_FORM_VALUE_BUID',
+    payload: data
+  }
+}
+
+// To set setting form value based on BUID on redux store
+const setSettingFormValueBasedOnToken = (data) => {
+  return {
+    type: 'SET_SETTING_FORM_VALUE_BUID',
     payload: data
   }
 }
@@ -251,7 +261,7 @@ export const customerRegisterInputValidation = (props) => {
         let BUID = getCookies(cookies)
         if (BUID) {
           let customerData = verifyCookies(BUID)
-          dispatch(updatePasswordCustomer(customerData, props))
+          dispatch(customerUpdatePassword(customerData, props))
         } else {
           dispatch(createNewCustomer(props))
         }
@@ -414,7 +424,6 @@ export const setLoadingStatus = (data) => {
   }
 }
 
-
 // To set register status to true - limit customer to only able to register once each render
 const setLoginSuccess = (data) => {
   return {
@@ -504,6 +513,208 @@ const setLoginError = (data) => {
   }
 }
 
+// To Handle Input Changes During Registration
+export const handleSettingInputChanges = (e) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let target = e.target
+    let inputId = target.id
+    let value = target.value
+
+    if (inputId === 'name') {
+      dispatch(setSettingCustomerName(value))
+    } else if (inputId === 'email') {
+      dispatch(setSettingCustomerEmail(value))
+    } else if (inputId === 'phone') {
+      dispatch(setSettingCustomerPhone(value))
+    }
+  }
+}
+
+const setSettingCustomerName = (data) => {
+  return {
+    type: 'SET_SETTING_CUSTOMER_NAME',
+    payload: data
+  }
+}
+
+const setSettingCustomerEmail = (data) => {
+  return {
+    type: 'SET_SETTING_CUSTOMER_EMAIL',
+    payload: data
+  }
+}
+
+const setSettingCustomerPhone = (data) => {
+  return {
+    type: 'SET_SETTING_CUSTOMER_PHONE',
+    payload: data
+  }
+}
+
+// ACCOUNT SETTINGS
+// To validate customer's input form of inputting customer information when updating settings
+export const customerSettingsInputValidation = (props) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let name = props.settingsCustomerName
+    let phone = props.settingsCustomerPhone
+    let email = props.settingsCustomerEmail
+    let cookies = props.cookies
+
+    // To set loading status as true
+    await dispatch(setLoadingStatus(true))
+
+    // Input is ERROR
+    if (name.length <= 0) {
+      await dispatch(setSettingNameInputError(emptyError))
+    } 
+    
+    if (phone.length <= 0) {
+      await dispatch(setSettingPhoneInputError(emptyError))
+    } 
+    
+    if (phone.length > 0 && phone.length < 8) {
+      await dispatch(setSettingPhoneInputError(phoneMinError))
+    }
+
+    if (email.length <= 0) {
+      await dispatch(setSettingEmailInputError(emptyError))
+    } 
+    
+    if (email.length > 0 && validateEmail(email) === false) {
+      await dispatch(setSettingEmailInputError(emailInvalidError))
+    }
+
+    // Input is OK
+    if (name.length > 0) {
+      await dispatch(setSettingNameInputOK(false))
+    } 
+    
+    if (phone.length >= 8) {
+      await dispatch(setSettingPhoneInputOK(false))
+    }
+    
+    if (email.length > 0 && validateEmail(email)) {
+      await dispatch(setSettingEmailInputOK(false))
+    }
+    
+    if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true) {
+      console.log('pass through')
+      let BUID = getCookies(cookies)
+      if (BUID) {
+        let customerData = verifyCookies(BUID)
+        let customerId = customerData.id
+        dispatch(customerUpdateAccount(customerId, props))
+      } else {
+        dispatch(setLoadingStatus(false))
+        dispatch(setAuthorizationStatus(false))
+      }
+    } else {
+      dispatch(setLoadingStatus(false))
+    }
+  }
+}
+
+// To handle changes from input text if error
+const setSettingNameInputError = (data) => {
+  return {
+    type: 'SET_SETTING_NAME_ERROR',
+    payload: data
+  }
+}
+
+const setSettingPhoneInputError = (data) => {
+  return {
+    type: 'SET_SETTING_PHONE_ERROR',
+    payload: data
+  }
+}
+
+const setSettingEmailInputError = (data) => {
+  return {
+    type: 'SET_SETTING_EMAIL_ERROR',
+    payload: data
+  }
+}
+
+// To handle changes from input text if OK
+const setSettingNameInputOK = (data) => {
+  return {
+    type: 'SET_SETTING_NAME_OK',
+    payload: data
+  }
+}
+
+const setSettingPhoneInputOK = (data) => {
+  return {
+    type: 'SET_SETTING_PHONE_OK',
+    payload: data
+  }
+}
+
+const setSettingEmailInputOK = (data) => {
+  return {
+    type: 'SET_SETTING_EMAIL_OK',
+    payload: data
+  }
+}
+
+// To update customer account information
+export const customerUpdateAccount = (customerId, props) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let name = props.settingsCustomerName
+    let phone = props.settingsCustomerPhone
+    let email = props.settingsCustomerEmail
+    let history = props.history
+    let cookies = props.cookies
+
+    let firestore = getFirestore()
+    let customerRef = firestore.collection('customer').doc(customerId)
+
+    customerRef.get()
+    .then(doc => {
+      if (doc.exists) {
+        let id = doc.id
+        let { picture, password } = doc.data()
+        
+        let registeredStatus = ''
+        if (password.length <= 0) {
+          registeredStatus = false
+        } else {
+          registeredStatus = true
+        }
+
+        let customerData = {
+          id, name, email, phone, picture, registeredStatus
+        }      
+
+        if (customerId === id) {
+          let customerUpdateRef = firestore.collection('customer').doc(id)
+          
+          customerUpdateRef.update({
+            name,
+            phone,
+            email
+          })
+          .then(() => {
+            setNewCookies(cookies, customerData)
+            dispatch(setLoadingStatus(false))
+            history.push('/account')
+          })
+          .catch(err => {
+            console.log('ERROR: Update customer data', err)
+          })
+        }
+      } else {
+        dispatch(setAuthorizationStatus(false))
+      }
+    })
+    .catch(err => {
+      console.log('ERROR: Get customer data to update account information', err)
+    })
+  
+  }
+}
+
 
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------
 // // To get customer based on purpose. Originally to handle cookies since cookies only consist of id.
@@ -531,7 +742,7 @@ const setLoginError = (data) => {
 //   }
 // }
 
-export const updatePasswordCustomer = (customerData, props) => {
+export const customerUpdatePassword = (customerData, props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let customerId = customerData.id
     customerData.registeredStatus = true
@@ -852,38 +1063,3 @@ const getTransactionFailed = (data) => {
     payload: data
   }
 }
-
-// ---------------------------------------------- APPOINTMENT ACTION ----------------------------------------------
-export const getRealAppointmentBasedOnTransactions = (transactions) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    // let firestore = getFirestore()
-    // let transactionsWithAppointmentData = []
-
-    await Promise.all(transactions && transactions.map(transaction => {
-      // let staffId = transaction.appointment.staffId
-      // let date = transaction.appointment.date
-      // let appointmentRef = firestore.collection('appointment')
-      
-      // appointmentRef
-      // .where('staffId', '==', staffId)
-      // .where('date', '==', date)
-      // .onSnapshot(querySnapshot => {
-      //   querySnapshot.forEach(function(doc) {
-      //     if (doc.exists) {
-      //       let data = doc.data()
-      //       let id = doc.id
-      //       data['id'] = id
-      //       transaction['realAppointment'] = data
-      //       transactionsWithAppointmentData.push(transaction)
-      //       console.log('check HASIL', transactionsWithAppointmentData)
-      //     } 
-      //   })
-      // })
-      return ''
-    }))
-    await dispatch(getTransactionsBasedOnCustomerIdSuccess(transactions))
-  }
-}
-
-
-

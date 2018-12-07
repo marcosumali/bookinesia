@@ -44,7 +44,7 @@ class navBarPage extends Component {
           :
           this.props.match.path === '/account' ?
           <div className="Padding-t-20 Background-grey" style={{ height: window.innerHeight }}>
-            <MenuAccountPage currentParams={ this.props.match.params }/>
+            <MenuAccountPage currentParams={ this.props.match.params } history={ this.props.history }/>
           </div>
           :
           this.props.match.path === '/support' ?

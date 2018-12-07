@@ -36,6 +36,12 @@ let initialState = {
   loginErrorMessage: '',
   loadingStatus: false,
   authorizationStatus: true,
+  settingsCustomerName: '',
+  settingsCustomerEmail: '',
+  settingsCustomerPhone: '',
+  settingsCustomerNameError: false,
+  settingsCustomerEmailError: false,
+  settingsCustomerPhoneError: false,
 }
 
 const shopDataList = (state = { ...initialState }, action) => {
@@ -255,6 +261,60 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         authorizationStatus: action.payload
       })
+    case 'SET_SETTING_CUSTOMER_NAME':
+      return ({
+        ...state,
+        settingsCustomerName: action.payload,
+      })
+    case 'SET_SETTING_CUSTOMER_EMAIL':
+      return ({
+        ...state,
+        settingsCustomerEmail: action.payload,
+      })
+    case 'SET_SETTING_CUSTOMER_PHONE':
+      return ({
+        ...state,
+        settingsCustomerPhone: action.payload,
+      })
+    case 'SET_SETTING_FORM_VALUE_BUID':
+      return ({
+        ...state,
+        settingsCustomerName: action.payload.name,
+        settingsCustomerEmail: action.payload.email,
+        settingsCustomerPhone: action.payload.phone,
+      })
+    case 'SET_SETTING_NAME_ERROR':
+      return ({
+        ...state,
+        settingsCustomerNameError: action.payload
+      })
+    case 'SET_SETTING_EMAIL_ERROR':
+      return ({
+        ...state,
+        settingsCustomerEmailError: action.payload
+      })
+    case 'SET_SETTING_PHONE_ERROR':
+      return ({
+        ...state,
+        settingsCustomerPhoneError: action.payload
+      })
+    case 'SET_SETTING_NAME_OK':
+      return ({
+        ...state,
+        settingsCustomerNameError: action.payload
+      })
+    case 'SET_SETTING_EMAIL_OK':
+      return ({
+        ...state,
+        settingsCustomerEmailError: action.payload
+      })
+    case 'SET_SETTING_PHONE_OK':
+      return ({
+        ...state,
+        settingsCustomerPhoneError: action.payload
+      })
+
+
     default:
       return state;
   }

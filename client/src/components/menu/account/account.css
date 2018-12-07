@@ -17,8 +17,15 @@
 .Settings-button-box {
   border-radius: 5px;
   background-color: #5499c3;
-  padding: 3px 5px 3px 5px;
+  height: 1.7em !important;
+  width: 7em !important;
+  /* padding: 5px; */
 }
+
+.Form-box-white {
+  background-color: #ffffff;
+}
+
 
 .Settings-button-text {
   font-family: Montserrat;
@@ -33,7 +40,7 @@
 
 .Info-box {
   border: 1px solid #EAEAEA;
-  border-radius: 5px;
+  border-radius: 5px 5px 0px 0px;
 }
 
 .Account-info-header {
@@ -63,6 +70,14 @@
   padding: 3px;
   border-radius: 5px;
   width: 80%;
+  height: 2em;
+}
+
+.Blue-button-pass {
+  background-color: #5499c3;
+  padding: 3px;
+  border-radius: 0px 0px 5px 5px;
+  height: 2em;
 }
 
 .White-text {

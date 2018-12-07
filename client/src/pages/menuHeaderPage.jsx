@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import MenuHeader from '../components/menu/menuHeader/menuHeader';
 import TransactionDetails from '../components/menu/transaction/transactionDetails';
+import AccountSettings from '../components/menu/account/accountSettings';
 import { setParams } from '../store/firestore/shop/shop.actions';
 import { setCookies } from '../store/firestore/customer/customer.actions';
 
@@ -16,7 +17,7 @@ class menuHeaderPage extends Component {
   }
 
   render() {
-    // console.log('from header page', this.props) 
+    // console.log('from menu header page', this.props) 
     return (
       <div>
         {
@@ -26,6 +27,14 @@ class menuHeaderPage extends Component {
           >
             <MenuHeader history={ this.props.history } text="Transaction Details" />
             <TransactionDetails currentParams={ this.props.match.params } />
+          </div>
+          :
+          this.props.match.path === '/settings' ?
+          <div 
+          style={{ height: window.innerHeight, backgroundColor: '#EAEAEA' }}
+          >
+            <MenuHeader onPage="accountSettingsPage" history={ this.props.history } text="Account Settings" />
+            <AccountSettings history={ this.props.history } />
           </div>
           :
           <div></div>

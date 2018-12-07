@@ -9,7 +9,7 @@ class menuAccount extends Component {
     // console.log('from menu account', this.props)
     return (
       <div>
-        <AccountDetails />
+        <AccountDetails history={ this.props.history }/>
       </div>
     )
   }
