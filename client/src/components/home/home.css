@@ -1,0 +1,56 @@
+.First-section {
+  position: absolute;
+  z-index: 0;
+  border: 1px solid red;
+}
+
+.Second-section {
+  position: absolute;
+  z-index: 0;
+  /* background-color: #5499c3; */
+  border: 1px solid blue;
+}
+
+.Header-text-h1 {
+  font-family: Montserrat;
+  font-size: 1.25em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Header-description-box {
+  max-width: 20em;
+  max-height: 1.6em;
+}
+
+.Header-text {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.First-section-child {
+  z-index: 1;
+}
+
+.Image-over {
+  z-index: 2;
+  position: absolute;
+  margin-top: 53px;
+  /* margin-left: 58.5px; */
+}
+
+.Image-under {
+  z-index: 2;
+  position: absolute;
+}
+

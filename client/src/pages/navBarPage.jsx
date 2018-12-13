@@ -34,7 +34,7 @@ class navBarPage extends Component {
           </div>
           :
           this.props.match.path === '/' ?
-          <div className="Margin-t-20">
+          <div className="">
             <HomePage currentParams={ this.props.match.params }/>
           </div>
           :
