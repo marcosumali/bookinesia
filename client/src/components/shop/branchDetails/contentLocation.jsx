@@ -9,10 +9,19 @@ import MapContainer from './locationMap';
 class contentLocation extends Component {
   render() {
     // console.log('from content location', this.props)
+    
+    // Below are width and height settings that needs to match with size of MapContainer except height
+    const innerWidth = window.innerWidth
+    const setWidth = innerWidth - 40
+    const setHeight = setWidth / 3 * 2
+    const mapStyles = {}
+
+    mapStyles['width'] = `${setWidth}px`
+    mapStyles['height'] = `${setHeight}px`
+
     return (
       <div className="row No-margin No-padding">
         <div className="col s12 No-padding Margin-b-8" style={ mapStyles }>
-          {/* <img className="Location-img" src={ process.env.PUBLIC_URL + '/assets/img/dummy/googlemap.png' } alt="location"/> */}
           <MapContainer branch={ this.props.branch }/>
         </div>
         <div className="col s12 No-padding">
@@ -22,16 +31,6 @@ class contentLocation extends Component {
     )
   }
 }
-
-// Below are width and height settings that needs to match with size of MapContainer except height
-const innerWidth = window.innerWidth
-const setWidth = innerWidth - 40
-const setHeight = setWidth / 3 * 2
-const mapStyles = {}
-
-mapStyles['width'] = `${setWidth}px`
-mapStyles['height'] = `${setHeight}px`
-
 
 const mapStateToProps = state => {
   return {

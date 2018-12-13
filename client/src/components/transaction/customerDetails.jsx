@@ -230,9 +230,9 @@ class customerDetails extends Component {
                   }
                 </div>
               </form>
-              <div className="col s12 No-margin No-padding">
+              {/* <div className="col s12 No-margin No-padding">
                 <p className="No-margin Confirm-text Text-justify">I hereby declare to agree with <span className="Text-underline">Cancellation Policy</span>. I also agree to pay in total of stated amount.</p>
-              </div>
+              </div> */}
             </div>
 
           </div>

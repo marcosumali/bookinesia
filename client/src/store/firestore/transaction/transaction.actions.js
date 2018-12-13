@@ -950,7 +950,7 @@ export const createNewTransaction = (customerId, props) => {
       .add(newTransaction)
       .then(ref => {
         let refId = ref.id
-        dispatch(setLoadingStatus(false))
+        // dispatch(setLoadingStatus(false)) // If success no need to change to false since it will be redirected to new page
         window.location.assign(`/book/success/${refId}`)
         dispatch(updateAppointmentCurrentTransaction(appointment))
       })

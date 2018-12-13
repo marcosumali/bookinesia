@@ -1,4 +1,18 @@
 /* ---------- General Component ---------- */
+.Dot-10-blue {
+  height: 0.625em;
+  width: 0.625em;
+  border-radius: 50%;
+  background-color: #5499c3;
+}
+
+.Dot-10-grey {
+  height: 0.625em;
+  width: 0.625em;
+  border-radius: 50%;
+  background-color: #EAEAEA;
+}
+
 .Background-grey {
   background-color: #EAEAEA;
 }

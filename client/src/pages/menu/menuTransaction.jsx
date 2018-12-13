@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 import TransactionCard from '../../components/menu/transaction/transactionCard';
 import TransactionLoadingCard from '../../components/menu/transaction/transactionCardLoading';
 import EmptyTransactionCard from '../../components/menu/transaction/emptyTransactionCard';
-import TransactionHeader from '../../components/menu/transaction/transactionHeader';
+// import TransactionHeader from '../../components/menu/transaction/transactionHeader';
 import { handleCookies } from '../../store/firestore/customer/customer.actions';
 
 class menuTransaction extends Component {
@@ -21,7 +21,7 @@ class menuTransaction extends Component {
         {
           this.props.authenticationStatus ?
           <div>
-            <TransactionHeader />
+            {/* <TransactionHeader /> */}
             <div>
               {
                 this.props.transactionsLoading ?
