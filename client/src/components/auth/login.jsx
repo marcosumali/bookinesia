@@ -11,6 +11,7 @@ import { handleCookies, handleLoginInputChanges, customerLoginInputValidation } 
 import EyeSvg from '../svg/eyeSvg';
 import EyeOffSvg from '../svg/eyeOffSvg';
 import AuthButton from '../button/authButton';
+import { loginDisableError, getAuthStatus } from '../../store/firestore/auth/auth.actions';
 
 class loginComponent extends Component {
   constructor() {
@@ -62,7 +63,7 @@ class loginComponent extends Component {
   
           <form className="col s12 No-margin No-padding">
             {/* Phone Input */}
-            <div className="input-field ">
+            {/* <div className="input-field ">
               {
                 this.props.customerPhoneError !== false?
                 <div>
@@ -82,6 +83,33 @@ class loginComponent extends Component {
                     <div>
                       <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerPhone }/>
                       <label htmlFor="phone" className="Form-text">Phone No.</label>
+                    </div>
+                  }
+                </div>
+              }
+            </div> */}
+
+            {/* Email Input */}
+            <div className="input-field">
+              {
+                this.props.customerEmailError !== false?
+                <div>
+                  <input id="email" type="email" className="Input-error validate No-margin" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerEmail }/>
+                  <label htmlFor="email" className="Form-text active">Email</label>
+                  <span className="Input-info-error">{ this.props.customerEmailError }</span>
+                </div>
+                :
+                <div>
+                  {
+                    this.props.customerEmail !== "" ?
+                    <div>
+                      <input id="email" type="email" className="validate No-margin valid" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerEmail }/>
+                      <label htmlFor="email" className="Form-text active">Email</label>
+                    </div>
+                    :
+                    <div>
+                      <input id="email" type="email" className="validate No-margin" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerEmail }/>
+                      <label htmlFor="email" className="Form-text">Email</label>
                     </div>
                   }
                 </div>
@@ -148,6 +176,12 @@ class loginComponent extends Component {
   
           <div className="col s12 No-margin No-padding Text-justify Margin-b-24 Margin-t-20">
             <div className="Text-error">{ this.props.loginErrorMessage }</div>
+            {
+              this.props.loginErrorMessage === loginDisableError ?
+              <div className="Text-error">Please contact <a style={{ color: '#D00', textDecoration: 'underline' }} href="/support">our support team</a>.</div>
+              :
+              <div></div>
+            }
           </div>
             
           <AuthButton onPage="loginPage" history={ this.props.history } />
@@ -161,13 +195,14 @@ class loginComponent extends Component {
 
 const mapStateToProps = state => {
   return {
+    // customerPhone: state.user.loginCustomerPhone,
+    // customerPhoneError: state.user.loginCustomerPhoneError,
     loginErrorMessage: state.user.loginErrorMessage,
-    customerPhone: state.user.loginCustomerPhone,
+    customerEmail: state.user.loginCustomerEmail,
+    customerEmailError: state.user.loginCustomerEmailError,
     customerPassword: state.user.loginCustomerPassword,
-    customerPhoneError: state.user.loginCustomerPhoneError,
     customerPasswordError: state.user.loginCustomerPasswordError,
     cookies: state.user.cookies,
-    loginStatus: state.user.loginStatus,
     loadingStatus: state.user.loadingStatus,
     authenticationStatus: state.user.authenticationStatus
   }
@@ -176,7 +211,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => bindActionCreators({
   handleLoginInputChanges,
   handleCookies,
-  customerLoginInputValidation
+  customerLoginInputValidation,
+  getAuthStatus
 }, dispatch)
 
 

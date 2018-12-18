@@ -78,7 +78,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => bindActionCreators({
   setParams,
   setCookies,
-  setWindow
+  setWindow,
 }, dispatch)
 
 

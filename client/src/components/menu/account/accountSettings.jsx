@@ -8,11 +8,35 @@ import '../../../assets/css/materialize/form.css';
 import './account.css';
 import { handleCookies, handleSettingInputChanges } from '../../../store/firestore/customer/customer.actions';
 import AccountCircleSvg from '../../svg/accountCircleSvg';
+import EyeSvg from '../../svg/eyeSvg';
+import EyeOffSvg from '../../svg/eyeOffSvg';
 import AuthButton from '../../button/authButton';
 
 class accountSettings extends Component {
+  constructor() {
+    super()
+    this.state = {
+      visibilityStatus: false
+    }
+  }
+
   componentWillMount() {
     this.props.handleCookies('get account settings', this.props.cookies)
+  }
+
+  passwordVisibility() {
+    let x = document.getElementById("password")
+    if (x.type === "password") {
+      x.type = "text"
+      this.setState({
+        'visibilityStatus': true
+      })
+    } else {
+      x.type = "password"
+      this.setState({
+        'visibilityStatus': false
+      })
+    }
   }
 
   render() {
@@ -120,6 +144,66 @@ class accountSettings extends Component {
                     }
                   </div>
 
+                  <div className="Text-justify Grey-text-small">Please input your password to validate the changes.</div>
+                  {/* Password Input */}
+                  <div className="col s12 No-margin No-padding Margin-b-24">
+                    <div className="input-field">
+                      {
+                        this.props.settingsCustomerPasswordError !== false?
+                        <div>
+                          <div className="col s11 No-margin No-padding">
+                            <input id="password" type="password" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
+                            <label htmlFor="password" className="Form-text active">Password</label>
+                            <span className="Input-info-error">{ this.props.settingsCustomerPasswordError }</span>
+                          </div>
+                          <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                            {
+                              this.state.visibilityStatus ?
+                              <EyeSvg width="25px" height="22px" color="#666666" />
+                              :
+                              <EyeOffSvg width="25px" height="22px" color="#666666" />
+                            }
+                          </div>
+                        </div>
+                        :
+                        <div>
+                          {
+                            this.props.settingsCustomerPassword !== "" ?
+                            <div>
+                                <div className="col s11 No-margin No-padding">
+                                  <input id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
+                                  <label htmlFor="password" className="Form-text active">Password</label>
+                                </div>
+                                <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                  {
+                                    this.state.visibilityStatus ?
+                                    <EyeSvg width="25px" height="22px" color="#666666" />
+                                    :
+                                    <EyeOffSvg width="25px" height="22px" color="#666666" />
+                                  }
+                                </div>
+                            </div>
+                            :
+                            <div>
+                              <div className="col s11 No-margin No-padding">
+                                <input id="password" type="password" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword } />
+                                <label htmlFor="password" className="Form-text">Password</label>
+                              </div>
+                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                {
+                                  this.state.visibilityStatus ?
+                                  <EyeSvg width="25px" height="22px" color="#666666" />
+                                  :
+                                  <EyeOffSvg width="25px" height="22px" color="#666666" />
+                                }
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+
                   {/* Save Button */}
                   <AuthButton onPage="settingsPage" history={ this.props.history }/>
 
@@ -144,9 +228,11 @@ const mapStateToProps = (state, ownProps) => {
     settingsCustomerName: state.user.settingsCustomerName,
     settingsCustomerEmail: state.user.settingsCustomerEmail,
     settingsCustomerPhone: state.user.settingsCustomerPhone,
+    settingsCustomerPassword: state.user.settingsCustomerPassword,
     settingsCustomerNameError: state.user.settingsCustomerNameError,
     settingsCustomerEmailError: state.user.settingsCustomerEmailError,
     settingsCustomerPhoneError: state.user.settingsCustomerPhoneError,
+    settingsCustomerPasswordError: state.user.settingsCustomerPasswordError,
     authenticationStatus: state.user.authenticationStatus,
     authorizationStatus: state.user.authorizationStatus,
   }

@@ -13,12 +13,13 @@ import CloseSvg from '../svg/closeSvg';
 import RegisterButton from './registerButton';
 import LoginButton from './loginButton';
 import { handleCookies } from '../../store/firestore/customer/customer.actions';
+import { getAuthStatus } from '../../store/firestore/auth/auth.actions';
 
 class navbar extends Component {
   componentWillMount() {
     this.props.handleCookies('get account', this.props.cookies, window.location.pathname)
   }
-
+  
   render() {
     const windowInnerWidth = window.innerWidth
     // console.log('from navbar component', this.props)
@@ -151,7 +152,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  handleCookies
+  handleCookies,
+  getAuthStatus,
 }, dispatch)
 
 

@@ -43,7 +43,7 @@ class authButton extends Component {
                 <LoadingInfiniteSvg width="24px" height="24px"/>
               </div>
               :
-              <div className="Container-center Auth-button-box" onClick={ this.props.registerStatus === false? () => this.props.customerRegisterInputValidation(this.props) : () => this.doNothing }>
+              <div className="Container-center Auth-button-box" onClick={ () => this.props.customerRegisterInputValidation(this.props) }>
                 <div className="Auth-button-text">Register</div>
               </div>
              }
@@ -92,18 +92,18 @@ const mapStateToProps = state => {
     window: state.user.window,
     // Login Section
     loginCustomerPhone: state.user.loginCustomerPhone,
+    loginCustomerEmail: state.user.loginCustomerEmail,
     loginCustomerPassword: state.user.loginCustomerPassword,
-    loginStatus: state.user.loginStatus,
     // Register Section
     customerName: state.user.registerCustomerName,
     customerEmail: state.user.registerCustomerEmail,
     customerPhone: state.user.registerCustomerPhone,
     customerPassword: state.user.registerCustomerPassword,
-    registerStatus: state.user.registerStatus,
     // Settings Section
     settingsCustomerName: state.user.settingsCustomerName,
     settingsCustomerEmail: state.user.settingsCustomerEmail,
     settingsCustomerPhone: state.user.settingsCustomerPhone,
+    settingsCustomerPassword: state.user.settingsCustomerPassword,
     // Change Password Section
     oldPassword: state.user.oldPassword,
     newPassword: state.user.newPassword,
