@@ -20,6 +20,7 @@ class transactionConfirm extends Component {
 
         <TransactionCard section="Transaction Details" />
 
+        {/* Break line is set to anticipate fix bottom over-shadow contents */}
         <br></br>
         <br></br>
         <br></br>

@@ -15,12 +15,17 @@ import * as serviceWorker from './serviceWorker';
 import allReducers from './store';
 import firebaseConfig from './config/firebase.config';
 
+const rrfConfig = {
+  useFirestoreForProfile: true,
+  userProfile: 'customer', 
+}
+
 const store = createStore(
   allReducers,
   compose(
     applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
     reduxFirestore(firebaseConfig),
-    reactReduxFirebase(firebaseConfig)
+    reactReduxFirebase(firebaseConfig, rrfConfig)
   )
 );
 

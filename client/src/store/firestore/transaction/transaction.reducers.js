@@ -31,7 +31,7 @@ let initialState = {
   hasBookStatus: false,
 }
 
-const shopDataList = (state = { ...initialState }, action) => {
+const transactionDataList = (state = { ...initialState }, action) => {
   switch (action.type) {
     case 'CLEAR_SHOP_STATE':
       return ({
@@ -224,4 +224,4 @@ const shopDataList = (state = { ...initialState }, action) => {
   }
 }
 
-export default shopDataList;
+export default transactionDataList;

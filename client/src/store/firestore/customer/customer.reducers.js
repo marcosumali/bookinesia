@@ -27,22 +27,24 @@ let initialState = {
   registerCustomerEmailError: false,
   registerCustomerPhoneError: false,
   registerCustomerPasswordError: false,
-  registerStatus: false,
   authenticationStatus: false,
   loginCustomerPhone: '',
+  loginCustomerEmail: '',
   loginCustomerPassword: '',
   loginCustomerPhoneError: false,
+  loginCustomerEmailError: false,
   loginCustomerPasswordError: false,
-  loginStatus: false,
   loginErrorMessage: '',
   loadingStatus: false,
   authorizationStatus: true,
   settingsCustomerName: '',
   settingsCustomerEmail: '',
   settingsCustomerPhone: '',
+  settingsCustomerPassword: '',
   settingsCustomerNameError: false,
   settingsCustomerEmailError: false,
   settingsCustomerPhoneError: false,
+  settingsCustomerPasswordError: false,
   oldPassword: '',
   oldPasswordError: false,
   newPassword: '',
@@ -52,7 +54,7 @@ let initialState = {
   changePasswordErrors: [],
 }
 
-const shopDataList = (state = { ...initialState }, action) => {
+const customerDataList = (state = { ...initialState }, action) => {
   switch (action.type) {
     case 'CLEAR_USER_STATE':
       return ({
@@ -167,11 +169,6 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         registerCustomerPassword: action.payload,
       })
-    case 'SET_REGISTER_STATUS_SUCCESS':
-    return ({
-      ...state,
-      registerStatus: action.payload
-    })
     case 'SET_REGISTER_NAME_ERROR':
       return ({
         ...state,
@@ -234,6 +231,11 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         loginCustomerPassword: action.payload,
       })
+    case 'SET_LOGIN_CUSTOMER_EMAIL':
+      return ({
+        ...state,
+        loginCustomerEmail: action.payload,
+      })
     case 'SET_LOGIN_PHONE_ERROR':
       return ({
         ...state,
@@ -243,6 +245,11 @@ const shopDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         loginCustomerPasswordError: action.payload
+      })
+    case 'SET_LOGIN_EMAIL_ERROR':
+      return ({
+        ...state,
+        loginCustomerEmailError: action.payload
       })
     case 'SET_LOGIN_PHONE_OK':
       return ({
@@ -254,10 +261,10 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         loginCustomerPasswordError: action.payload
       })
-    case 'SET_LOGIN_STATUS_SUCCESS':
+    case 'SET_LOGIN_EMAIL_OK':
       return ({
         ...state,
-        loginStatus: action.payload
+        loginCustomerEmailError: action.payload
       })
     case 'SET_LOGIN_ERROR':
       return ({
@@ -289,6 +296,11 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         settingsCustomerPhone: action.payload,
       })
+    case 'SET_SETTING_CUSTOMER_PASSWORD':
+      return ({
+        ...state,
+        settingsCustomerPassword: action.payload,
+      })
     case 'SET_SETTING_FORM_VALUE_BUID':
       return ({
         ...state,
@@ -311,6 +323,11 @@ const shopDataList = (state = { ...initialState }, action) => {
         ...state,
         settingsCustomerPhoneError: action.payload
       })
+    case 'SET_SETTING_PASSWORD_ERROR':
+      return ({
+        ...state,
+        settingsCustomerPasswordError: action.payload
+      })
     case 'SET_SETTING_NAME_OK':
       return ({
         ...state,
@@ -325,6 +342,11 @@ const shopDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         settingsCustomerPhoneError: action.payload
+      })
+    case 'SET_SETTING_PASSWORD_OK':
+      return ({
+        ...state,
+        settingsCustomerPasswordError: action.payload
       })
     case 'SET_OLD_PASSWORD':
       return ({
@@ -382,4 +404,4 @@ const shopDataList = (state = { ...initialState }, action) => {
   }
 }
 
-export default shopDataList;
+export default customerDataList;

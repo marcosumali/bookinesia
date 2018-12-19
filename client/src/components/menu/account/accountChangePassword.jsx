@@ -43,7 +43,7 @@ class accountChangePassword extends Component {
     return (
       <div>
         {
-          this.props.authenticationStatus && this.props.authorizationStatus ?
+          this.props.authenticationStatus && this.props.authorizationStatus && this.props.user.registeredStatus ?
           <div className="row No-margin">
             <div className="col s12 No-margin No-padding Form-box-white Padding-10 Margin-t-20">
     
@@ -257,6 +257,7 @@ class accountChangePassword extends Component {
 
 const mapStateToProps = state => {
   return {
+    user: state.user.user,
     oldPassword: state.user.oldPassword,
     oldPasswordError: state.user.oldPasswordError,
     newPassword: state.user.newPassword,

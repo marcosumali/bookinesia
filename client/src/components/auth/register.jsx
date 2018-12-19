@@ -231,7 +231,6 @@ const mapStateToProps = state => {
     customerPhoneError: state.user.registerCustomerPhoneError,
     customerPasswordError: state.user.registerCustomerPasswordError,
     cookies: state.user.cookies,
-    registerStatus: state.user.registerStatus,
     authenticationStatus: state.user.authenticationStatus,
     userExists: state.user.userExists,
   }
