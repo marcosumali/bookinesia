@@ -257,7 +257,7 @@ export const getServicesData = (shopName, branchName) => {
         }
       })
       .catch(err => {
-        console.log('ERROR:Get branches data', err)
+        console.log('ERROR:Get services of branch data', err)
       })
   }
 }
@@ -304,7 +304,7 @@ export const getStaffsData = (shopName, branchName) => {
         }
       })
       .catch(err => {
-        console.log('ERROR:Get branches data', err)
+        console.log('ERROR:Get staffs of branch data', err)
       })
   }
 }
@@ -354,7 +354,7 @@ const getStaffScheduleData = (staffsData) => {
           }
         })
         .catch(err => {
-          console.log('ERROR:Get specific branches data', err)
+          console.log('ERROR:Get staff schedules data', err)
         })
     }))
     await dispatch(getStaffsDataSuccess(newStaffsData))

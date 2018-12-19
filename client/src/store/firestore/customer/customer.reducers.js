@@ -54,7 +54,7 @@ let initialState = {
   changePasswordErrors: [],
 }
 
-const shopDataList = (state = { ...initialState }, action) => {
+const customerDataList = (state = { ...initialState }, action) => {
   switch (action.type) {
     case 'CLEAR_USER_STATE':
       return ({
@@ -404,4 +404,4 @@ const shopDataList = (state = { ...initialState }, action) => {
   }
 }
 
-export default shopDataList;
+export default customerDataList;

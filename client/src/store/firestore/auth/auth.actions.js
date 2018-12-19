@@ -15,6 +15,9 @@ import {
   passwordMinError,
   createNewCustomer,
 } from '../customer/customer.actions';
+import {
+  getCustomerByPhoneAndCreateNewTransaction,
+} from '../transaction/transaction.actions';
 import swal from 'sweetalert';
 
 export const loginDisableError = `Your account has been disabled. We're sorry for the inconvenience.`
@@ -30,6 +33,14 @@ export const getAuthStatus = () => {
         dispatch(setAuthenticationStatus(false))
       }
     })
+  }
+}
+
+export const getUserProfile = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let firebase = getFirebase()
+    let user = firebase.auth().currentUser;
+    return user
   }
 }
 
@@ -110,6 +121,30 @@ export const authPasswordValidation = (customerData, oldPassword) => {
   }  
 }
 
+export const authEmailValidation = (email) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let validateResult = 'none'
+    let password = 'no-password'
+
+    let firebase = getFirebase()
+    await firebase.auth().signInWithEmailAndPassword(email, password)
+    .catch(err => {
+      // TRUE means user exist while FALSE means user not exist
+      if (err.code === 'auth/user-not-found') {
+        validateResult = false
+      } else if (err.code === 'auth/wrong-password') {
+        validateResult = true
+      } else if (err.code === 'auth/invalid-email') {
+        // Do nothing
+      } else if (err.code === 'auth/user-disabled') {
+        validateResult = true
+      } 
+    })
+
+    return validateResult
+  }
+}
+
 export const authUpdateEmail = (customerData, password, newEmail, props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firebase = getFirebase()
@@ -162,6 +197,49 @@ export const authUpdatePassword = (customerData, oldPassword, newPassword, histo
   }
 }
 
+export const authSignInAnonymously = (props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let email = props.customerEmail
+    let firebase = getFirebase()
+    
+    firebase.auth().signInAnonymously()
+    .then(response => {
+      let uid = response.user.uid
+      let user = firebase.auth().currentUser
+
+      user.updateEmail(email)
+      .then(function() {
+        dispatch(getCustomerByPhoneAndCreateNewTransaction(uid, props))
+      }).catch(function(err) {
+        console.log('ERROR: update profile anonymous', err)
+      })
+    })
+    .catch(function(err) {
+      console.log('ERROR: sign in guest', err)
+    })
+  }
+}
+
+export const authMigrateAnonymousUser = (props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let email = props.customerEmail
+    let password = props.customerPassword
+
+    let firebase = getFirebase()
+    let credential = firebase.auth.EmailAuthProvider.credential(email, password)
+    
+    firebase.auth().currentUser.linkAndRetrieveDataWithCredential(credential)
+    .then(function(usercred) {
+      let uid = usercred.user.uid
+      dispatch(migrateRegisteredStatus(uid, props))
+    }, function(err) {
+      console.log("ERROR: migrating account", err);
+    });
+
+  }
+}
+
+
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------
 export const afterLoginValidation = (uid, email, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -171,8 +249,7 @@ export const afterLoginValidation = (uid, email, props) => {
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer').doc(uid)
 
-    customerRef
-    .get()
+    customerRef.get()
     .then(doc => {
       if (doc.exists) {
         let id = doc.id
@@ -191,5 +268,35 @@ export const afterLoginValidation = (uid, email, props) => {
     .catch(err => {
       console.log('ERROR: customer login validation', err)
     })
+  }
+}
+
+export const migrateRegisteredStatus = (id, props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let window = props.window
+    let cookies = props.cookies
+    let name = props.customerName
+    let phone = props.customerPhone
+    let email = props.customerEmail
+    let picture = ''
+    let registeredStatus = true
+    
+    let firestore = getFirestore()
+    let customerRef = firestore.collection('customer').doc(id)
+
+    customerRef.update({
+      registeredStatus
+    })
+    .then(() => {
+      let customerData = {
+        id, name, email, phone, picture, registeredStatus
+      }
+      setNewCookies(cookies, customerData)
+      window.location.assign('/')
+    })
+    .catch(err => {
+      console.log('ERROR: updating migration status', err)
+    })
+
   }
 }

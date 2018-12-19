@@ -44,7 +44,7 @@ class accountSettings extends Component {
     return (
       <div className="row No-margin">
         {
-          this.props.authenticationStatus && this.props.authorizationStatus ?
+          this.props.authenticationStatus && this.props.authorizationStatus && this.props.user.registeredStatus ?
           <div>
             {
               this.props.userLoading ?

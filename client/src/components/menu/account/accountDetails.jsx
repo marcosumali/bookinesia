@@ -46,16 +46,21 @@ class accountDetails extends Component {
                     </div>
                     <div className="col s12 No-margin No-padding">
                       <div className="col s5 No-margin No-padding">
-                        <div className="col s12 No-margin No-padding Container-center Settings-button-box Container-one-line">
-                          <div className="Container-center Margin-r-4">
-                            <SettingSvg width="18px" height="18px" color="#ffffff" />
-                          </div>
+                        {
+                          this.props.user.registeredStatus ?
                           <Link to="/settings">
-                            <div className="Container-center">
-                              <div className="Settings-button-text">Settings</div>
+                            <div className="col s12 No-margin No-padding Container-center Settings-button-box Container-one-line">
+                              <div className="Container-center Margin-r-4">
+                                <SettingSvg width="18px" height="18px" color="#ffffff" />
+                              </div>
+                              <div className="Container-center">
+                                <div className="Settings-button-text">Settings</div>
+                              </div>
                             </div>
                           </Link>
-                        </div>
+                          :
+                          <div></div>
+                        }
                       </div>
                     </div>
                   </div>

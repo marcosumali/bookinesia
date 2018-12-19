@@ -9,7 +9,7 @@ import { returnWhatDay, returnWhatMonth } from '../../../helpers/date';
 
 class transactionCard extends Component {
   render() {
-    console.log('from transaction card', this.props)
+    // console.log('from transaction card', this.props)
     return (
       <div>
         <div className="row No-margin Card-container">

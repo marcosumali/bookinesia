@@ -7,12 +7,16 @@ import {
   authUpdatePassword, 
   authUpdateEmail, 
   authCreateUser, 
+  authEmailValidation,
+  getUserProfile,
+  authMigrateAnonymousUser,
 } from '../auth/auth.actions';
 import swal from 'sweetalert';
 
-const bcrypt = require('bcryptjs')
-const ENV_SALTROUNDS = Number(process.env.REACT_APP_SALTROUNDS)
-const SALTROUNDS = bcrypt.genSaltSync(ENV_SALTROUNDS)
+// // For Manual Authentication Purposes
+// const bcrypt = require('bcryptjs')
+// const ENV_SALTROUNDS = Number(process.env.REACT_APP_SALTROUNDS)
+// const SALTROUNDS = bcrypt.genSaltSync(ENV_SALTROUNDS)
 
 const emptyError = 'This section must be filled.'
 const phoneMinError = 'Phone number is too short, min. 8 characters.'
@@ -20,7 +24,7 @@ const phoneRegisteredError = 'Phone number is already registered. Please sign in
 export const passwordMinError = 'Password is too short, min. 8 characters.'
 export const emailInvalidError = 'Invalid email.'
 export const emailRegisteredError = 'Email is already registered. Please sign in.'
-export const loginError = 'The phone number or password you entered is incorrect. Please try again.'
+export const loginError = 'The email or password you entered is incorrect. Please try again.'
 const incorrectPasswordError = 'Incorrect password.'
 const oldPasswordError = 'The old password you entered is incorrect.'
 const samePasswordError = `The new password can't be the same with your old password.`
@@ -85,6 +89,7 @@ export const handleCookies = (purpose, cookies, data) => {
       }
     } else {
       dispatch(setAuthenticationStatus(false))
+      dispatch(setAuthorizationStatus(false))
       dispatch(setCustomerDataFailed(false))
     }
   }
@@ -184,44 +189,6 @@ const setRegisterCustomerPassword = (data) => {
   }
 }
 
-// To Handle Input Changes During Login
-export const handleLoginInputChanges = (e) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let target = e.target
-    let inputId = target.id
-    let value = target.value
-
-    if (inputId === 'phone') {
-      dispatch(setLoginCustomerPhone(value))
-    } else if (inputId === 'password') {
-      dispatch(setLoginCustomerPassword(value))
-    } else if (inputId === 'email') {
-      dispatch(setLoginCustomerEmail(value))
-    }
-  }
-}
-
-const setLoginCustomerPhone = (data) => {
-  return {
-    type: 'SET_LOGIN_CUSTOMER_PHONE',
-    payload: data
-  }
-}
-
-const setLoginCustomerPassword = (data) => {
-  return {
-    type: 'SET_LOGIN_CUSTOMER_PASSWORD',
-    payload: data
-  }
-}
-
-const setLoginCustomerEmail = (data) => {
-  return {
-    type: 'SET_LOGIN_CUSTOMER_EMAIL',
-    payload: data
-  }
-}
-
 // REGISTRATION
 // To validate customer's input form of inputting customer information
 export const customerRegisterInputValidation = (props) => {
@@ -231,6 +198,12 @@ export const customerRegisterInputValidation = (props) => {
     let email = props.customerEmail
     let password = props.customerPassword
     let cookies = props.cookies
+    
+    // Get user data to determine the error status if user registered status is true
+    let userByPhone = await dispatch(getCustomerByField('phone', phone))
+    let authUser = await dispatch(getUserProfile())
+    let userByEmail = await dispatch(getCustomerById(authUser.uid))
+    userByEmail['email'] = authUser.email
 
     // To set loading status as true
     await dispatch(setLoadingStatus(true))
@@ -249,7 +222,14 @@ export const customerRegisterInputValidation = (props) => {
     }
 
     let customerExistenceBasedOnPhone = await dispatch(validateCustomerExistence('phone', phone))
+    if (userByPhone.registeredStatus === false) {
+      customerExistenceBasedOnPhone = false
+    }
+    if (customerExistenceBasedOnPhone) {
+      dispatch(setRegisterPhoneInputError(phoneRegisteredError))
+    }
     // console.log('check phone', customerExistenceBasedOnPhone)
+
 
     if (password.length <= 0) {
       await dispatch(setRegisterPasswordInputError(emptyError))
@@ -267,12 +247,23 @@ export const customerRegisterInputValidation = (props) => {
       await dispatch(setRegisterEmailInputError(emailInvalidError))
     }
 
-    let customerData = { email }
-    let customerExistenceBasedOnEmail = await dispatch(authPasswordValidation(customerData, password))
-    // console.log('check email', customerExistenceBasedOnEmail)
+    let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
+    // LOGIC:
+    // 1. If based on authEmailValidation to firebase auth return true, it means the user has been signed in to Auth
+    // 2. Next need to check whether user by email have registeredStatus of true. If false, means user has not registered.
+    // 3. Since we can't check email profile to firebase auth without password access, if userByEmail.email is not the same with email
+    // and from point 1 return true, it means that the user is truely have been registered
+    if (userByEmail.registeredStatus === false) {
+      if (customerExistenceBasedOnEmail && userByEmail.email !== email) {
+        customerExistenceBasedOnEmail = true
+      } else {
+        customerExistenceBasedOnEmail = false
+      }
+    }
     if (customerExistenceBasedOnEmail) {
       dispatch(setRegisterEmailInputError(emailRegisteredError))
     }
+    // console.log('check email', customerExistenceBasedOnEmail)
 
     // Input is OK
     if (name.length > 0) {
@@ -297,8 +288,8 @@ export const customerRegisterInputValidation = (props) => {
         let BUID = getCookies(cookies)
         if (BUID) {
           let customerData = verifyCookies(BUID)
-          if (customerData.registeredStatus) {
-            // dispatch(customerUpdatePassword(customerData, props))
+          if (customerData.registeredStatus === false) {
+            dispatch(authMigrateAnonymousUser(props))
           } else {
             dispatch(authCreateUser(props))
           }
@@ -372,31 +363,41 @@ const setRegisterPasswordInputOK = (data) => {
   }
 }
 
-// To validate customer existence and ensure each customer only have 1 account before register new account
-const validateCustomerExistence = (field, value) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-    let customerExistence = 'none'
+// To Handle Input Changes During Login
+export const handleLoginInputChanges = (e) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let target = e.target
+    let inputId = target.id
+    let value = target.value
 
-    await customerRef.where(field, '==', value).get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          customerExistence = true
-          if (field === 'phone') {
-            dispatch(setRegisterPhoneInputError(phoneRegisteredError))
-          } 
-        })
-      } else {
-        customerExistence = false
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: check customer data', err)
-    })
+    if (inputId === 'phone') {
+      dispatch(setLoginCustomerPhone(value))
+    } else if (inputId === 'password') {
+      dispatch(setLoginCustomerPassword(value))
+    } else if (inputId === 'email') {
+      dispatch(setLoginCustomerEmail(value))
+    }
+  }
+}
 
-    return customerExistence
+const setLoginCustomerPhone = (data) => {
+  return {
+    type: 'SET_LOGIN_CUSTOMER_PHONE',
+    payload: data
+  }
+}
+
+const setLoginCustomerPassword = (data) => {
+  return {
+    type: 'SET_LOGIN_CUSTOMER_PASSWORD',
+    payload: data
+  }
+}
+
+const setLoginCustomerEmail = (data) => {
+  return {
+    type: 'SET_LOGIN_CUSTOMER_EMAIL',
+    payload: data
   }
 }
 
@@ -910,30 +911,76 @@ const setNewPasswordConfirmInputOK = (data) => {
 }
 
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------
-// To handle customer that has not register previously but have transactions
-export const customerUpdatePassword = (customerData, props) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let customerId = customerData.id
-    customerData.registeredStatus = true
+// To validate customer existence and ensure each customer only have 1 account before register new account
+export const validateCustomerExistence = (field, value) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(customerId)
-    let password = props.customerPassword
-    let cookies = props.cookies
+    let customerRef = firestore.collection('customer')
+    let customerExistence = 'none'
 
-    let hashedPassword = bcrypt.hashSync(password, SALTROUNDS)
-
-    customerRef.update({
-      password: hashedPassword
-    })
-    .then(() => {
-      setNewCookies(cookies, customerData)
-      window.location.assign('/')
-      dispatch(setLoadingStatus(false))
+    await customerRef.where(field, '==', value).get()
+    .then(snapshot => {
+      if (snapshot.empty === false) {
+        snapshot.forEach(doc => {
+          customerExistence = true
+        })
+      } else {
+        customerExistence = false
+      }
     })
     .catch(err => {
-      console.log('ERROR: register password', err)
+      console.log('ERROR: validate customer data', err)
     })
 
+    return customerExistence
+  }
+}
+
+// Get single customer data by field provided
+export const getCustomerByField = (field, value) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let firestore = getFirestore()
+    let customerRef = firestore.collection('customer')
+    let user = 'not-found'
+
+    await customerRef.where(field, '==', value).get()
+    .then(snapshot => {
+      if (snapshot.empty === false) {
+        snapshot.forEach(doc => {
+          let id = doc.id
+          let data = doc.data()
+          data['id'] = id
+          user = data
+        })
+      } 
+    })
+    .catch(err => {
+      console.log('ERROR: get customer by field', err)
+    })
+
+    return user
+  }
+}
+
+// Get single customer data by ID
+export const getCustomerById = (uid) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let firestore = getFirestore()
+    let customerRef = firestore.collection('customer').doc(uid)
+    let user = 'not-found'
+
+    await customerRef.get()
+    .then(doc => {
+      let id = doc.id
+      let data = doc.data()
+      data['id'] = id
+      user = data
+    })
+    .catch(err => {
+      console.log('ERROR: get customer by ID', err)
+    })
+
+    return user
   }
 }
 
@@ -956,6 +1003,7 @@ export const createNewCustomer = (uid, props) => {
 
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer').doc(uid)
+    
     customerRef.set(newCustomer)
     .then(() => {
       let customerData = {
@@ -981,6 +1029,7 @@ export const getTransactionsBasedOnCustomerId = (customerId) => {
 
     await transactionRef
     .where('customerId', '==', customerId)
+    .orderBy('createdDate', 'desc')
     .get()
     .then(snapshot => {
       if (snapshot.empty === false) {
@@ -1440,7 +1489,30 @@ const getTransactionFailed = (data) => {
 //       history.push('/account')
 //     })
 //     .catch(err => {
-//       console.log('ERROR: password validation', err)
+//       console.log('ERROR: change password', err)
+//     })
+//   }
+// }
+
+// // To handle customer that has not register previously but have transactions
+// export const customerUpdatePassword = (customerData, props) => {
+//   return (dispatch, getState, { getFirebase, getFirestore }) => {
+//     let customerId = customerData.id
+//     customerData.registeredStatus = true
+//     let firestore = getFirestore()
+//     let customerRef = firestore.collection('customer').doc(customerId)
+//     let password = props.customerPassword
+//     let cookies = props.cookies
+//     let hashedPassword = bcrypt.hashSync(password, SALTROUNDS)
+//     customerRef.update({
+//       password: hashedPassword
+//     })
+//     .then(() => {
+//       setNewCookies(cookies, customerData)
+//       window.location.assign('/')
+//     })
+//     .catch(err => {
+//       console.log('ERROR: register password', err)
 //     })
 //   }
 // }

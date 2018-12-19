@@ -1,7 +1,8 @@
 import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail } from '../../../helpers/form';
 import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
-import { setLoadingStatus, setAuthorizationStatus } from '../customer/customer.actions';
+import { setLoadingStatus, setAuthorizationStatus, validateCustomerExistence } from '../customer/customer.actions';
+import { authSignInAnonymously, authEmailValidation } from '../auth/auth.actions';
 
 const emptyError = 'This section must be filled.'
 const phoneMinError = 'Phone number is too short, min. 8 characters.'
@@ -105,23 +106,10 @@ export const handleInputChanges = (e) => {
 
     if (inputId === 'name') {
       dispatch(setCustomerName(value))
-      // if (value.length > 0) {
-      //   dispatch(setNameInputError(false))
-      // }
     } else if (inputId === 'email') {
       dispatch(setCustomerEmail(value))
-      // if (value.length > 0 && validateEmail(value) === true) {
-      //   dispatch(setEmailInputError(false))
-      // } else if (value.length > 0 && validateEmail(value) === false) {
-      //   dispatch(setEmailInputError(emailInvalidError))
-      // }
     } else if (inputId === 'phone') {
       dispatch(setCustomerPhone(value))
-      // if (value.length >= 8) {
-      //   dispatch(setPhoneInputError(false))
-      // } else if (value.length < 8) {
-      //   dispatch(setPhoneInputError(phoneMinError))
-      // }
     }
   }
 }
@@ -225,7 +213,7 @@ export const setServicesIdBasedOnParams = (params) => {
         }
       })
       .catch(err => {
-        console.log('ERROR: Set Store Services', err)
+        console.log('ERROR: get store services', err)
       })
       return ''
     }))
@@ -283,7 +271,7 @@ export const getServicesBasedOnParams = (params) => {
         }
       })
       .catch(err => {
-        console.log('ERROR: Get selected Services', err)
+        console.log('ERROR: get selected services', err)
       })
       return ''
     }))
@@ -334,7 +322,7 @@ export const getStaffServiceDataBasedOnParams = (params) => {
           }
         })
         .catch(err => {
-          console.log('ERROR: Get staffServices data', err)
+          console.log('ERROR: get staffServices data', err)
         })
       return ''
     }))
@@ -389,7 +377,7 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
           }
         })
         .catch(err => {
-          console.log('ERROR: Get specific staffs data', err)
+          console.log('ERROR: get specific staffs data', err)
         })
       return ''
     }))
@@ -459,7 +447,7 @@ export const getStaffBasedOnParams = (params) => {
       }
     })
     .catch(err => {
-      console.log('ERROR: Get selected Services', err)
+      console.log('ERROR: get selected staffs', err)
     })
   }
 }
@@ -510,23 +498,6 @@ export const getSpecificAppointments = (competentStaff, params) => {
         dispatch(getSpecificAppointmentsFailed(false))
       }
     })
-
-    // // Promise to handle single loading data from firestore
-    // .get()
-    // .then(snapshot => {
-    //   if (snapshot.empty === false) {
-    //     snapshot.forEach(doc => {
-    //       let data = doc.data()
-    //       appointmentsData.unshift(data)
-    //     })
-    //     dispatch(getSpecificAppointmentsSuccess(appointmentsData))
-    //   } else {
-    //     dispatch(getSpecificAppointmentsFailed(false))
-    //   }
-    // })
-    // .catch(err => {
-    //   console.log('ERROR: Get selected appointment staffs data', err)
-    // })
   }
 }
 
@@ -729,9 +700,28 @@ export const customerInputValidation = (props) => {
       if (BUID) {
         let customerData = verifyCookies(BUID)
         let customerId = customerData.id
-        dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
+        let authUserExistence = await dispatch(authEmailValidation(email))
+        let userExistence = await dispatch(validateCustomerExistence('phone', phone))
+        console.log('auth exist check BUID', authUserExistence, userExistence)
+        if (authUserExistence && userExistence) {
+          dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
+        } else if (authUserExistence && userExistence === false ) {
+        } else if (authUserExistence === false && userExistence) {
+        } else if (authUserExistence === false && userExistence === false) {
+          dispatch(authSignInAnonymously(props))
+        }
+        
       } else {
-        dispatch(getCustomerByPhoneAndCreateNewTransaction(props))
+        let authUserExistence = await dispatch(authEmailValidation(email))
+        let userExistence = await dispatch(validateCustomerExistence('phone', phone))
+        console.log('auth exist', authUserExistence, userExistence)
+        if (authUserExistence && userExistence) {
+          dispatch(getCustomerByPhoneAndCreateNewTransaction(null, props))
+        } else if (authUserExistence && userExistence === false ) {
+        } else if (authUserExistence === false && userExistence) {
+        } else if (authUserExistence === false && userExistence === false) {
+          dispatch(authSignInAnonymously(props))
+        }
       }
     } else {
       dispatch(setLoadingStatus(false))
@@ -793,40 +783,35 @@ const setEmailInputOK = (data) => {
 
 // To check customer existence using input from phone form, then save new cookies, and create new transaction
 // OR create new customer and create new transaction
-export const getCustomerByPhoneAndCreateNewTransaction = (props) => {
+export const getCustomerByPhoneAndCreateNewTransaction = (uid, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let phone = props.customerPhone
+    let customerEmail = props.customerEmail
+    let customerPhone = props.customerPhone
     let cookies = props.cookies
 
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer')
 
     customerRef
-    .where('phone', '==', phone)
+    .where('phone', '==', customerPhone)
     .get()
     .then(snapshot => {
       if (snapshot.empty === false) {
         snapshot.forEach(doc => {
           let id = doc.id
-          let { name, phone, email, picture, password } = doc.data()
-          let registeredStatus = ''
-          if (password.length <= 0) {
-            registeredStatus = false
-          } else {
-            registeredStatus = true
-          }
+          let { name, phone, picture, registeredStatus } = doc.data()
           let customerData = {
-            id, name, phone, email, picture, registeredStatus
+            id, name, phone, email: customerEmail, picture, registeredStatus
           }
           setNewCookies(cookies, customerData)
           dispatch(createNewTransaction(id, props))
         })
       } else {
-        dispatch(createNewCustomerAndCreateNewTransaction(props))
+        dispatch(createNewCustomerAndCreateNewTransaction(uid, props))
       }
     })
     .catch(err => {
-      console.log('ERROR: Customer input validation', err)
+      console.log('ERROR: get customer by phone and create new transaction', err)
     })
   }
 }
@@ -848,41 +833,38 @@ export const getCustomerByIdAndCreateNewTransaction = (customerId, props) => {
       }
     })
     .catch(err => {
-      console.log('ERROR: Customer input validation', err)
+      console.log('ERROR: get customer by Id and create new transaction', err)
     })
   }
 }
 
-
-export const createNewCustomerAndCreateNewTransaction = (props) => {
+// To create new customer with registered status false they haven't registered and then create new transaction
+export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let cookies = props.cookies
     let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
-    let password = ''
     let picture = ''
     let registeredStatus = false
 
     let newCustomer = {
       name,
       phone,
-      email,
-      password,
-      picture
+      picture,
+      registeredStatus
     }
 
     let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
+    let customerRef = firestore.collection('customer').doc(uid)
 
-    customerRef.add(newCustomer)
-    .then(ref => {
-      let refId = ref.id
+    customerRef.set(newCustomer)
+    .then(() => {
       let customerData = {
-        id: refId, name, phone, email, picture, registeredStatus
+        id: uid, name, phone, email, picture, registeredStatus
       }
       setNewCookies(cookies, customerData)
-      dispatch(createNewTransaction(refId, props))
+      dispatch(createNewTransaction(uid, props))
     })
     .catch(err => {
       console.log('ERROR: Get and create new customer', err)
@@ -950,12 +932,11 @@ export const createNewTransaction = (customerId, props) => {
       .add(newTransaction)
       .then(ref => {
         let refId = ref.id
-        // dispatch(setLoadingStatus(false)) // If success no need to change to false since it will be redirected to new page
-        window.location.assign(`/book/success/${refId}`)
         dispatch(updateAppointmentCurrentTransaction(appointment))
+        window.location.assign(`/book/success/${refId}`)
       })
       .catch(err => {
-        console.log('ERROR: Get and create new customer', err)
+        console.log('ERROR: create new transaction', err)
       })
     } 
 
