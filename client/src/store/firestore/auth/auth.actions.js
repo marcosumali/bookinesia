@@ -39,6 +39,7 @@ export const getAuthStatus = () => {
 export const getUserProfile = () => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firebase = getFirebase()
+    console.log('fb', firebase)
     let user = firebase.auth().currentUser;
     return user
   }

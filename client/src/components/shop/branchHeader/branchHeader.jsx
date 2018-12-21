@@ -6,16 +6,32 @@ import { Redirect } from 'react-router-dom';
 import '../../../assets/css/general.css';
 import './branchHeader.css';
 import PreviousArrowSvg from '../../svg/arrowPreviousSvg';
-import { getShopData, clearShopState, getBranchData } from '../../../store/firestore/shop/shop.actions';
+import { getShopData, clearShopState, getBranchData, setParams } from '../../../store/firestore/shop/shop.actions';
 import { clearCartState } from '../../../store/firestore/transaction/transaction.actions';
 
 class branchHeader extends Component {
-  componentWillMount () {
+  componentWillMount() {
     let params = this.props.params
     let shopName = params.shopName
     let branchName = params.branchName
     this.props.getShopData(shopName)
     this.props.getBranchData(shopName, branchName)
+  }
+
+  componentDidUpdate() {
+    let shop = this.props.shop
+    let branch = this.props.branch
+    let params = this.props.params
+    let shopName = params.shopName
+    let branchName = params.branchName
+    if (Object.keys(params).length !== 0 && params.constructor === Object) {
+      if (Object.keys(shop).length === 0 && shop.constructor === Object) {
+        this.props.getShopData(shopName)
+      }
+      if (Object.keys(branch).length === 0 && branch.constructor === Object) {
+        this.props.getBranchData(shopName, branchName)
+      }
+    }
   }
   
   render() {
@@ -28,7 +44,7 @@ class branchHeader extends Component {
             {/* Previous Arrow Section */}
             <div 
               className="col s2 Height-100 No-padding No-margin Container-center" 
-              onClick={ () => { this.props.history.goBack(); this.props.clearShopState(); this.props.clearCartState() } 
+              onClick={ () => { this.props.history.goBack(); this.props.setParams({});this.props.clearShopState(); this.props.clearCartState() } 
             }>
               <PreviousArrowSvg color="#666666" />
             </div>
@@ -89,7 +105,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   getShopData,
   clearShopState,
   clearCartState,
-  getBranchData
+  getBranchData,
+  setParams
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps) (branchHeader);
