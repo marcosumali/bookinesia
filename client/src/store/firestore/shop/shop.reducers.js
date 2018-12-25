@@ -36,6 +36,9 @@ const shopDataList = (state = { ...initialState }, action) => {
     case 'CLEAR_SHOP_STATE':
       return ({
         ...state,
+        shop: {},
+        shopExists: true,
+        shopLoading: true,      
         branch: {},
         branchExists: true,
         branchLoading: true,

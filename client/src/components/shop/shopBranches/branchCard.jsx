@@ -5,7 +5,7 @@ import { Redirect, Link } from 'react-router-dom';
 
 import '../../../assets/css/general.css';
 import './shopBranches.css';
-import { getBranchesData } from '../../../store/firestore/shop/shop.actions';
+import { getBranchesData, setParams } from '../../../store/firestore/shop/shop.actions';
 
 class branchCard extends Component {
   componentWillMount() {
@@ -108,6 +108,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   getBranchesData,
+  setParams
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps) (branchCard);

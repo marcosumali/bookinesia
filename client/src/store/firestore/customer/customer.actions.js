@@ -199,12 +199,6 @@ export const customerRegisterInputValidation = (props) => {
     let password = props.customerPassword
     let cookies = props.cookies
     
-    // Get user data to determine the error status if user registered status is true
-    let userByPhone = await dispatch(getCustomerByField('phone', phone))
-    let authUser = await dispatch(getUserProfile())
-    let userByEmail = await dispatch(getCustomerById(authUser.uid))
-    userByEmail['email'] = authUser.email
-
     // To set loading status as true
     await dispatch(setLoadingStatus(true))
 
@@ -220,6 +214,9 @@ export const customerRegisterInputValidation = (props) => {
     if (phone.length > 0 && phone.length < 8) {
       await dispatch(setRegisterPhoneInputError(phoneMinError))
     }
+
+    // Get user data to determine the error status if user registered status is true from database
+    let userByPhone = await dispatch(getCustomerByField('phone', phone))
 
     let customerExistenceBasedOnPhone = await dispatch(validateCustomerExistence('phone', phone))
     if (userByPhone.registeredStatus === false) {
@@ -247,17 +244,24 @@ export const customerRegisterInputValidation = (props) => {
       await dispatch(setRegisterEmailInputError(emailInvalidError))
     }
 
+    // Get user data to determine the error status if user registered status is true from auth    
     let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
-    // LOGIC:
-    // 1. If based on authEmailValidation to firebase auth return true, it means the user has been signed in to Auth
-    // 2. Next need to check whether user by email have registeredStatus of true. If false, means user has not registered.
-    // 3. Since we can't check email profile to firebase auth without password access, if userByEmail.email is not the same with email
-    // and from point 1 return true, it means that the user is truely have been registered
-    if (userByEmail.registeredStatus === false) {
-      if (customerExistenceBasedOnEmail && userByEmail.email !== email) {
-        customerExistenceBasedOnEmail = true
-      } else {
-        customerExistenceBasedOnEmail = false
+    let authUser = await dispatch(getUserProfile())
+    if (authUser) {
+      let userByEmail = await dispatch(getCustomerById(authUser.uid))
+      userByEmail['email'] = authUser.email
+
+      // LOGIC:
+      // 1. If based on authEmailValidation to firebase auth return true, it means the user has been signed in to Auth
+      // 2. Next need to check whether user by email have registeredStatus of true. If false, means user has not registered.
+      // 3. Since we can't check email profile to firebase auth without password access, if userByEmail.email is not the same with email
+      // and from point 1 return true, it means that the user is truely have been registered
+      if (userByEmail.registeredStatus === false) {
+        if (customerExistenceBasedOnEmail && userByEmail.email !== email) {
+          customerExistenceBasedOnEmail = true
+        } else {
+          customerExistenceBasedOnEmail = false
+        }
       }
     }
     if (customerExistenceBasedOnEmail) {

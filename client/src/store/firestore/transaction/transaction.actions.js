@@ -1,7 +1,9 @@
+import axios from 'axios';
+
 import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail } from '../../../helpers/form';
 import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
-import { setLoadingStatus, setAuthorizationStatus, validateCustomerExistence } from '../customer/customer.actions';
+import { setLoadingStatus, setAuthorizationStatus, validateCustomerExistence, getCustomerByField, getCustomerById } from '../customer/customer.actions';
 import { authSignInAnonymously, authEmailValidation } from '../auth/auth.actions';
 
 const emptyError = 'This section must be filled.'
@@ -700,25 +702,30 @@ export const customerInputValidation = (props) => {
       if (BUID) {
         let customerData = verifyCookies(BUID)
         let customerId = customerData.id
-        let authUserExistence = await dispatch(authEmailValidation(email))
-        let userExistence = await dispatch(validateCustomerExistence('phone', phone))
-        console.log('auth exist check BUID', authUserExistence, userExistence)
-        if (authUserExistence && userExistence) {
-          dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
-        } else if (authUserExistence && userExistence === false ) {
-        } else if (authUserExistence === false && userExistence) {
-        } else if (authUserExistence === false && userExistence === false) {
-          dispatch(authSignInAnonymously(props))
-        }
-        
+        dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
       } else {
         let authUserExistence = await dispatch(authEmailValidation(email))
         let userExistence = await dispatch(validateCustomerExistence('phone', phone))
-        console.log('auth exist', authUserExistence, userExistence)
+        // console.log('auth exist', authUserExistence, userExistence)
         if (authUserExistence && userExistence) {
           dispatch(getCustomerByPhoneAndCreateNewTransaction(null, props))
         } else if (authUserExistence && userExistence === false ) {
+          let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
+          if (authResponseByEmail.status === 200) {
+            let authUser = authResponseByEmail.data.user
+            let id = authUser.id
+            let registeredUser = await dispatch(getCustomerById(id))
+            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+          }
         } else if (authUserExistence === false && userExistence) {
+          let registeredUser = await dispatch(getCustomerByField('phone', phone))
+          let uid = registeredUser.id
+
+          let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
+          if (authResponseByUID.status === 200) {
+            let authUser = authResponseByUID.data.user
+            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+          }
         } else if (authUserExistence === false && userExistence === false) {
           dispatch(authSignInAnonymously(props))
         }
@@ -813,6 +820,19 @@ export const getCustomerByPhoneAndCreateNewTransaction = (uid, props) => {
     .catch(err => {
       console.log('ERROR: get customer by phone and create new transaction', err)
     })
+  }
+}
+
+export const authUserCreateNewTransaction = (authUser, fbUser, props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let cookies = props.cookies
+    let { email } = authUser
+    let { id, name, phone, picture, registeredStatus } = fbUser
+    let customerData = {
+      id, name, phone, email, picture, registeredStatus
+    }
+    setNewCookies(cookies, customerData)
+    dispatch(createNewTransaction(id, props))
   }
 }
 
