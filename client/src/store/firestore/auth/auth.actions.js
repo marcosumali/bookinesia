@@ -39,9 +39,25 @@ export const getAuthStatus = () => {
 export const getUserProfile = () => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firebase = getFirebase()
-    console.log('fb', firebase)
-    let user = firebase.auth().currentUser;
+    let user = firebase.auth().currentUser
     return user
+  }
+}
+
+export const authUpdateUserProfile = (props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let firebase = getFirebase()
+    let user = firebase.auth().currentUser
+
+    // LAST
+    user.updateProfile({
+      // displayName: name,
+      photoURL: "https://example.com/jane-q-user/profile.jpg"
+    }).then(function() {
+      // Update successful.
+    }).catch(function(error) {
+      // An error happened.
+    });
   }
 }
 
@@ -49,12 +65,15 @@ export const authCreateUser = (props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail
     let password = props.customerPassword
+    console.log('masuk auth')
 
     let firebase = getFirebase()
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(response => {
-      let uid = response.user.uid
-      dispatch(createNewCustomer(uid, props))
+      let user = firebase.auth().currentUser;
+      // let uid = response.user.uid
+      console.log('check auth current user', user)
+      // dispatch(createNewCustomer(uid, props))
     })
     .catch(function(err) {
       if (err.code === 'auth/email-already-in-use') {
