@@ -16,7 +16,7 @@ class accountSettings extends Component {
   constructor() {
     super()
     this.state = {
-      visibilityStatus: false
+      visibilityStatus: false,
     }
   }
 
@@ -120,7 +120,7 @@ class accountSettings extends Component {
                   {/* Email Input */}
                   <div className="input-field Margin-b-24">
                     {
-                      this.props.settingsCustomerEmailError !== false?
+                      this.props.settingsCustomerEmailError !== false ?
                       <div>
                         <input id="email" type="email" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerEmail }/>
                         <label htmlFor="email" className="Form-text active">Email</label>

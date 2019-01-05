@@ -42,8 +42,10 @@ export default class accountDetailsLoading extends Component {
           <div className="Input-loading"></div>
         </div>
         
-        <div className="col s12 No-margin No-padding Margin-b-24 Container-center">
-          <div className="Input-loading"></div>
+        <div className="Fix-bottom">
+          <div className="col s12 No-margin No-padding Margin-b-24 Container-center">
+            <div className="Input-loading" style={{ backgroundColor:  '#ffffff', width: '80%', height: '2em' }}></div>
+          </div>
         </div>
 
       </div>

@@ -13,11 +13,16 @@ import CloseSvg from '../svg/closeSvg';
 import RegisterButton from './registerButton';
 import LoginButton from './loginButton';
 import { handleCookies } from '../../store/firestore/customer/customer.actions';
-import { getAuthStatus } from '../../store/firestore/auth/auth.actions';
+import { getAuthStatus, authSignOut, authRedirectAndSignOut } from '../../store/firestore/auth/auth.actions';
 
 class navbar extends Component {
   componentWillMount() {
+    this.props.authRedirectAndSignOut(this.props)
     this.props.handleCookies('get account', this.props.cookies, window.location.pathname)
+  }
+
+  componentDidUpdate() {
+    this.props.authRedirectAndSignOut(this.props)
   }
   
   render() {
@@ -143,17 +148,23 @@ class navbar extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  state.firebase.profile['email'] = state.firebase.auth.email
   return {
     cookies: state.user.cookies,
     user: state.user.user,
     userExists: state.user.userExists,
     userLoading: state.user.userLoading,
+    authUser: state.firebase.profile,
+    authUserIsLoaded: state.firebase.profile.isLoaded,
+    window: state.user.window
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   handleCookies,
   getAuthStatus,
+  authSignOut,
+  authRedirectAndSignOut,
 }, dispatch)
 
 

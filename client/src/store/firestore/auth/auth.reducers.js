@@ -1,4 +1,7 @@
 let initialState = {
+  user: '',
+  userExists: true,
+  userLoading: true,
 }
 
 const authDataList = (state = { ...initialState }, action) => {

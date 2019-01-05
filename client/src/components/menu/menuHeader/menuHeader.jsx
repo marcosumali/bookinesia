@@ -6,12 +6,18 @@ import '../../../assets/css/general.css';
 import './menuHeader.css';
 import PreviousArrowSvg from '../../svg/arrowPreviousSvg';
 import { clearUserState, handleCookies } from '../../../store/firestore/customer/customer.actions';
+import { authSignOut, authRedirectAndSignOut } from '../../../store/firestore/auth/auth.actions';
 
 class menuHeader extends Component {
   componentWillMount() {
+    this.props.authRedirectAndSignOut(this.props)
     if (this.props.getAccountStatus === 'true') {
       this.props.handleCookies('get account', this.props.cookies)
     }
+  }
+
+  componentDidUpdate() {
+    this.props.authRedirectAndSignOut(this.props)
   }
 
   render() {
@@ -42,14 +48,20 @@ class menuHeader extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
+  state.firebase.profile['email'] = state.firebase.auth.email
   return {
-    cookies: state.user.cookies
+    cookies: state.user.cookies,
+    authUser: state.firebase.profile,
+    authUserIsLoaded: state.firebase.profile.isLoaded,
+    window: state.user.window
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   clearUserState,
-  handleCookies
+  handleCookies,
+  authSignOut,
+  authRedirectAndSignOut,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps) (menuHeader);

@@ -28,6 +28,7 @@ function removeCookies(cookies) {
   cookies.remove('BUID',  { path: '/', secure: false, expires: expirationDate })
 }
 
+
 module.exports = {
   setNewCookies,
   verifyCookies,

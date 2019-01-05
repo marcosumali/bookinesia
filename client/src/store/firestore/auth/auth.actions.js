@@ -1,4 +1,4 @@
-import { setNewCookies, removeCookies } from '../../../helpers/auth';
+import { setNewCookies, removeCookies, getCookies } from '../../../helpers/auth';
 import { 
   loginError, 
   setLoadingStatus, 
@@ -14,6 +14,7 @@ import {
   setRegisterPasswordInputError,
   passwordMinError,
   createNewCustomer,
+  setSettingEmailInputError
 } from '../customer/customer.actions';
 import {
   getCustomerByPhoneAndCreateNewTransaction,
@@ -44,20 +45,22 @@ export const getUserProfile = () => {
   }
 }
 
-export const authUpdateUserProfile = (props) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+export const authUpdateUserProfileByField = (field, value) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firebase = getFirebase()
     let user = firebase.auth().currentUser
+    let updateStatus = 'none'
 
-    // LAST
-    user.updateProfile({
-      // displayName: name,
-      photoURL: "https://example.com/jane-q-user/profile.jpg"
+    await user.updateProfile({
+      [field]: value
     }).then(function() {
-      // Update successful.
-    }).catch(function(error) {
-      // An error happened.
+      updateStatus = true
+    }).catch(function(err) {
+      console.log('ERROR: auth update user profile', err)
+      updateStatus = false
     });
+
+    return updateStatus
   }
 }
 
@@ -65,15 +68,17 @@ export const authCreateUser = (props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail
     let password = props.customerPassword
-    console.log('masuk auth')
 
     let firebase = getFirebase()
     firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(response => {
-      let user = firebase.auth().currentUser;
-      // let uid = response.user.uid
-      console.log('check auth current user', user)
-      // dispatch(createNewCustomer(uid, props))
+    .then(async response => {
+      let uid = response.user.uid
+
+      let updateProfileResult = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
+
+      if (updateProfileResult === true) {
+        dispatch(createNewCustomer(uid, props))
+      }
     })
     .catch(function(err) {
       if (err.code === 'auth/email-already-in-use') {
@@ -179,9 +184,14 @@ export const authUpdateEmail = (customerData, password, newEmail, props) => {
     user.reauthenticateAndRetrieveDataWithCredential(credential).then(function() {
       user.updateEmail(newEmail).then(function() {
         let customerId = customerData.id
+        dispatch(authUpdateUserProfileByField('displayName', props.settingsCustomerName))
         dispatch(customerUpdateAccount(customerId, props))
       }).catch(function(err) {
         console.log('ERROR: update email', err)
+        if (err.code === 'auth/email-already-in-use') {
+          dispatch(setSettingEmailInputError(err.message))
+          dispatch(setLoadingStatus(false))
+        }
       })
     }).catch(function(err) {
       console.log('ERROR: reauthenticate user', err)
@@ -253,9 +263,24 @@ export const authMigrateAnonymousUser = (props) => {
       let uid = usercred.user.uid
       dispatch(migrateRegisteredStatus(uid, props))
     }, function(err) {
-      console.log("ERROR: migrating account", err);
-    });
+      console.log("ERROR: migrating account", err)
+    })
+  }
+}
 
+// To redirect sign out and delete cookies user if the user has changed their email and reverse it through firebase auth email
+export const authRedirectAndSignOut = (props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let cookies = props.cookies
+    let window = props.window
+    let BUID = getCookies(cookies)
+
+    if (BUID) {
+      if (props.authUser.isLoaded && props.authUser.isEmpty && window.navigator.onLine) {
+        dispatch(authSignOut(cookies))
+        window.location.assign('/')
+      }
+    }
   }
 }
 
@@ -317,6 +342,5 @@ export const migrateRegisteredStatus = (id, props) => {
     .catch(err => {
       console.log('ERROR: updating migration status', err)
     })
-
   }
 }

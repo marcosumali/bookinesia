@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import '../../assets/css/general.css';
 import './home.css';
 
-export default class home extends Component {
+class home extends Component {
   constructor() {
     super()
     this.state = {
@@ -148,3 +150,14 @@ export default class home extends Component {
     )
   }
 }
+
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps) (home);
