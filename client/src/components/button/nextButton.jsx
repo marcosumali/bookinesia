@@ -17,7 +17,10 @@ class nextButton extends Component {
       <div>
         {
           this.props.text === 'Confirm and Book' ?
-            Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ?
+            Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ||
+            this.props.selectedStaffLoading ||
+            this.props.selectedAppointmentLoading ||
+            this.props.selectedServicesLoading ?
             <div className="Next-button-disable Container-center">
               <p className="Next-text-disable">{ this.props.text }</p>
             </div>
@@ -34,6 +37,11 @@ class nextButton extends Component {
             </div>
           :
           this.props.text === 'Continue' && this.props.onPage === 'ServicePage' ?
+            this.props.servicesLoading ?
+            <div className="Next-button-disable Container-center">
+              <p className="Next-text-disable">{ this.props.text }</p>
+            </div>
+            :
             <div onClick={ () => this.props.customerServiceInputValidation(this.props) }>
               <div className="Next-button Container-center">
                 <p className="Next-text">{ this.props.text }</p>
@@ -41,7 +49,9 @@ class nextButton extends Component {
             </div>
           :
           this.props.text === 'Continue' && this.props.onPage === 'BarberPage' ?
-            Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ?
+            Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) || 
+            this.props.competentStaffsLoading || 
+            this.props.appointmentsLoading ?
             <div className="Next-button-disable Container-center">
               <p className="Next-text-disable">{ this.props.text }</p>
             </div>
@@ -70,6 +80,13 @@ const mapStateToProps = state => {
     routeLink: state.shop.routeLink,
     params: state.shop.params,
     window: state.user.window,
+    // Loading Needs
+    servicesLoading: state.shop.servicesLoading,
+    competentStaffsLoading: state.cart.competentStaffsLoading,
+    appointmentsLoading: state.cart.appointmentsLoading,
+    selectedStaffLoading: state.cart.selectedStaffLoading,
+    selectedAppointmentLoading: state.cart.selectedAppointmentLoading,
+    selectedServicesLoading: state.cart.selectedServicesLoading,
     // Confirm Transaction Page Needs
     customerName: state.cart.customerName,
     customerEmail: state.cart.customerEmail,

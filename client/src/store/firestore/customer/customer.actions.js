@@ -247,6 +247,7 @@ export const customerRegisterInputValidation = (props) => {
     // Get user data to determine the error status if user registered status is true from auth    
     let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
     let authUser = await dispatch(getUserProfile())
+
     if (authUser) {
       let userByEmail = await dispatch(getCustomerById(authUser.uid))
       userByEmail['email'] = authUser.email
@@ -264,6 +265,7 @@ export const customerRegisterInputValidation = (props) => {
         }
       }
     }
+
     if (customerExistenceBasedOnEmail) {
       dispatch(setRegisterEmailInputError(emailRegisteredError))
     }
@@ -636,7 +638,7 @@ const setSettingPhoneInputError = (data) => {
   }
 }
 
-const setSettingEmailInputError = (data) => {
+export const setSettingEmailInputError = (data) => {
   return {
     type: 'SET_SETTING_EMAIL_ERROR',
     payload: data

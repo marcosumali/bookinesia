@@ -8,7 +8,7 @@
   font-size: 23px !important;
   padding-top: 0px !important;
   margin: 0px !important;
-  /* font-weight: normal; */
+  font-weight: normal;
 }
 
 .swal-icon--success__ring,

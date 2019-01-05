@@ -129,18 +129,21 @@ class accountDetails extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  state.firebase.profile['email'] = state.firebase.auth.email
   return {
     cookies: state.user.cookies,
     user: state.user.user,
     userExists: state.user.userExists,
     userLoading: state.user.userLoading,
     authenticationStatus: state.user.authenticationStatus,
+    authUser: state.firebase.profile,
+    authUserIsLoaded: state.firebase.profile.isLoaded,
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   removeCookies,
-  authSignOut
+  authSignOut,
 }, dispatch)
 
 
