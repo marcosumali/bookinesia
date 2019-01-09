@@ -19,6 +19,9 @@ let initialState = {
   staffs: [],
   staffsExists: true,
   staffsLoading: true,
+  shops: [],
+  shopsExists: true,
+  shopsLoading: true,
 }
 
 const shopDataList = (state = { ...initialState }, action) => {
@@ -53,10 +56,10 @@ const shopDataList = (state = { ...initialState }, action) => {
         staffsLoading: true,
       })
     case 'SET_STAFFS':
-    return ({
-      ...state,
-      staffs: action.payload
-    })
+      return ({
+        ...state,
+        staffs: action.payload
+      })
     case 'GET_SHOP_DATA_SUCCESS':
       return ({
         ...state,
@@ -102,27 +105,38 @@ const shopDataList = (state = { ...initialState }, action) => {
         branchScheduleExists: action.payload
       })
     case 'GET_SERVICES_DATA_SUCCESS':
-    return ({
-      ...state,
-      services: action.payload,
-      servicesLoading: false
-    })
+      return ({
+        ...state,
+        services: action.payload,
+        servicesLoading: false
+      })
     case 'GET_SERVICES_DATA_FAILED':
-    return ({
-      ...state,
-      servicesExists: action.payload
-    })
+      return ({
+        ...state,
+        servicesExists: action.payload
+      })
     case 'GET_STAFFS_DATA_SUCCESS':
-    return ({
-      ...state,
-      staffs: action.payload,
-      staffsLoading: false
-    })
+      return ({
+        ...state,
+        staffs: action.payload,
+        staffsLoading: false
+      })
     case 'GET_STAFFS_DATA_FAILED':
-    return ({
-      ...state,
-      staffsExists: action.payload
-    })
+      return ({
+        ...state,
+        staffsExists: action.payload
+      })
+    case 'GET_SHOPS_DATA_SUCCESS':
+      return ({
+        ...state,
+        shops: action.payload,
+        shopsLoading: false
+      })
+    case 'GET_SHOPS_DATA_FAILED':
+      return ({
+        ...state,
+        shopsExists: action.payload
+      })
     default:
       return state;
   }

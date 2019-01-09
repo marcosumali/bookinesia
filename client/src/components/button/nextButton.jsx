@@ -96,6 +96,7 @@ const mapStateToProps = state => {
     selectedServices: state.cart.selectedServices,
     hasBookStatus: state.cart.hasBookStatus,
     loadingStatus: state.user.loadingStatus,
+    shop: state.shop.shop,
     // Service Transaction Page Needs
     primaryService: state.cart.primaryService,
     secondaryServices: state.cart.secondaryServices,

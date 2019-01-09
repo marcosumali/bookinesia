@@ -14,10 +14,10 @@ import {
   setRegisterPasswordInputError,
   passwordMinError,
   createNewCustomer,
-  setSettingEmailInputError
+  setSettingEmailInputError,
 } from '../customer/customer.actions';
 import {
-  getCustomerByPhoneAndCreateNewTransaction,
+  createNewCustomerAndCreateNewTransaction
 } from '../transaction/transaction.actions';
 import swal from 'sweetalert';
 
@@ -148,7 +148,7 @@ export const authPasswordValidation = (customerData, oldPassword) => {
 
 export const authEmailValidation = (email) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let validateResult = 'none'
+    let validateResult = ''
     let password = 'no-password'
 
     let firebase = getFirebase()
@@ -227,7 +227,7 @@ export const authUpdatePassword = (customerData, oldPassword, newPassword, histo
   }
 }
 
-export const authSignInAnonymously = (props) => {
+export const authSignInAnonymouslyAndCreateNewTransaction = (props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail
     let firebase = getFirebase()
@@ -238,8 +238,11 @@ export const authSignInAnonymously = (props) => {
       let user = firebase.auth().currentUser
 
       user.updateEmail(email)
-      .then(function() {
-        dispatch(getCustomerByPhoneAndCreateNewTransaction(uid, props))
+      .then(async function() {
+        let updateProfileResult = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
+        if (updateProfileResult === true) {
+          dispatch(createNewCustomerAndCreateNewTransaction(uid, props))
+        }
       }).catch(function(err) {
         console.log('ERROR: update profile anonymous', err)
       })

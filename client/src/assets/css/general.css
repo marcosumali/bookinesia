@@ -200,6 +200,14 @@
   margin-top: 1.25em !important;
 }
 
+.Margin-t-32 {
+  margin-top: 2em !important;
+}
+
+.Margin-t-40 {
+  margin-top: 2.5em !important;
+}
+
 .Margin-t-3-cent {
   margin-top: 3% !important;
 }
@@ -230,6 +238,14 @@
 
 .Margin-b-24 {
   margin-bottom: 1.5em !important;
+}
+
+.Margin-b-32 {
+  margin-bottom: 2em !important;
+}
+
+.Margin-b-40 {
+  margin-bottom: 2.5em !important;
 }
 
 .Margin-r-4 {

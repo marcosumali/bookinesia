@@ -272,7 +272,7 @@ const mapStateToProps = state => {
     customerNameError: state.cart.customerNameError,
     customerEmailError: state.cart.customerEmailError,
     customerPhoneError: state.cart.customerPhoneError,
-    cookies: state.user.cookies
+    cookies: state.user.cookies,
   }
 }
 

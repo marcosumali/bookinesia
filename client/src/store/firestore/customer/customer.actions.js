@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { getCookies, verifyCookies, setNewCookies } from '../../../helpers/auth';
 import { validateEmail } from '../../../helpers/form';
 import { getTransaction } from '../transaction/transaction.actions';
@@ -226,7 +228,6 @@ export const customerRegisterInputValidation = (props) => {
       dispatch(setRegisterPhoneInputError(phoneRegisteredError))
     }
     // console.log('check phone', customerExistenceBasedOnPhone)
-
 
     if (password.length <= 0) {
       await dispatch(setRegisterPasswordInputError(emptyError))
@@ -922,7 +923,7 @@ export const validateCustomerExistence = (field, value) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer')
-    let customerExistence = 'none'
+    let customerExistence = false
 
     await customerRef.where(field, '==', value).get()
     .then(snapshot => {
@@ -1011,12 +1012,17 @@ export const createNewCustomer = (uid, props) => {
     let customerRef = firestore.collection('customer').doc(uid)
     
     customerRef.set(newCustomer)
-    .then(() => {
+    .then(async () => {
       let customerData = {
         id: uid, name, email, phone, picture, registeredStatus
       }
       setNewCookies(cookies, customerData)
-      window.location.assign('/')
+      let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeCustomer', { name, email })
+      if (sendEmailResult.status === 200) {
+        window.location.assign('/')
+      } else {
+        window.location.assign('/')
+      }
     })
     .catch(err => {
       console.log('ERROR: create new customer', err)

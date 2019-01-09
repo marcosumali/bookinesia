@@ -4,7 +4,7 @@ import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail } from '../../../helpers/form';
 import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
 import { setLoadingStatus, setAuthorizationStatus, validateCustomerExistence, getCustomerByField, getCustomerById } from '../customer/customer.actions';
-import { authSignInAnonymously, authEmailValidation } from '../auth/auth.actions';
+import { authSignInAnonymouslyAndCreateNewTransaction, authEmailValidation } from '../auth/auth.actions';
 
 const emptyError = 'This section must be filled.'
 const phoneMinError = 'Phone number is too short, min. 8 characters.'
@@ -706,28 +706,37 @@ export const customerInputValidation = (props) => {
       } else {
         let authUserExistence = await dispatch(authEmailValidation(email))
         let userExistence = await dispatch(validateCustomerExistence('phone', phone))
-        // console.log('auth exist', authUserExistence, userExistence)
+        console.log('auth exist', authUserExistence, userExistence)
         if (authUserExistence && userExistence) {
-          dispatch(getCustomerByPhoneAndCreateNewTransaction(null, props))
+          dispatch(getCustomerByPhoneAndCreateNewTransaction(props))
         } else if (authUserExistence && userExistence === false ) {
+          console.log('masuk 1')
           let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
+          console.log('===>', authResponseByEmail)
           if (authResponseByEmail.status === 200) {
             let authUser = authResponseByEmail.data.user
             let id = authUser.id
             let registeredUser = await dispatch(getCustomerById(id))
-            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+            console.log('check', authUser, registeredUser)
+            if (registeredUser.registeredStatus) {
+              console.log('masuk true')
+            } else {
+              console.log('masuk false')
+            }
+            // dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
           }
         } else if (authUserExistence === false && userExistence) {
+          console.log('masuk 2')
           let registeredUser = await dispatch(getCustomerByField('phone', phone))
           let uid = registeredUser.id
 
           let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
           if (authResponseByUID.status === 200) {
             let authUser = authResponseByUID.data.user
-            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+            // dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
           }
         } else if (authUserExistence === false && userExistence === false) {
-          dispatch(authSignInAnonymously(props))
+          dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
         }
       }
     } else {
@@ -790,7 +799,7 @@ const setEmailInputOK = (data) => {
 
 // To check customer existence using input from phone form, then save new cookies, and create new transaction
 // OR create new customer and create new transaction
-export const getCustomerByPhoneAndCreateNewTransaction = (uid, props) => {
+export const getCustomerByPhoneAndCreateNewTransaction = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let customerEmail = props.customerEmail
     let customerPhone = props.customerPhone
@@ -814,7 +823,7 @@ export const getCustomerByPhoneAndCreateNewTransaction = (uid, props) => {
           dispatch(createNewTransaction(id, props))
         })
       } else {
-        dispatch(createNewCustomerAndCreateNewTransaction(uid, props))
+        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
       }
     })
     .catch(err => {
@@ -849,7 +858,7 @@ export const getCustomerByIdAndCreateNewTransaction = (customerId, props) => {
         let id = doc.id
         dispatch(createNewTransaction(id, props))
       } else {
-        dispatch(createNewCustomerAndCreateNewTransaction(props))
+        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
       }
     })
     .catch(err => {
@@ -879,12 +888,15 @@ export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
     let customerRef = firestore.collection('customer').doc(uid)
 
     customerRef.set(newCustomer)
-    .then(() => {
+    .then(async () => {
       let customerData = {
         id: uid, name, phone, email, picture, registeredStatus
       }
       setNewCookies(cookies, customerData)
-      dispatch(createNewTransaction(uid, props))
+      let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeGuest', { name, email })
+      if (sendEmailResult.status === 200) {
+        dispatch(createNewTransaction(uid, props))
+      }
     })
     .catch(err => {
       console.log('ERROR: Get and create new customer', err)
@@ -948,12 +960,27 @@ export const createNewTransaction = (customerId, props) => {
 
     // To handle no transaction is set more than max daily queue
     if (Number(appointment.currentTransaction) < Number(appointment.maxQueue)) {
-      transactionRef
-      .add(newTransaction)
-      .then(ref => {
+      transactionRef.add(newTransaction)
+      .then(async ref => {
         let refId = ref.id
         dispatch(updateAppointmentCurrentTransaction(appointment))
-        window.location.assign(`/book/success/${refId}`)
+        let emailData = {
+          name,
+          email,
+          transactionId: refId,
+          date: appointment.date,
+          shopName: params.shopName,
+          shopLogo: props.shop.logo,
+          branchName: params.branchName,
+          queueNo,
+          staffName: staff.name,
+          staffImage: staff.picture,
+          service,
+        }
+        let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailCustomerBookTransaction', emailData)
+        if (sendEmailResult.status === 200) {
+          window.location.assign(`/book/success/${refId}`)
+        }
       })
       .catch(err => {
         console.log('ERROR: create new transaction', err)

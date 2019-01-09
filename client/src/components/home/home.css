@@ -1,14 +1,20 @@
 .First-section {
   position: absolute;
   z-index: 0;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .Second-section {
   position: absolute;
   z-index: 0;
-  /* background-color: #5499c3; */
-  border: 1px solid blue;
+  background-color: #5499c3;
+  /* border: 1px solid blue; */
+}
+
+.Third-section {
+  position: absolute;
+  z-index: 0;
+  /* border: 1px solid red; */
 }
 
 .Header-text-h1 {
@@ -45,8 +51,7 @@
 .Image-over {
   z-index: 2;
   position: absolute;
-  margin-top: 53px;
-  /* margin-left: 58.5px; */
+  /* margin-top: 53px; */
 }
 
 .Image-under {
@@ -54,3 +59,92 @@
   position: absolute;
 }
 
+.Icon-border {
+  background-color: #ffffff;
+  border-radius: 50%;
+  height: 7em;
+  width: 7em;
+}
+
+.Icon {
+  height: 4em;
+  width: 4em;
+}
+
+.Icon-text-header {
+  font-family: Montserrat;
+  font-size: 1.25em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Icon-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+  text-align: center;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.Section-text-header {
+  font-family: Montserrat;
+  font-size: 2em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  text-decoration: underline;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Partner-text-header {
+  font-family: Montserrat;
+  font-size: 2em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: #666666;
+  letter-spacing: normal;
+  text-align: center;
+  color: #5499c3;
+}
+
+.Home-shop-logo {
+  height: 8em;
+  width: 8em;
+  border: 1px solid #EAEAEA;
+  border-radius: 5px;
+}
+
+.Home-shop-loading {
+  height: 8em;
+  width: 8em;
+  border: 1px solid #EAEAEA;
+  border-radius: 5px;
+  background-color: #EAEAEA;
+}
+
+.Home-shop-name {
+  font-family: Montserrat;
+  font-size: 1.25em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-align: center;
+  color: #5499c3;
+}
