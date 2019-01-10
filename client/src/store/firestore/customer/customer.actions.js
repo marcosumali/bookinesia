@@ -1300,6 +1300,44 @@ const getTransactionFailed = (data) => {
   }
 }
 
+// To execute customer request to cancel transaction
+export const customerCancelTransaction = (transaction) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let firestore = getFirestore()
+    let customerId = transaction.customerId
+    let latestUpdatedBy = {
+      type: 'customer',
+      id: customerId
+    }
+
+    swal({
+      title: 'Are you sure?',
+      text: "Your transaction will be removed from list of appointments.",
+      icon: 'warning',
+      buttons: ['Cancel', 'OK']
+    })
+    .then(result => {
+      if (result) {
+        let transactionRef = firestore.collection('transaction').doc(transaction.id)
+
+        transactionRef.update({
+          status: 'canceled',
+          updatedBy: latestUpdatedBy,
+          updatedDate: new Date(Date.now()),
+        })
+        .then(() => {
+          swal("Canceled!", "Your appointment has been canceled", "success");
+        })
+        .catch(err => {
+          console.log('ERROR: cancel transactions', err)
+        })
+
+      }
+    })
+  }
+}
+
+
 
 // ---------------------------------------------- MANUAL AUTHENTICATION FUNCTION ----------------------------------------------
 // ---------------------------------------------- BEFORE FIREBASE AUTH INITIATED ----------------------------------------------

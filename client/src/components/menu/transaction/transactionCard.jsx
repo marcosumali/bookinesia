@@ -7,10 +7,11 @@ import '../../../assets/css/general.css';
 import './transaction.css';
 import { returnWhatDay, returnWhatMonth } from '../../../helpers/date';
 import { getTotalTransaction, formatMoney } from '../../../helpers/currency';
+import TransactionStatusDiv from './transactionStatusDiv';
 
 class transactionCard extends Component {
   render() {
-    console.log('from transaction card', this.props)
+    // console.log('from transaction card', this.props)
     return (
       <div>
         <div className="row No-margin Card-container">
@@ -46,8 +47,13 @@ class transactionCard extends Component {
                 <img src={ this.props.transaction.staff.picture } className="No-padding Staff-image animated fadeIn" alt="Barber-img" />
               </div>
               <div className="col s9 Height-100 No-margin No-padding Container-center">
-                <div className="col s12 No-padding No-margin">
-                  <p className="No-margin Shop-header-name Text-capitalize animated fadeIn">{ this.props.transaction.staff.name }</p>
+                <div className="col s12 No-padding No-margin Container-center-cross">
+                  <div className="col s7 No-padding No-margin">
+                    <p className="No-margin Shop-header-name Text-capitalize animated fadeIn">{ this.props.transaction.staff.name }</p>
+                  </div>
+                  <div className="col s5 No-padding No-margin">
+                    <TransactionStatusDiv transaction={ this.props.transaction }/>
+                  </div>
                 </div>
                 <div className="col s12 No-padding No-margin">
                   <p className="No-margin Branch-header-name Text-capitalize animated fadeIn">Queue No. { this.props.transaction.queueNo }</p>

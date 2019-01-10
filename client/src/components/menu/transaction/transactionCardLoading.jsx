@@ -34,9 +34,12 @@ export default class transactionLoadingCard extends Component {
               <div className="Loading-circle-64"></div>
             </div>
             <div className="col s9 Height-100 No-margin No-padding Container-center">
-              <div className="col s12 No-padding Container-center">
-                <div className="col s12 No-padding No-margin Margin-b-4">
+              <div className="col s12 No-padding Container-center" style={{ justifyContent: 'space-between' }}>
+                <div className="col s7 No-padding No-margin Margin-b-4" style={{ marginRight: '0px' }}>
                   <div className="Loading-box-category"></div>
+                </div>
+                <div className="col s4 No-padding No-margin Margin-b-4">
+                  <div className="Loading-box-status"></div>
                 </div>
                 <div className="col s12 No-padding No-margin Margin-b-4">
                   <div className="Loading-box-name"></div>

@@ -125,12 +125,12 @@ class home extends Component {
                           return (
                             this.state.carouselIndex === index ?
                             <div 
-                              className="Dot-10-blue Margin-r-8" 
+                              className="Dot-10-blue Margin-r-16" 
                               key={ 'carousel-dot' + index }
                             ></div>
                             :
                             <div 
-                              className="Dot-10-grey Margin-r-8" 
+                              className="Dot-10-grey Margin-r-16" 
                               onClick={ () => this.changeCarouselIndex(index) }
                               key={ 'carousel-dot' + index }
                             ></div>
