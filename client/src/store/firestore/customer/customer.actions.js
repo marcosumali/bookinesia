@@ -29,6 +29,7 @@ export const emailRegisteredError = 'Email is already registered. Please sign in
 export const loginError = 'The email or password you entered is incorrect. Please try again.'
 export const incorrectPasswordError = 'Incorrect password.'
 export const tooManyRequestError = 'Too many unsuccessful authorisation attempts. Try again later.'
+export const tooManyRegistrationError = 'Too many unsuccessful registration attempts. Try again later.'
 const oldPasswordError = 'The old password you entered is incorrect.'
 const samePasswordError = `The new password can't be the same with your old password.`
 const notSameNewPasswordError = 'Your new password and its confirmation do not match.'
@@ -260,7 +261,7 @@ export const customerRegisterInputValidation = (props) => {
       // 3. Since we can't check email profile to firebase auth without password access, if userByEmail.email is not the same with email
       // and from point 1 return true, it means that the user is truely have been registered
       if (userByEmail.registeredStatus === false) {
-        if (customerExistenceBasedOnEmail && userByEmail.email !== email) {
+        if (customerExistenceBasedOnEmail === true && userByEmail.email !== email) {
           customerExistenceBasedOnEmail = true
         } else {
           customerExistenceBasedOnEmail = false
@@ -268,8 +269,10 @@ export const customerRegisterInputValidation = (props) => {
       }
     }
 
-    if (customerExistenceBasedOnEmail) {
+    if (customerExistenceBasedOnEmail === true) {
       dispatch(setRegisterEmailInputError(emailRegisteredError))
+    } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
+      dispatch(setRegisterEmailInputError(tooManyRegistrationError))
     }
     // console.log('check email', customerExistenceBasedOnEmail)
 
@@ -610,10 +613,13 @@ export const customerSettingsInputValidation = (props) => {
         let customerData = verifyCookies(BUID)
 
         let passwordStatus = await dispatch(authPasswordValidation(customerData, password))
-        if (passwordStatus) {
+        if (passwordStatus === true) {
           dispatch(authUpdateEmail(customerData, password, email, props))
-        } else {
+        } else if (passwordStatus === false) {
           dispatch(setSettingPasswordInputError(incorrectPasswordError))
+          dispatch(setLoadingStatus(false))          
+        } else if (passwordStatus === 'too-many-requests') {
+          dispatch(setSettingPasswordInputError(tooManyRequestError))
           dispatch(setLoadingStatus(false))          
         }
       } else {
@@ -847,6 +853,11 @@ export const customerChangePasswordInputValidation = (props) => {
         
         if (newPassword !== newPasswordConfirm) {
           inputErrors.push(notSameNewPasswordError)
+        }
+
+        if (passwordStatus === 'too-many-requests') {
+          inputErrors = []
+          inputErrors.push(tooManyRequestError)
         }
 
         await dispatch(setPasswordCheckingErrors(inputErrors))

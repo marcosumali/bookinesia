@@ -12,6 +12,25 @@ export default class transactionLoadingCard extends Component {
           {/* Transaction Card Header */}
           <div className="Branch-header-container Container-center-cross Padding-10">
             <div className="col s3 Height-100 No-padding No-margin Container-center">
+              <div className="Loading-square-64"></div>
+            </div>
+            <div className="col s9 Height-100 No-margin No-padding Container-center">
+              <div className="col s12 No-padding Container-center">
+                <div className="col s12 No-padding No-margin Margin-b-4">
+                  <div className="Loading-box-category"></div>
+                </div>
+                <div className="col s12 No-padding No-margin Margin-b-4">
+                  <div className="Loading-box-name"></div>
+                </div>
+                <div className="col s12 No-padding No-margin Margin-b-4">
+                  <div className="Loading-box-category"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="Branch-header-container Container-center-cross Padding-10">
+            <div className="col s3 Height-100 No-padding No-margin Container-center">
               <div className="Loading-circle-64"></div>
             </div>
             <div className="col s9 Height-100 No-margin No-padding Container-center">

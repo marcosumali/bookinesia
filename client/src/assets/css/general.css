@@ -358,6 +358,13 @@
   border-radius: 50%;
 }
 
+.Loading-square-56 {
+  background-color: #EAEAEA;
+  width: 3.5em;
+  height: 3.5em;
+  border-radius: 5px;
+}
+
 .Circle-img-64 {
   width: 4em;
   height: 4em;
@@ -370,6 +377,13 @@
   width: 4em;
   height: 4em;
   border-radius: 50%;
+}
+
+.Loading-square-64 {
+  background-color: #EAEAEA;
+  width: 4em;
+  height: 4em;
+  border-radius: 5px;
 }
 
 .Img-opacity-5 {

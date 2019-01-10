@@ -15,6 +15,7 @@ import {
   passwordMinError,
   createNewCustomer,
   setSettingEmailInputError,
+  tooManyRequestError
 } from '../customer/customer.actions';
 import {
   createNewCustomerAndCreateNewTransaction
@@ -112,7 +113,10 @@ export const authSignIn = (props) => {
       } else if (err.code === 'auth/user-disabled') {
         dispatch(setLoginError(loginDisableError))
         dispatch(setLoadingStatus(false))
-      } 
+      } else if (err.code === 'auth/too-many-requests') {
+        dispatch(setLoginError(tooManyRequestError))
+        dispatch(setLoadingStatus(false))
+      }
     })
   }
 }
@@ -144,7 +148,6 @@ export const authPasswordValidation = (customerData, password) => {
       } else {
         validateResult = false
       }
-      console.log('?????', err)
     })
 
     return validateResult
@@ -171,7 +174,6 @@ export const authEmailValidation = (email) => {
       } else if (err.code === 'auth/too-many-requests') {
         validateResult = 'too-many-requests'
       } 
-      console.log('=====a', validateResult, err)
     })
 
     return validateResult

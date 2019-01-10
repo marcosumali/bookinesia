@@ -37,7 +37,7 @@ class home extends Component {
         description: `while checking your active queue number in your transaction in real time. No need to refresh !`,
         imagePath: 'transaction-mobile-min.png'
       }],
-      loadingBox: [1, 2]
+      loadingBox: [1]
     }
   }
 
@@ -245,7 +245,7 @@ class home extends Component {
                 }
               </div>
               :
-              <div>
+              <div className="Container-center">
                 {
                   this.props.shops && this.props.shops.map((shop, index) => {
                     return (

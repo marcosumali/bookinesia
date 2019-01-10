@@ -62,117 +62,133 @@ class accountSettings extends Component {
                 </div>
                 
                 {/* Form Section */}
-                <div className="col s12 No-margin No-padding Margin-t-16 Form-box-white Padding-10 Padding-t-24">
-                  {/* Name Input */}
-                  <div className="input-field">
-                    {
-                      this.props.settingsCustomerNameError !== false?
-                      <div>
-                        <input id="name" type="text" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerName }/>
-                        <label htmlFor="name" className="Form-text active">Name</label>
-                        <span className="Input-info-error">{ this.props.settingsCustomerNameError }</span>
-                      </div>
-                      :
-                      <div>
-                        {
-                          this.props.settingsCustomerName !== "" ?
-                          <div>
-                            <input id="name" type="text" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerName }/>
-                            <label htmlFor="name" className="Form-text active">Name</label>
-                          </div>
-                          :
-                          <div>
-                            <input id="name" type="text" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerName } />
-                            <label htmlFor="name" className="Form-text">Name</label>
-                          </div>
-                        }
-                      </div>
-                    }
-                  </div>
-        
-                  {/* Phone Input */}
-                  <div className="input-field Margin-b-4">
-                    {
-                      this.props.settingsCustomerPhoneError !== false?
-                      <div>
-                        <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
-                        <label htmlFor="phone" className="Form-text active">Phone No.</label>
-                        <span className="Input-info-error">{ this.props.settingsCustomerPhoneError }</span>
-                      </div>
-                      :
-                      <div>
-                        {
-                          this.props.settingsCustomerPhone !== "" ?
-                          <div>
-                            <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
-                            <label htmlFor="phone" className="Form-text active">Phone No.</label>
-                          </div>
-                          :
-                          <div>
-                            <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
-                            <label htmlFor="phone" className="Form-text">Phone No.</label>
-                          </div>
-                        }
-                      </div>
-                    }
-                  </div>
-
-                  {/* Email Input */}
-                  <div className="input-field Margin-b-24">
-                    {
-                      this.props.settingsCustomerEmailError !== false ?
-                      <div>
-                        <input id="email" type="email" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerEmail }/>
-                        <label htmlFor="email" className="Form-text active">Email</label>
-                        <span className="Input-info-error">{ this.props.settingsCustomerEmailError }</span>
-                      </div>
-                      :
-                      <div>
-                        {
-                          this.props.settingsCustomerEmail !== "" ?
-                          <div>
-                            <input id="email" type="email" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerEmail }/>
-                            <label htmlFor="email" className="Form-text active">Email</label>
-                          </div>
-                          :
-                          <div>
-                            <input id="email" type="email" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerEmail }/>
-                            <label htmlFor="email" className="Form-text">Email</label>
-                          </div>
-                        }
-                      </div>
-                    }
-                  </div>
-
-                  <div className="Text-justify Grey-text-small">Please input your password to validate the changes.</div>
-                  {/* Password Input */}
-                  <div className="col s12 No-margin No-padding Margin-b-24">
+                <form>
+                  <div className="col s12 No-margin No-padding Margin-t-16 Form-box-white Padding-10 Padding-t-24">
+                    {/* Name Input */}
                     <div className="input-field">
                       {
-                        this.props.settingsCustomerPasswordError !== false?
+                        this.props.settingsCustomerNameError !== false?
                         <div>
-                          <div className="col s11 No-margin No-padding">
-                            <input autoComplete="off" id="password" type="password" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
-                            <label htmlFor="password" className="Form-text active">Password</label>
-                            <span className="Input-info-error">{ this.props.settingsCustomerPasswordError }</span>
-                          </div>
-                          <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
-                            {
-                              this.state.visibilityStatus ?
-                              <EyeSvg width="25px" height="22px" color="#666666" />
-                              :
-                              <EyeOffSvg width="25px" height="22px" color="#666666" />
-                            }
-                          </div>
+                          <input id="name" type="text" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerName }/>
+                          <label htmlFor="name" className="Form-text active">Name</label>
+                          <span className="Input-info-error">{ this.props.settingsCustomerNameError }</span>
                         </div>
                         :
                         <div>
                           {
-                            this.props.settingsCustomerPassword !== "" ?
+                            this.props.settingsCustomerName !== "" ?
                             <div>
+                              <input id="name" type="text" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerName }/>
+                              <label htmlFor="name" className="Form-text active">Name</label>
+                            </div>
+                            :
+                            <div>
+                              <input id="name" type="text" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerName } />
+                              <label htmlFor="name" className="Form-text">Name</label>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+          
+                    {/* Phone Input */}
+                    <div className="input-field Margin-b-4">
+                      {
+                        this.props.settingsCustomerPhoneError !== false?
+                        <div>
+                          <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                          <label htmlFor="phone" className="Form-text active">Phone No.</label>
+                          <span className="Input-info-error">{ this.props.settingsCustomerPhoneError }</span>
+                        </div>
+                        :
+                        <div>
+                          {
+                            this.props.settingsCustomerPhone !== "" ?
+                            <div>
+                              <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                              <label htmlFor="phone" className="Form-text active">Phone No.</label>
+                            </div>
+                            :
+                            <div>
+                              <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                              <label htmlFor="phone" className="Form-text">Phone No.</label>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    {/* Email Input */}
+                    <div className="input-field Margin-b-24">
+                      {
+                        this.props.settingsCustomerEmailError !== false ?
+                        <div>
+                          <input id="email" type="email" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerEmail }/>
+                          <label htmlFor="email" className="Form-text active">Email</label>
+                          <span className="Input-info-error">{ this.props.settingsCustomerEmailError }</span>
+                        </div>
+                        :
+                        <div>
+                          {
+                            this.props.settingsCustomerEmail !== "" ?
+                            <div>
+                              <input id="email" type="email" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerEmail }/>
+                              <label htmlFor="email" className="Form-text active">Email</label>
+                            </div>
+                            :
+                            <div>
+                              <input id="email" type="email" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerEmail }/>
+                              <label htmlFor="email" className="Form-text">Email</label>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    <div className="Text-justify Grey-text-small">Please input your password to authorise the changes.</div>
+                    {/* Password Input */}
+                    <div className="col s12 No-margin No-padding Margin-b-24">
+                      <div className="input-field">
+                        {
+                          this.props.settingsCustomerPasswordError !== false?
+                          <div>
+                            <div className="col s11 No-margin No-padding">
+                              <input autoComplete="off" id="password" type="password" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
+                              <label htmlFor="password" className="Form-text active">Password</label>
+                              <span className="Input-info-error">{ this.props.settingsCustomerPasswordError }</span>
+                            </div>
+                            <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                              {
+                                this.state.visibilityStatus ?
+                                <EyeSvg width="25px" height="22px" color="#666666" />
+                                :
+                                <EyeOffSvg width="25px" height="22px" color="#666666" />
+                              }
+                            </div>
+                          </div>
+                          :
+                          <div>
+                            {
+                              this.props.settingsCustomerPassword !== "" ?
+                              <div>
+                                  <div className="col s11 No-margin No-padding">
+                                    <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
+                                    <label htmlFor="password" className="Form-text active">Password</label>
+                                  </div>
+                                  <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                    {
+                                      this.state.visibilityStatus ?
+                                      <EyeSvg width="25px" height="22px" color="#666666" />
+                                      :
+                                      <EyeOffSvg width="25px" height="22px" color="#666666" />
+                                    }
+                                  </div>
+                              </div>
+                              :
+                              <div>
                                 <div className="col s11 No-margin No-padding">
-                                  <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
-                                  <label htmlFor="password" className="Form-text active">Password</label>
+                                  <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword } />
+                                  <label htmlFor="password" className="Form-text">Password</label>
                                 </div>
                                 <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
                                   {
@@ -182,32 +198,19 @@ class accountSettings extends Component {
                                     <EyeOffSvg width="25px" height="22px" color="#666666" />
                                   }
                                 </div>
-                            </div>
-                            :
-                            <div>
-                              <div className="col s11 No-margin No-padding">
-                                <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword } />
-                                <label htmlFor="password" className="Form-text">Password</label>
                               </div>
-                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
-                                {
-                                  this.state.visibilityStatus ?
-                                  <EyeSvg width="25px" height="22px" color="#666666" />
-                                  :
-                                  <EyeOffSvg width="25px" height="22px" color="#666666" />
-                                }
-                              </div>
-                            </div>
-                          }
-                        </div>
-                      }
+                            }
+                          </div>
+                        }
+                      </div>
                     </div>
+
+                    {/* Save Button */}
+                    <AuthButton onPage="settingsPage" history={ this.props.history }/>
+
                   </div>
-
-                  {/* Save Button */}
-                  <AuthButton onPage="settingsPage" history={ this.props.history }/>
-
-                </div>
+                </form>
+ 
               </div>
             }
           </div>

@@ -77,7 +77,9 @@ export const getShopsData = () => {
         snapshot.forEach(doc => {
           let data = doc.data()
           data['id'] = doc.id
-          shops.push(data)
+          if (data.id !== 'dummyshop') {
+            shops.push(data)
+          }
         })
       } else {
         dispatch(getShopsDataFailed(false))
