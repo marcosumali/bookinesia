@@ -128,18 +128,23 @@ export const authSignOut = (cookies) => {
   }
 }
 
-export const authPasswordValidation = (customerData, oldPassword) => {
+export const authPasswordValidation = (customerData, password) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = customerData.email
     let validateResult = 'none'
 
     let firebase = getFirebase()
-    await firebase.auth().signInWithEmailAndPassword(email, oldPassword)
+    await firebase.auth().signInWithEmailAndPassword(email, password)
     .then(() => {
       validateResult = true
     })
     .catch(err => {
-      validateResult = false
+      if (err.code === 'auth/too-many-requests') {
+        validateResult = 'too-many-requests'
+      } else {
+        validateResult = false
+      }
+      console.log('?????', err)
     })
 
     return validateResult
@@ -163,7 +168,10 @@ export const authEmailValidation = (email) => {
         // Do nothing
       } else if (err.code === 'auth/user-disabled') {
         validateResult = true
+      } else if (err.code === 'auth/too-many-requests') {
+        validateResult = 'too-many-requests'
       } 
+      console.log('=====a', validateResult, err)
     })
 
     return validateResult
@@ -253,6 +261,7 @@ export const authSignInAnonymouslyAndCreateNewTransaction = (props) => {
   }
 }
 
+// To migrate user from anonymous user to registered user
 export const authMigrateAnonymousUser = (props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail

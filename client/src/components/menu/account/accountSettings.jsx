@@ -152,7 +152,7 @@ class accountSettings extends Component {
                         this.props.settingsCustomerPasswordError !== false?
                         <div>
                           <div className="col s11 No-margin No-padding">
-                            <input id="password" type="password" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
+                            <input autoComplete="off" id="password" type="password" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
                             <label htmlFor="password" className="Form-text active">Password</label>
                             <span className="Input-info-error">{ this.props.settingsCustomerPasswordError }</span>
                           </div>
@@ -171,7 +171,7 @@ class accountSettings extends Component {
                             this.props.settingsCustomerPassword !== "" ?
                             <div>
                                 <div className="col s11 No-margin No-padding">
-                                  <input id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
+                                  <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
                                   <label htmlFor="password" className="Form-text active">Password</label>
                                 </div>
                                 <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
@@ -186,7 +186,7 @@ class accountSettings extends Component {
                             :
                             <div>
                               <div className="col s11 No-margin No-padding">
-                                <input id="password" type="password" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword } />
+                                <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword } />
                                 <label htmlFor="password" className="Form-text">Password</label>
                               </div>
                               <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>

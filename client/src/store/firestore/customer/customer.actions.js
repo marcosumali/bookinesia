@@ -20,14 +20,15 @@ import swal from 'sweetalert';
 // const ENV_SALTROUNDS = Number(process.env.REACT_APP_SALTROUNDS)
 // const SALTROUNDS = bcrypt.genSaltSync(ENV_SALTROUNDS)
 
-const emptyError = 'This section must be filled.'
-const phoneMinError = 'Phone number is too short, min. 8 characters.'
+export const emptyError = 'This section must be filled.'
+export const phoneMinError = 'Phone number is too short, min. 8 characters.'
 const phoneRegisteredError = 'Phone number is already registered. Please sign in.'
 export const passwordMinError = 'Password is too short, min. 8 characters.'
 export const emailInvalidError = 'Invalid email.'
 export const emailRegisteredError = 'Email is already registered. Please sign in.'
 export const loginError = 'The email or password you entered is incorrect. Please try again.'
-const incorrectPasswordError = 'Incorrect password.'
+export const incorrectPasswordError = 'Incorrect password.'
+export const tooManyRequestError = 'Too many unsuccessful authorisation attempts. Try again later.'
 const oldPasswordError = 'The old password you entered is incorrect.'
 const samePasswordError = `The new password can't be the same with your old password.`
 const notSameNewPasswordError = 'Your new password and its confirmation do not match.'

@@ -23,12 +23,14 @@ let initialState = {
   customerName: '',
   customerEmail: '',
   customerPhone: '',
+  customerPassword: '',
   customerNameError: false,
   customerEmailError: false,
   customerPhoneError: false,
+  customerPasswordError: false,
   transaction: '',
   noServiceSelectedStatus: false,
-  hasBookStatus: false,
+  showPasswordInputStatus: false,
 }
 
 const transactionDataList = (state = { ...initialState }, action) => {
@@ -167,10 +169,10 @@ const transactionDataList = (state = { ...initialState }, action) => {
         ...state,
         customerPhone: action.payload
       })
-    case 'SET_BOOK_STATUS_SUCCESS':
+    case 'SET_CUSTOMER_PASSWORD':
       return ({
         ...state,
-        hasBookStatus: action.payload
+        customerPassword: action.payload
       })
     case 'SET_CUSTOMER_NAME_ERROR':
       return ({
@@ -187,6 +189,11 @@ const transactionDataList = (state = { ...initialState }, action) => {
         ...state,
         customerPhoneError: action.payload
       })
+    case 'SET_CUSTOMER_PASSWORD_ERROR':
+      return ({
+        ...state,
+        customerPasswordError: action.payload
+      })
     case 'SET_CUSTOMER_NAME_OK':
       return ({
         ...state,
@@ -201,6 +208,11 @@ const transactionDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         customerPhoneError: action.payload
+      })
+    case 'SET_CUSTOMER_PASSWORD_OK':
+      return ({
+        ...state,
+        customerPasswordError: action.payload
       })
     case 'SET_FORM_VALUE_BUID':
       return ({
@@ -218,6 +230,11 @@ const transactionDataList = (state = { ...initialState }, action) => {
       return ({
         ...state,
         noServiceSelectedStatus: action.payload
+      })
+    case 'SET_SHOW_PASSWORD_INPUT_STATUS':
+      return ({
+        ...state,
+        showPasswordInputStatus: action.payload
       })
     default:
       return state;

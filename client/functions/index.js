@@ -39,6 +39,9 @@ exports.getUserBasedOnUid = functions.https.onRequest((req, res) => {
   })
   .catch(function(error) {
     console.log("ERROR: fetching user data by UID", error)
+    // res.status(400).json({
+    //   message: 'ERROR: fetching user data by UID',
+    // })
   })
 })
 
@@ -63,6 +66,9 @@ exports.getUserBasedOnEmail = functions.https.onRequest((req, res) => {
   })
   .catch(function(error) {
     console.log("ERROR: fetching user data by Email", error)
+    // res.status(400).json({
+    //   message: 'ERROR: fetching user data by Email',
+    // })
   })
 })
 
@@ -100,9 +106,8 @@ exports.sendEmailWelcomeCustomer = functions.https.onRequest((req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log('ERROR: Customer Welcome Message not sent', error)
-      res.status(200).json({
+      res.status(400).json({
         message: 'ERROR: Customer Welcome Message not sent',
-        error
       })    
     } else {
       console.log(`Customer Welcome Message sent: %s`, info.messageId)
@@ -148,9 +153,8 @@ exports.sendEmailWelcomeGuest = functions.https.onRequest((req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log('ERROR: Guest Welcome Message not sent ', error)
-      res.status(200).json({
+      res.status(400).json({
         message: 'ERROR: Guest Welcome Message not sent',
-        error
       })    
     } else {
       console.log(`Guest Welcome Message sent: %s`, info.messageId)
@@ -235,9 +239,8 @@ exports.sendEmailCustomerBookTransaction = functions.https.onRequest((req, res) 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log('ERROR: Customer Book Transaction Message not sent ', error)
-      res.status(200).json({
+      res.status(400).json({
         message: 'ERROR: Customer Book Transaction Message not sent',
-        error
       })    
     } else {
       console.log(`Customer Book Transaction Message sent: %s`, info.messageId)

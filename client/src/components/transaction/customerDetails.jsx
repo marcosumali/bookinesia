@@ -16,14 +16,38 @@ import {
 import { handleCookies } from '../../store/firestore/customer/customer.actions';
 import { returnWhatDay, returnWhatMonth } from '../../helpers/date';
 import { formatMoney, getTotalTransaction } from '../../helpers/currency';
+import EyeSvg from '../svg/eyeSvg';
+import EyeOffSvg from '../svg/eyeOffSvg';
 
 class customerDetails extends Component {
+  constructor() {
+    super()
+    this.state = {
+      visibilityStatus: false
+    }
+  }
+
   componentWillMount() {
     let params = this.props.params
     this.props.getStaffBasedOnParams(params)
     this.props.getAppointmentBasedOnParams(params)
     this.props.getServicesBasedOnParams(params)
     this.props.handleCookies('during input', this.props.cookies)
+  }
+
+  passwordVisibility() {
+    let x = document.getElementById("password")
+    if (x.type === "password") {
+      x.type = "text"
+      this.setState({
+        'visibilityStatus': true
+      })
+    } else {
+      x.type = "password"
+      this.setState({
+        'visibilityStatus': false
+      })
+    }
   }
 
   render() {
@@ -154,6 +178,7 @@ class customerDetails extends Component {
                 <p className="No-margin Confirm-text Text-justify">Barbershop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</p>
               </div>
               <form className="col s12 No-margin No-padding">
+                {/* Name Input */}
                 <div className="input-field">
                   {
                     this.props.customerNameError !== false?
@@ -179,6 +204,8 @@ class customerDetails extends Component {
                     </div>
                   }
                 </div>
+
+                {/* Phone Input */}
                 <div className="input-field ">
                   {
                     this.props.customerPhoneError !== false?
@@ -204,7 +231,9 @@ class customerDetails extends Component {
                     </div>
                   }
                 </div>
-                <div className="input-field Margin-b-10">
+
+                {/* Email Input */}
+                <div className="input-field Margin-b-20">
                   {
                     this.props.customerEmailError !== false?
                     <div>
@@ -229,6 +258,76 @@ class customerDetails extends Component {
                     </div>
                   }
                 </div>
+                
+                
+                {/* Password Input */}
+                {
+                  this.props.showPasswordInputStatus ?
+                  <div>
+                    <div className="Margin-b-10">
+                      <div className="No-margin Confirm-text Text-justify">We noticed that you have registered and signed out previously, please input your password to authorised the transaction.</div>
+                    </div>
+                    <div className="input-field Margin-b-10">
+                      {
+                        this.props.customerPasswordError !== false?
+                        <div>
+                          <div className="col s11 No-margin No-padding">
+                            <input autoComplete="off" id="password" type="password" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPassword }/>
+                            <label htmlFor="password" className="Form-text active">Password</label>
+                            <span className="Input-info-error">{ this.props.customerPasswordError }</span>
+                          </div>
+                          <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                            {
+                              this.state.visibilityStatus ?
+                              <EyeSvg width="25px" height="22px" color="#666666" />
+                              :
+                              <EyeOffSvg width="25px" height="22px" color="#666666" />
+                            }
+                          </div>
+                        </div>
+                        :
+                        <div>
+                          {
+                            this.props.customerPassword !== "" ?
+                            <div>
+                                <div className="col s11 No-margin No-padding">
+                                  <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPassword }/>
+                                  <label htmlFor="password" className="Form-text active">Password</label>
+                                </div>
+                                <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                  {
+                                    this.state.visibilityStatus ?
+                                    <EyeSvg width="25px" height="22px" color="#666666" />
+                                    :
+                                    <EyeOffSvg width="25px" height="22px" color="#666666" />
+                                  }
+                                </div>
+                            </div>
+                            :
+                            <div>
+                              <div className="col s11 No-margin No-padding">
+                                <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPassword } />
+                                <label htmlFor="password" className="Form-text">Password</label>
+                              </div>
+                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                {
+                                  this.state.visibilityStatus ?
+                                  <EyeSvg width="25px" height="22px" color="#666666" />
+                                  :
+                                  <EyeOffSvg width="25px" height="22px" color="#666666" />
+                                }
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  :
+                  <div></div>
+                }
+                <div id="recaptcha" ref={(ref)=>this.recaptcha=ref}></div>
+
               </form>
               {/* <div className="col s12 No-margin No-padding">
                 <p className="No-margin Confirm-text Text-justify">I hereby declare to agree with <span className="Text-underline">Cancellation Policy</span>. I also agree to pay in total of stated amount.</p>
@@ -273,6 +372,9 @@ const mapStateToProps = state => {
     customerEmailError: state.cart.customerEmailError,
     customerPhoneError: state.cart.customerPhoneError,
     cookies: state.user.cookies,
+    customerPassword: state.cart.customerPassword,
+    customerPasswordError: state.cart.customerPasswordError,
+    showPasswordInputStatus: state.cart.showPasswordInputStatus,
   }
 }
 
@@ -281,7 +383,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   getStaffBasedOnParams,
   getAppointmentBasedOnParams,
   handleInputChanges,
-  handleCookies
+  handleCookies,
 }, dispatch)
 
 
