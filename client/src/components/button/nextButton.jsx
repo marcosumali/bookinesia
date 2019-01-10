@@ -8,9 +8,6 @@ import { customerInputValidation, customerServiceInputValidation } from '../../s
 import LoadingDotSvg from '../svg/loadingDotSvg';
 
 class nextButton extends Component {
-  doNothing() {
-  }
-
   render() {
     // console.log('check props in next', this.props)
     return (
@@ -25,15 +22,21 @@ class nextButton extends Component {
               <p className="Next-text-disable">{ this.props.text }</p>
             </div>
             :
-            <div onClick={ this.props.hasBookStatus === false ? () => this.props.customerInputValidation(this.props) : () => this.doNothing }>
-              <div className="Next-button Container-center">
-                {
-                  this.props.loadingStatus ?
+            <div>
+            {
+              this.props.loadingStatus ?
+              <div>
+                <div className="Next-button Container-center">
                   <LoadingDotSvg width="4.5em" height="4.5em" />
-                  :
-                  <p className="Next-text">{ this.props.text }</p>
-                }
+                </div>
               </div>
+              :
+              <div onClick={ () => this.props.customerInputValidation(this.props) }>
+                <div className="Next-button Container-center">
+                  <p className="Next-text">{ this.props.text }</p>
+                </div>
+              </div>
+            }
             </div>
           :
           this.props.text === 'Continue' && this.props.onPage === 'ServicePage' ?
@@ -91,11 +94,13 @@ const mapStateToProps = state => {
     customerName: state.cart.customerName,
     customerEmail: state.cart.customerEmail,
     customerPhone: state.cart.customerPhone,
+    customerPassword: state.cart.customerPassword,
     selectedStaff: state.cart.selectedStaff,
     selectedAppointment: state.cart.selectedAppointment,
     selectedServices: state.cart.selectedServices,
-    hasBookStatus: state.cart.hasBookStatus,
     loadingStatus: state.user.loadingStatus,
+    shop: state.shop.shop,
+    showPasswordInputStatus: state.cart.showPasswordInputStatus,
     // Service Transaction Page Needs
     primaryService: state.cart.primaryService,
     secondaryServices: state.cart.secondaryServices,

@@ -14,10 +14,11 @@ import {
   setRegisterPasswordInputError,
   passwordMinError,
   createNewCustomer,
-  setSettingEmailInputError
+  setSettingEmailInputError,
+  tooManyRequestError
 } from '../customer/customer.actions';
 import {
-  getCustomerByPhoneAndCreateNewTransaction,
+  createNewCustomerAndCreateNewTransaction
 } from '../transaction/transaction.actions';
 import swal from 'sweetalert';
 
@@ -112,7 +113,10 @@ export const authSignIn = (props) => {
       } else if (err.code === 'auth/user-disabled') {
         dispatch(setLoginError(loginDisableError))
         dispatch(setLoadingStatus(false))
-      } 
+      } else if (err.code === 'auth/too-many-requests') {
+        dispatch(setLoginError(tooManyRequestError))
+        dispatch(setLoadingStatus(false))
+      }
     })
   }
 }
@@ -128,18 +132,22 @@ export const authSignOut = (cookies) => {
   }
 }
 
-export const authPasswordValidation = (customerData, oldPassword) => {
+export const authPasswordValidation = (customerData, password) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = customerData.email
     let validateResult = 'none'
 
     let firebase = getFirebase()
-    await firebase.auth().signInWithEmailAndPassword(email, oldPassword)
+    await firebase.auth().signInWithEmailAndPassword(email, password)
     .then(() => {
       validateResult = true
     })
     .catch(err => {
-      validateResult = false
+      if (err.code === 'auth/too-many-requests') {
+        validateResult = 'too-many-requests'
+      } else {
+        validateResult = false
+      }
     })
 
     return validateResult
@@ -148,7 +156,7 @@ export const authPasswordValidation = (customerData, oldPassword) => {
 
 export const authEmailValidation = (email) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let validateResult = 'none'
+    let validateResult = ''
     let password = 'no-password'
 
     let firebase = getFirebase()
@@ -163,6 +171,8 @@ export const authEmailValidation = (email) => {
         // Do nothing
       } else if (err.code === 'auth/user-disabled') {
         validateResult = true
+      } else if (err.code === 'auth/too-many-requests') {
+        validateResult = 'too-many-requests'
       } 
     })
 
@@ -227,7 +237,7 @@ export const authUpdatePassword = (customerData, oldPassword, newPassword, histo
   }
 }
 
-export const authSignInAnonymously = (props) => {
+export const authSignInAnonymouslyAndCreateNewTransaction = (props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail
     let firebase = getFirebase()
@@ -238,8 +248,11 @@ export const authSignInAnonymously = (props) => {
       let user = firebase.auth().currentUser
 
       user.updateEmail(email)
-      .then(function() {
-        dispatch(getCustomerByPhoneAndCreateNewTransaction(uid, props))
+      .then(async function() {
+        let updateProfileResult = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
+        if (updateProfileResult === true) {
+          dispatch(createNewCustomerAndCreateNewTransaction(uid, props))
+        }
       }).catch(function(err) {
         console.log('ERROR: update profile anonymous', err)
       })
@@ -250,6 +263,7 @@ export const authSignInAnonymously = (props) => {
   }
 }
 
+// To migrate user from anonymous user to registered user
 export const authMigrateAnonymousUser = (props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail

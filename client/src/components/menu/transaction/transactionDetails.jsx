@@ -9,10 +9,12 @@ import CheckSvg from '../../svg/checkSvg';
 import TransactionDetailsLoading from './transactionDetailsLoading';
 import { 
   getTransactionDetails,
-  handleCookies
+  handleCookies,
+  customerCancelTransaction
 } from '../../../store/firestore/customer/customer.actions';
 import { returnWhatDay, returnWhatMonth } from '../../../helpers/date';
 import { formatMoney, getTotalTransaction } from '../../../helpers/currency';
+import TransactionStatusDiv from './transactionStatusDiv';
 
 class transactionDetails extends Component {
   componentWillMount () {
@@ -57,17 +59,22 @@ class transactionDetails extends Component {
                         <p className="No-margin Schedule-text-white animated fadeIn faster">Your Queue No. { this.props.transaction.queueNo }</p>
                       </div>
                       {
-                        Number(this.props.appointment.currentQueue) === 0 ?
+                        this.props.transaction.status === 'canceled' ?
+                        <div className="col s12 No-padding No-margin Container-center">
+                          <p className="No-margin Schedule-text-white animated fadeIn faster">The appointment has been canceled.</p>
+                        </div>
+                        :
+                        this.props.transaction.status !== 'canceled' && Number(this.props.appointment.currentQueue) === 0 ?
                         <div className="col s12 No-padding No-margin Container-center">
                           <p className="No-margin Schedule-text-white animated fadeIn faster">The queue hasn't started.</p>
                         </div>
                         :
-                        Number(this.props.appointment.currentQueue) ===  Number(this.props.transaction.queueNo) ?
+                        this.props.transaction.status !== 'canceled' && Number(this.props.appointment.currentQueue) ===  Number(this.props.transaction.queueNo) ?
                         <div className="col s12 No-padding No-margin Container-center">
                           <p className="No-margin Schedule-text-white animated fadeIn faster">You're up.</p>
                         </div>
                         :
-                        Number(this.props.appointment.currentQueue) >  Number(this.props.transaction.queueNo) ?
+                        this.props.transaction.status !== 'canceled' && Number(this.props.appointment.currentQueue) >  Number(this.props.transaction.queueNo) ?
                         <div className="col s12 No-padding No-margin Container-center">
                           <p className="No-margin Schedule-text-white animated fadeIn faster">Your appointment has finished.</p>
                         </div>
@@ -91,24 +98,7 @@ class transactionDetails extends Component {
                         </div>
                       </div>
                       <div className="col s4 No-margin No-padding Container-end">
-                        {
-                          this.props.transaction.status === 'booking confirmed' || this.props.transaction.status === 'on progress' ?
-                          <div className="Status-box-progress">
-                            <div className="Status-text">Confirmed</div>
-                          </div>
-                          :
-                          this.props.transaction.status === 'finished' ?
-                          <div className="Status-box-complete">
-                            <div className="Status-text">Finished</div>
-                          </div>
-                          :
-                          this.props.transaction.status === 'canceled' ?
-                          <div className="Status-box-cancel">
-                            <div className="Status-text">Canceled</div>
-                          </div>
-                          :
-                          <div></div>
-                        }
+                        <TransactionStatusDiv transaction={ this.props.transaction }/>
                       </div>
                     </div>
         
@@ -222,9 +212,14 @@ class transactionDetails extends Component {
                     </div>
         
                     {/* Cancel Button */}
-                    <div className="col s12 No-margin No-padding Cancel-box Container-center">
-                      <div className="Cancel-text">Cancel</div>
-                    </div>
+                    {
+                      this.props.transaction.status === 'canceled' ?
+                      <div></div>
+                      :
+                      <div className="col s12 No-margin No-padding Cancel-box Container-center" onClick={ () => this.props.customerCancelTransaction(this.props.transaction) }>
+                        <div className="Cancel-text">Cancel</div>
+                      </div>
+                    }
         
                   </div>
                 </div>
@@ -261,7 +256,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   getTransactionDetails,
-  handleCookies
+  handleCookies,
+  customerCancelTransaction
 }, dispatch)
 
 

@@ -3,12 +3,26 @@ import axios from 'axios';
 import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail } from '../../../helpers/form';
 import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
-import { setLoadingStatus, setAuthorizationStatus, validateCustomerExistence, getCustomerByField, getCustomerById } from '../customer/customer.actions';
-import { authSignInAnonymously, authEmailValidation } from '../auth/auth.actions';
-
-const emptyError = 'This section must be filled.'
-const phoneMinError = 'Phone number is too short, min. 8 characters.'
-const emailInvalidError = 'Invalid email.'
+import { 
+  setLoadingStatus, 
+  setAuthorizationStatus, 
+  validateCustomerExistence, 
+  getCustomerByField, 
+  getCustomerById 
+} from '../customer/customer.actions';
+import { 
+  authSignInAnonymouslyAndCreateNewTransaction, 
+  authEmailValidation, 
+  authPasswordValidation 
+} from '../auth/auth.actions';
+import { 
+  emptyError, 
+  phoneMinError, 
+  emailInvalidError, 
+  passwordMinError, 
+  incorrectPasswordError, 
+  tooManyRequestError 
+} from '../customer/customer.actions';
 
 // ---------------------------------------------- GENERAL ACTION ----------------------------------------------
 // To clear transaction state when user go back
@@ -112,6 +126,8 @@ export const handleInputChanges = (e) => {
       dispatch(setCustomerEmail(value))
     } else if (inputId === 'phone') {
       dispatch(setCustomerPhone(value))
+    } else if (inputId === 'password') {
+      dispatch(setCustomerPassword(value))
     }
   }
 }
@@ -133,6 +149,13 @@ const setCustomerEmail = (data) => {
 const setCustomerPhone = (data) => {
   return {
     type: 'SET_CUSTOMER_PHONE',
+    payload: data
+  }
+}
+
+const setCustomerPassword = (data) => {
+  return {
+    type: 'SET_CUSTOMER_PASSWORD',
     payload: data
   }
 }
@@ -657,7 +680,9 @@ export const customerInputValidation = (props) => {
     let name = props.customerName
     let phone = props.customerPhone
     let email = props.customerEmail
+    let password = props.customerPassword
     let cookies = props.cookies
+    let showPasswordInputStatus = props.showPasswordInputStatus
 
     // To set loading status to true
     dispatch(setLoadingStatus(true))
@@ -683,6 +708,14 @@ export const customerInputValidation = (props) => {
       dispatch(setEmailInputError(emailInvalidError))
     }
 
+    if (password.length <= 0) {
+      await dispatch(setPasswordInputError(emptyError))
+    } 
+    
+    if (password.length > 0 && password.length < 8) {
+      await dispatch(setPasswordInputError(passwordMinError))
+    }
+
     // Input is OK
     if (name.length > 0) {
       dispatch(setNameInputOK(false))
@@ -695,40 +728,46 @@ export const customerInputValidation = (props) => {
     if (email.length > 0 && validateEmail(email)) {
       dispatch(setEmailInputOK(false))
     }
+
+    if (password.length >= 8) {
+      await dispatch(setPasswordInputOK(false))
+    } 
     
     if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true) {
-      dispatch(setHasBookSuccess(true))
-      let BUID = getCookies(cookies)
-      if (BUID) {
-        let customerData = verifyCookies(BUID)
-        let customerId = customerData.id
-        dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
-      } else {
-        let authUserExistence = await dispatch(authEmailValidation(email))
-        let userExistence = await dispatch(validateCustomerExistence('phone', phone))
-        // console.log('auth exist', authUserExistence, userExistence)
-        if (authUserExistence && userExistence) {
-          dispatch(getCustomerByPhoneAndCreateNewTransaction(null, props))
-        } else if (authUserExistence && userExistence === false ) {
-          let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
-          if (authResponseByEmail.status === 200) {
-            let authUser = authResponseByEmail.data.user
-            let id = authUser.id
-            let registeredUser = await dispatch(getCustomerById(id))
-            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+      if (showPasswordInputStatus === false || (showPasswordInputStatus && password.length >= 8)) {
+        let BUID = getCookies(cookies)
+        if (BUID) {
+          let customerData = verifyCookies(BUID)
+          let customerId = customerData.id
+          dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
+        } else {
+          let authUserExistence = await dispatch(authEmailValidation(email))
+          let userExistence = await dispatch(validateCustomerExistence('phone', phone))
+          // console.log('auth exist', authUserExistence, '===', userExistence)
+          if (authUserExistence === 'too-many-requests') {
+            dispatch(setPasswordInputError(tooManyRequestError))
+            dispatch(setLoadingStatus(false))
+          } else {
+            if (authUserExistence && userExistence) {
+              dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
+            } else if (authUserExistence && userExistence === false ) {
+              dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
+            } else if (authUserExistence === false && userExistence) {
+              let registeredUser = await dispatch(getCustomerByField('phone', phone))
+              let uid = registeredUser.id
+    
+              let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
+              if (authResponseByUID.status === 200) {
+                let authUser = authResponseByUID.data.user
+                dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))
+              }
+            } else if (authUserExistence === false && userExistence === false) {
+              dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
+            }
           }
-        } else if (authUserExistence === false && userExistence) {
-          let registeredUser = await dispatch(getCustomerByField('phone', phone))
-          let uid = registeredUser.id
-
-          let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
-          if (authResponseByUID.status === 200) {
-            let authUser = authResponseByUID.data.user
-            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
-          }
-        } else if (authUserExistence === false && userExistence === false) {
-          dispatch(authSignInAnonymously(props))
         }
+      } else {
+        dispatch(setLoadingStatus(false))
       }
     } else {
       dispatch(setLoadingStatus(false))
@@ -736,11 +775,50 @@ export const customerInputValidation = (props) => {
   }
 }
 
-// To set book status to true - limit customer to only able to book once each render
-const setHasBookSuccess = (data) => {
-  return {
-    type: 'SET_BOOK_STATUS_SUCCESS',
-    payload: data
+
+export const checkAuthUserByEmailAndCreateNewTransaction = (props) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let email = props.customerEmail
+
+    let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
+    if (authResponseByEmail.status === 200) {
+      let authUser = authResponseByEmail.data.user
+      let id = authUser.id
+      let registeredUser = await dispatch(getCustomerById(id))
+      dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))            
+    }
+  }
+}
+
+// To final check auth user is authorised to create new transsaction by inputting password
+export const checkAuthUserToCreateTransaction = (props, authUser, registeredUser) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let showPasswordInputStatus = props.showPasswordInputStatus
+    let password = props.customerPassword
+
+    if (registeredUser.registeredStatus) {
+      if (showPasswordInputStatus) {
+        if (password.length >= 8) {
+          let passwordStatus = await dispatch(authPasswordValidation(authUser, password))
+          if (passwordStatus === true) {
+            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+          } else if (passwordStatus === 'too-many-requests') {
+            dispatch(setPasswordInputError(tooManyRequestError))
+            dispatch(setLoadingStatus(false))
+          } else if (passwordStatus === false) {
+            dispatch(setPasswordInputError(incorrectPasswordError))
+            dispatch(setLoadingStatus(false))
+          }
+        } else {
+          dispatch(setLoadingStatus(false))
+        }
+      } else {
+        dispatch(setShowPasswordInputstatus(true))
+        dispatch(setLoadingStatus(false))
+      }
+    } else {
+      dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+    }
   }
 }
 
@@ -762,6 +840,13 @@ const setPhoneInputError = (data) => {
 const setEmailInputError = (data) => {
   return {
     type: 'SET_CUSTOMER_EMAIL_ERROR',
+    payload: data
+  }
+}
+
+const setPasswordInputError = (data) => {
+  return {
+    type: 'SET_CUSTOMER_PASSWORD_ERROR',
     payload: data
   }
 }
@@ -788,9 +873,23 @@ const setEmailInputOK = (data) => {
   }
 }
 
+const setPasswordInputOK = (data) => {
+  return {
+    type: 'SET_CUSTOMER_PASSWORD_OK',
+    payload: data
+  }
+}
+
+const setShowPasswordInputstatus = (data) => {
+  return {
+    type: 'SET_SHOW_PASSWORD_INPUT_STATUS',
+    payload: data
+  }
+}
+
 // To check customer existence using input from phone form, then save new cookies, and create new transaction
 // OR create new customer and create new transaction
-export const getCustomerByPhoneAndCreateNewTransaction = (uid, props) => {
+export const getCustomerByPhoneAndCreateNewTransaction = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let customerEmail = props.customerEmail
     let customerPhone = props.customerPhone
@@ -814,7 +913,7 @@ export const getCustomerByPhoneAndCreateNewTransaction = (uid, props) => {
           dispatch(createNewTransaction(id, props))
         })
       } else {
-        dispatch(createNewCustomerAndCreateNewTransaction(uid, props))
+        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
       }
     })
     .catch(err => {
@@ -823,11 +922,11 @@ export const getCustomerByPhoneAndCreateNewTransaction = (uid, props) => {
   }
 }
 
-export const authUserCreateNewTransaction = (authUser, fbUser, props) => {
+export const authUserCreateNewTransaction = (authUser, firestoreUser, props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let cookies = props.cookies
     let { email } = authUser
-    let { id, name, phone, picture, registeredStatus } = fbUser
+    let { id, name, phone, picture, registeredStatus } = firestoreUser
     let customerData = {
       id, name, phone, email, picture, registeredStatus
     }
@@ -849,7 +948,7 @@ export const getCustomerByIdAndCreateNewTransaction = (customerId, props) => {
         let id = doc.id
         dispatch(createNewTransaction(id, props))
       } else {
-        dispatch(createNewCustomerAndCreateNewTransaction(props))
+        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
       }
     })
     .catch(err => {
@@ -879,12 +978,15 @@ export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
     let customerRef = firestore.collection('customer').doc(uid)
 
     customerRef.set(newCustomer)
-    .then(() => {
+    .then(async () => {
       let customerData = {
         id: uid, name, phone, email, picture, registeredStatus
       }
       setNewCookies(cookies, customerData)
-      dispatch(createNewTransaction(uid, props))
+      let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeGuest', { name, email })
+      if (sendEmailResult.status === 200) {
+        dispatch(createNewTransaction(uid, props))
+      }
     })
     .catch(err => {
       console.log('ERROR: Get and create new customer', err)
@@ -948,12 +1050,27 @@ export const createNewTransaction = (customerId, props) => {
 
     // To handle no transaction is set more than max daily queue
     if (Number(appointment.currentTransaction) < Number(appointment.maxQueue)) {
-      transactionRef
-      .add(newTransaction)
-      .then(ref => {
+      transactionRef.add(newTransaction)
+      .then(async ref => {
         let refId = ref.id
         dispatch(updateAppointmentCurrentTransaction(appointment))
-        window.location.assign(`/book/success/${refId}`)
+        let emailData = {
+          name,
+          email,
+          transactionId: refId,
+          date: appointment.date,
+          shopName: params.shopName,
+          shopLogo: props.shop.logo,
+          branchName: params.branchName,
+          queueNo,
+          staffName: staff.name,
+          staffImage: staff.picture,
+          service,
+        }
+        let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailCustomerBookTransaction', emailData)
+        if (sendEmailResult.status === 200) {
+          window.location.assign(`/book/success/${refId}`)
+        }
       })
       .catch(err => {
         console.log('ERROR: create new transaction', err)
@@ -994,8 +1111,3 @@ const setTransactionSuccess = (data) => {
     payload: data
   }
 }
-
-
-
-
-

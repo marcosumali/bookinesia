@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
 import '../../assets/css/general.css';
 import './home.css';
+import { getShopsData } from '../../store/firestore/shop/shop.actions';
 
 class home extends Component {
   constructor() {
@@ -31,11 +33,16 @@ class home extends Component {
         description: `You have successfully booked an appointment with your favourite barber with ease.`,
         imagePath: 'success-mobile-min.png'
       }, {
-        header: 'Enjoy Your Cup of Tea',
+        header: 'Enjoy your cup of tea',
         description: `while checking your active queue number in your transaction in real time. No need to refresh !`,
         imagePath: 'transaction-mobile-min.png'
-      }]
+      }],
+      loadingBox: [1]
     }
+  }
+
+  componentWillMount() {
+    this.props.getShopsData()
   }
 
   changeCarouselIndex (index) {
@@ -48,14 +55,22 @@ class home extends Component {
     // Window measurement
     let innerWidth = window.innerWidth
     let innerHeight = window.innerHeight
-    let headerHeight = 97.45 + 10 // 97.45 is min height of header from mobile and 10 is margin top of header
+    
+    // Hardcode Image measurement
+    // let imageUnderWidth = 240
+    // let imageUnderHeight = 405
+    // let imageOverWidth = 203.3
+    // let imageOverHeight = 346
+    // let imageOverPaddingLeft = 18.5
+    let headerHeight = 104.45
+    let navbarHeight = 56
     
     // Image measurement
-    let imageUnderWidth = 240
-    let imageUnderHeight = 405
-    let imageOverWidth = 203.3
-    let imageOverHeight = 346
-    let imageOverPaddingLeft = 18.5
+    let imageUnderHeight = innerHeight - headerHeight - navbarHeight
+    let imageUnderWidth = imageUnderHeight * 0.5925
+    let imageOverHeight = imageUnderHeight * 0.8543
+    let imageOverWidth = imageOverHeight * 0.5875
+    let imageOverPaddingLeft = (imageUnderWidth - imageOverWidth) / 2
 
     // Style Inliner
     let firstPageStyle = {
@@ -65,20 +80,28 @@ class home extends Component {
 
     let secondPageStyle = {
       width: innerWidth,
+      height: 1050,
+      marginTop: firstPageStyle.height,
+    }
+
+    let thirdPageStyle = {
+      width: innerWidth,
       height: innerHeight,
-      marginTop: imageUnderHeight + headerHeight
+      marginTop: firstPageStyle.height + secondPageStyle.height
     }
 
     let imageUnderStyle = {
-      marginLeft: ((innerWidth - imageUnderWidth)/2)
+      marginLeft: (innerWidth - imageUnderWidth) / 2
     }
 
     let imageOverStyle = {
-      marginLeft: (((innerWidth - imageUnderWidth)/2) + imageOverPaddingLeft)
+      marginTop: imageUnderHeight * 0.13,
+      marginLeft: ((innerWidth - imageUnderWidth) / 2) + imageOverPaddingLeft
     }
 
+    // console.log('from home', this.props)
     return (
-      <div>
+      <div className="row No-margin No-padding">
         <div className="First-section" style={ firstPageStyle }>
           {
             this.state.carousels && this.state.carousels.map((carousel, index) => {
@@ -102,12 +125,12 @@ class home extends Component {
                           return (
                             this.state.carouselIndex === index ?
                             <div 
-                              className="Dot-10-blue Margin-r-8" 
+                              className="Dot-10-blue Margin-r-16" 
                               key={ 'carousel-dot' + index }
                             ></div>
                             :
                             <div 
-                              className="Dot-10-grey Margin-r-8" 
+                              className="Dot-10-grey Margin-r-16" 
                               onClick={ () => this.changeCarouselIndex(index) }
                               key={ 'carousel-dot' + index }
                             ></div>
@@ -143,9 +166,107 @@ class home extends Component {
           }
         </div>
 
-        <div className="Second-section" style={ secondPageStyle }>
-          Halo
+        <div className="Second-section Container-center" style={ secondPageStyle }>
+          <div className="col s12 Container-center Margin-b-40 Margin-t-40">
+            <div className="Section-text-header">Why Bookinesia?</div>
+          </div>
+          <div className="col s12 Container-center Margin-b-40">
+            <div className="col s12 Container-center Margin-b-16">
+              <div className="Icon-border Container-center">
+                <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/calendar.svg' } alt="online-icon"/>
+              </div>
+            </div>
+            <div className="col s12 Container-center Margin-b-8">
+              <div className="Icon-text-header">Online Booking</div>
+            </div>
+            <div className="col s12 Container-center">
+              <div className="Icon-text">Book an appointment online with your favourite barber anywhere and anytime as you pleased.</div>
+            </div>
+          </div>
+          <div className="col s12 Container-center Margin-b-40">
+            <div className="col s12 Container-center Margin-b-16">
+              <div className="Icon-border Container-center">
+                <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/no-phone.svg' } alt="no-phone-icon"/>
+              </div>
+            </div>
+            <div className="col s12 Container-center Margin-b-8">
+              <div className="Icon-text-header">No Registration</div>
+            </div>
+            <div className="col s12 Container-center">
+              <div className="Icon-text">No registration are required to place a booking. Don't worry, we still keep track your transaction.</div>
+            </div>
+          </div>
+          <div className="col s12 Container-center Margin-b-40">
+            <div className="col s12 Container-center Margin-b-16">
+              <div className="Icon-border Container-center">
+                <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/hourglass.svg' } alt="real-time-icon"/>
+              </div>
+            </div>
+            <div className="col s12 Container-center Margin-b-8">
+              <div className="Icon-text-header">Real Time Queuing</div>
+            </div>
+            <div className="col s12 Container-center">
+              <div className="Icon-text">You can monitor your queuing number in the transaction menu so you can make the most of your time.</div>
+            </div>
+          </div>
+          <div className="col s12 Container-center Margin-b-40">
+            <div className="col s12 Container-center Margin-b-16">
+              <div className="Icon-border Container-center">
+                <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/bell.svg' } alt="notif-icon"/>
+              </div>
+            </div>
+            <div className="col s12 Container-center Margin-b-8">
+              <div className="Icon-text-header">Up To Date Notification</div>
+            </div>
+            <div className="col s12 Container-center">
+              <div className="Icon-text">We will send email notifications to remind your booking so you can arrive on time.</div>
+            </div>
+          </div>
         </div>
+        
+        <div className="Third-section" style={ thirdPageStyle }>
+          <div className="col s12 Container-center Margin-b-40 Margin-t-40">
+            <div className="Partner-text-header">Our Registered Barbershop</div>
+          </div>
+          <div className="col s12 No-margin No-padding Container-center Margin-b-40">
+            {
+              this.props.shopsLoading ?
+              <div className="col s12 No-margin No-padding Container-center">
+                {
+                  this.state.loadingBox.map((shopLoading, index) => {
+                    return (
+                      <div className="col s6 No-margin No-padding Container-center" key={ 'shop' + index }>
+                        <div className="col s12 No-margin No-padding Container-center Margin-b-8">
+                          <div className="Home-shop-loading"></div>
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+              :
+              <div className="Container-center">
+                {
+                  this.props.shops && this.props.shops.map((shop, index) => {
+                    return (
+                      <Link className="col s6 No-margin No-padding Container-center animated fadeIn faster" to={ `/shop/${shop.id}` } key={ 'shop' + index }>
+                        <div className="col s12 No-margin No-padding Container-center">
+                          <div className="col s12 No-margin No-padding Container-center Margin-b-8">
+                            <img className="Home-shop-logo" src={ shop.logo } alt={ 'image' + index } />
+                          </div>
+                          <div className="col s12 No-margin No-padding Container-center">
+                            <div className="Text-capitalize Home-shop-name">{ shop.name }</div>
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  })
+                }
+              </div>
+            }
+          </div>
+        </div>
+
       </div>
     )
   }
@@ -154,10 +275,14 @@ class home extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    shops: state.shop.shops,
+    shopsExist: state.shop.shopsExist,
+    shopsLoading: state.shop.shopsLoading
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  getShopsData
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps) (home);

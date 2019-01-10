@@ -25,10 +25,9 @@
 
 .Branch-header-container {
   width: 100%;
-  height: 5.25em;
+  /* height: 5.5em; */
   border-bottom: solid 1px #EAEAEA;
   background-color: #ffffff;
-  /* margin-bottom: 1em !important; */
 }
 
 .Branch-header-name {
@@ -150,6 +149,13 @@
   border-radius: 5px;
 }
 
+.Loading-box-status {
+  background-color: #EAEAEA;
+  width: 100%;
+  height: 1em;
+  border-radius: 5px;
+}
+
 .Input-loading {
   width: 100%;
   height: 1.5em;
@@ -170,6 +176,21 @@
   background-color: #EAEAEA;
   border-radius: 5px; 
 }
+
+.Trans-shop-logo {
+  width: 4em;
+  height: 4em;
+  border-radius: 5px;
+  border: 1px solid #EAEAEA;
+}
+
+.Staff-image {
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  border: 1px solid #EAEAEA;
+}
+
 
 /* ------------------ Transaction Details Component ------------------ */
 .Details-box {

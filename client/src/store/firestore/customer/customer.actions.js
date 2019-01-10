@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { getCookies, verifyCookies, setNewCookies } from '../../../helpers/auth';
 import { validateEmail } from '../../../helpers/form';
 import { getTransaction } from '../transaction/transaction.actions';
@@ -18,14 +20,16 @@ import swal from 'sweetalert';
 // const ENV_SALTROUNDS = Number(process.env.REACT_APP_SALTROUNDS)
 // const SALTROUNDS = bcrypt.genSaltSync(ENV_SALTROUNDS)
 
-const emptyError = 'This section must be filled.'
-const phoneMinError = 'Phone number is too short, min. 8 characters.'
+export const emptyError = 'This section must be filled.'
+export const phoneMinError = 'Phone number is too short, min. 8 characters.'
 const phoneRegisteredError = 'Phone number is already registered. Please sign in.'
 export const passwordMinError = 'Password is too short, min. 8 characters.'
 export const emailInvalidError = 'Invalid email.'
 export const emailRegisteredError = 'Email is already registered. Please sign in.'
 export const loginError = 'The email or password you entered is incorrect. Please try again.'
-const incorrectPasswordError = 'Incorrect password.'
+export const incorrectPasswordError = 'Incorrect password.'
+export const tooManyRequestError = 'Too many unsuccessful authorisation attempts. Try again later.'
+export const tooManyRegistrationError = 'Too many unsuccessful registration attempts. Try again later.'
 const oldPasswordError = 'The old password you entered is incorrect.'
 const samePasswordError = `The new password can't be the same with your old password.`
 const notSameNewPasswordError = 'Your new password and its confirmation do not match.'
@@ -227,7 +231,6 @@ export const customerRegisterInputValidation = (props) => {
     }
     // console.log('check phone', customerExistenceBasedOnPhone)
 
-
     if (password.length <= 0) {
       await dispatch(setRegisterPasswordInputError(emptyError))
     } 
@@ -258,7 +261,7 @@ export const customerRegisterInputValidation = (props) => {
       // 3. Since we can't check email profile to firebase auth without password access, if userByEmail.email is not the same with email
       // and from point 1 return true, it means that the user is truely have been registered
       if (userByEmail.registeredStatus === false) {
-        if (customerExistenceBasedOnEmail && userByEmail.email !== email) {
+        if (customerExistenceBasedOnEmail === true && userByEmail.email !== email) {
           customerExistenceBasedOnEmail = true
         } else {
           customerExistenceBasedOnEmail = false
@@ -266,8 +269,10 @@ export const customerRegisterInputValidation = (props) => {
       }
     }
 
-    if (customerExistenceBasedOnEmail) {
+    if (customerExistenceBasedOnEmail === true) {
       dispatch(setRegisterEmailInputError(emailRegisteredError))
+    } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
+      dispatch(setRegisterEmailInputError(tooManyRegistrationError))
     }
     // console.log('check email', customerExistenceBasedOnEmail)
 
@@ -608,10 +613,13 @@ export const customerSettingsInputValidation = (props) => {
         let customerData = verifyCookies(BUID)
 
         let passwordStatus = await dispatch(authPasswordValidation(customerData, password))
-        if (passwordStatus) {
+        if (passwordStatus === true) {
           dispatch(authUpdateEmail(customerData, password, email, props))
-        } else {
+        } else if (passwordStatus === false) {
           dispatch(setSettingPasswordInputError(incorrectPasswordError))
+          dispatch(setLoadingStatus(false))          
+        } else if (passwordStatus === 'too-many-requests') {
+          dispatch(setSettingPasswordInputError(tooManyRequestError))
           dispatch(setLoadingStatus(false))          
         }
       } else {
@@ -847,6 +855,11 @@ export const customerChangePasswordInputValidation = (props) => {
           inputErrors.push(notSameNewPasswordError)
         }
 
+        if (passwordStatus === 'too-many-requests') {
+          inputErrors = []
+          inputErrors.push(tooManyRequestError)
+        }
+
         await dispatch(setPasswordCheckingErrors(inputErrors))
 
         // Combination OK
@@ -922,7 +935,7 @@ export const validateCustomerExistence = (field, value) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let customerRef = firestore.collection('customer')
-    let customerExistence = 'none'
+    let customerExistence = false
 
     await customerRef.where(field, '==', value).get()
     .then(snapshot => {
@@ -1011,12 +1024,17 @@ export const createNewCustomer = (uid, props) => {
     let customerRef = firestore.collection('customer').doc(uid)
     
     customerRef.set(newCustomer)
-    .then(() => {
+    .then(async () => {
       let customerData = {
         id: uid, name, email, phone, picture, registeredStatus
       }
       setNewCookies(cookies, customerData)
-      window.location.assign('/')
+      let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeCustomer', { name, email })
+      if (sendEmailResult.status === 200) {
+        window.location.assign('/')
+      } else {
+        window.location.assign('/')
+      }
     })
     .catch(err => {
       console.log('ERROR: create new customer', err)
@@ -1281,6 +1299,44 @@ const getTransactionFailed = (data) => {
     payload: data
   }
 }
+
+// To execute customer request to cancel transaction
+export const customerCancelTransaction = (transaction) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let firestore = getFirestore()
+    let customerId = transaction.customerId
+    let latestUpdatedBy = {
+      type: 'customer',
+      id: customerId
+    }
+
+    swal({
+      title: 'Are you sure?',
+      text: "Your transaction will be removed from list of appointments.",
+      icon: 'warning',
+      buttons: ['Cancel', 'OK']
+    })
+    .then(result => {
+      if (result) {
+        let transactionRef = firestore.collection('transaction').doc(transaction.id)
+
+        transactionRef.update({
+          status: 'canceled',
+          updatedBy: latestUpdatedBy,
+          updatedDate: new Date(Date.now()),
+        })
+        .then(() => {
+          swal("Canceled!", "Your appointment has been canceled", "success");
+        })
+        .catch(err => {
+          console.log('ERROR: cancel transactions', err)
+        })
+
+      }
+    })
+  }
+}
+
 
 
 // ---------------------------------------------- MANUAL AUTHENTICATION FUNCTION ----------------------------------------------
