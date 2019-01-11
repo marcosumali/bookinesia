@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-// import Data from '../../../assets/data/dummy/barber';
 import DropDownSvg from '../../svg/dropDownSvg';
 import DropUpSvg from '../../svg/dropUpSvg';
 import '../../../assets/css/general.css';

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 
-// import Data from '../../assets/data/dummy/service.jsx';
 import '../../assets/css/general.css';
 import '../../assets/css/materialize/form.css';
 import './transaction.css';
@@ -15,52 +14,10 @@ class detailServices extends Component {
   constructor () {
     super()
     this.state = {
-      // data: Data,
       services: [],
       loadingBox: [1, 2],
     }    
   }
-
-  // handleChange = (e) => {
-  //   let target = e.target
-  //   let id = target.id            // id represent key of product in firestore
-  //   let type = target.type        // type of input e.g. radio or checkbox
-  //   let status = target.checked   // true or false
-
-  //   let serviceSelected = {
-  //     id,
-  //     type
-  //   }
-  //   console.log('service: ', serviceSelected)
-
-  //   if (type === 'radio') {
-  //     if (this.state.services.length <= 0 && status === true) {
-  //       this.state.services.push(serviceSelected)
-  //     } else {
-  //       this.state.services.map((service) => {
-  //         if (service.type === 'radio') {
-  //           let index = this.state.services.findIndex(stateService => stateService.id === service.id)
-  //           // console.log('check radio index', index)
-  //           this.state.services.splice(index, 1, serviceSelected)
-  //         }
-  //         return ''
-  //       })
-  //     }
-  //   } else if (type === 'checkbox') {
-  //     // console.log('check status checkbox', status)
-  //     // console.log('check isi array', this.state.services)
-  //     let index = this.state.services.findIndex(service => service.id === serviceSelected.id)
-  //     // console.log('check index bos', index)
-  //     if (status === true && index === -1) {
-  //       // console.log('check index true', index)
-  //       this.state.services.push(serviceSelected)
-  //     } else if (status === false && index !== -1) {
-  //       // console.log('check index false', index)
-  //       this.state.services.splice(index, 1)
-  //     }  
-  //   }
-  //   console.log('check final state service', this.state.services)
-  // }
 
   componentWillMount() {
     let params = this.props.params
