@@ -19,7 +19,6 @@ class accountDetails extends Component {
   }
 
   render() {
-    // console.log('from account details', this.props)
     return (
       <div className="row No-margin">
         {

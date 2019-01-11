@@ -51,7 +51,6 @@ class customerDetails extends Component {
   }
 
   render() {
-    // console.log('from customer detail', this.props)
     return (
       <div className="row No-margin Margin-l-b-r-10">
         {
@@ -329,9 +328,6 @@ class customerDetails extends Component {
                 <div id="recaptcha" ref={(ref)=>this.recaptcha=ref}></div>
 
               </form>
-              {/* <div className="col s12 No-margin No-padding">
-                <p className="No-margin Confirm-text Text-justify">I hereby declare to agree with <span className="Text-underline">Cancellation Policy</span>. I also agree to pay in total of stated amount.</p>
-              </div> */}
             </div>
 
           </div>

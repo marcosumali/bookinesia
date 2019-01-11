@@ -4,7 +4,7 @@ import { withCookies } from 'react-cookie';
 
 import ShopHeaderPage from './pages/shopHeaderPage';
 import BranchHeaderPage from './pages/branchHeaderPage';
-import NavbarPage from './pages/navbarPage';
+import NavbarPage from './pages/navBarPage';
 import MenuHeaderPage from './pages/menuHeaderPage';
 import NotFoundPage from './pages/error/notFound';
 

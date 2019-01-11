@@ -15,11 +15,9 @@ class successDetails extends Component {
     let params = this.props.params
     let transactionId = params.transactionId
     this.props.handleCookies('handle authorization success', this.props.cookies, transactionId)
-    // this.props.getTransaction(transactionId)
   }
 
   render() {
-    // console.log('from success', this.props)
     return (
       <div>
         {

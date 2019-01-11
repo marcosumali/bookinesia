@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 
-// import ShopHeader from '../../components/shop/shopHeader/shopHeader';
 import BranchImage from '../../components/shop/branchDetails/branchImage';
 import DetailsCard from '../../components/shop/branchDetails/detailsCard';
 import NextButton from '../../components/button/nextButton';
@@ -21,11 +20,8 @@ class branchDetails extends Component {
   }
 
   render() {
-    // console.log('from page branchDetails',this.props)
     return (
       <div>
-        {/* <ShopHeader shopName={ this.props.match.params.shopName } /> */}
-
         {
           this.props.branchExists ?
           <div className="row No-margin No-padding">

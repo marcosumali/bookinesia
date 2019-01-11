@@ -35,7 +35,6 @@ class branchHeader extends Component {
   }
   
   render() {
-    // console.log('from branchHeader component', this.props)
     return (
       <div className="row No-margin">
         {

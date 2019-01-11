@@ -18,7 +18,6 @@ class menuHeaderPage extends Component {
   }
 
   render() {
-    // console.log('from menu header page', this.props) 
     return (
       <div>
         {

@@ -12,9 +12,6 @@ export class locationMap extends Component {
   }
 
   render() {
-    // console.log('from location map', this.props)
-    // console.log('check state', this.state)
-
     return (
       <a href={ `https://www.google.com/maps/place/${this.props.branch.latitude},${this.props.branch.longitude}` } target="_blank" rel="noopener noreferrer">
         <Map

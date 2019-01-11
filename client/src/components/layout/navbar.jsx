@@ -27,7 +27,6 @@ class navbar extends Component {
   
   render() {
     const windowInnerWidth = window.innerWidth
-    // console.log('from navbar component', this.props)
     return (
       <div>
         {

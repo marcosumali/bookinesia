@@ -58,9 +58,6 @@ class contentBarber extends Component {
   }
   
   render() {
-    // console.log('state from content barber', this.state)
-    // console.log('props from content barber', this.props)
-
     // To handle data during first rendering from redux state to local state to manage showStatus
     if (this.state.barbers.length === 0) {
       this.handleData()

@@ -44,7 +44,6 @@ class registerComponent extends Component {
   }
 
   render() {
-    // console.log('from register component', this.props)
     return (
       <div className="row No-margin">
         {

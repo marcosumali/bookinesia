@@ -16,7 +16,6 @@ class shopHeader extends Component {
   }
   
   render() {
-    // console.log('from shopHeader', this.props)
     return (
       <div className="row No-margin">
         {

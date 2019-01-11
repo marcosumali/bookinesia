@@ -6,7 +6,6 @@ import AccountDetails from '../../components/menu/account/accountDetails';
 
 class menuAccount extends Component {
   render() {
-    // console.log('from menu account', this.props)
     return (
       <div>
         <AccountDetails history={ this.props.history }/>

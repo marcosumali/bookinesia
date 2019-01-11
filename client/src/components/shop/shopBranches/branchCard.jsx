@@ -14,7 +14,6 @@ class branchCard extends Component {
   }
 
   render() {
-    // console.log('from branch card', this.props)
     return (
       <div className="row No-margin">
         {

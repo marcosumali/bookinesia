@@ -22,7 +22,6 @@ class contentServices extends Component {
   }
 
   render() {
-    // console.log('from contentServices', this.props)
     return (
       <div className="row No-margin">
         {

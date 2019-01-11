@@ -16,7 +16,6 @@ class shopHeaderPage extends Component {
   }
 
   render() {
-    // console.log('from header page', this.props) 
     return (
       <div>
         <ShopHeader history={ this.props.history } />

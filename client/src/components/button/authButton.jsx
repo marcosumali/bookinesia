@@ -17,7 +17,6 @@ class authButton extends Component {
   }
 
   render() {
-    // console.log('from auth button', this.props)
     return (
       <div>
         {

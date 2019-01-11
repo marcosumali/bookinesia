@@ -11,7 +11,6 @@ import TransactionStatusDiv from './transactionStatusDiv';
 
 class transactionCard extends Component {
   render() {
-    // console.log('from transaction card', this.props)
     return (
       <div className="col s12 m6 l3 No-margin Container-center Margin-b-32">
         <div className="Container-center">

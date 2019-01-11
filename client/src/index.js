@@ -10,7 +10,6 @@ import { Router } from 'react-router-dom';
 import createBrowserHistory from "history/createBrowserHistory";
 
 import App from './App';
-// import './index.css';
 import * as serviceWorker from './serviceWorker';
 import allReducers from './store';
 import firebaseConfig from './config/firebase.config';
@@ -42,7 +41,4 @@ ReactDOM.render(
   ,document.getElementById('root')
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();

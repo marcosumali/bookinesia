@@ -8,8 +8,6 @@ import MapContainer from './locationMap';
 
 class contentLocation extends Component {
   render() {
-    // console.log('from content location', this.props)
-    
     // Below are width and height settings that needs to match with size of MapContainer except height
     const innerWidth = window.innerWidth
     const setWidth = innerWidth - 40

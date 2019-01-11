@@ -9,7 +9,6 @@ import LoadingDotSvg from '../svg/loadingDotSvg';
 
 class nextButton extends Component {
   render() {
-    // console.log('check props in next', this.props)
     return (
       <div>
         {

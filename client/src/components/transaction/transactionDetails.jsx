@@ -7,9 +7,9 @@ import SuccessDetails from './successDetails';
 
 export default class transactionDetail extends Component {
   render() {
+    // Purpose of Content Card is to route the exact section with the correct content details from the server
     return (
       <div className="Content-card">
-        {/* Purpose of Content Card is to route the exact section with the correct content details from the server */}
         {
           this.props.content === 'Choose Your Services' ?
           <ServiceDetails />

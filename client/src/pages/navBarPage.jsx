@@ -22,8 +22,7 @@ class navBarPage extends Component {
     this.props.setWindow(window)
   }
 
-  render() {
-    // console.log('from navbar page', this.props) 
+  render() { 
     return (
       <div>
         <Navbar history={ this.props.history } />

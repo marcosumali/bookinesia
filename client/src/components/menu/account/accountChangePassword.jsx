@@ -39,7 +39,6 @@ class accountChangePassword extends Component {
   }
 
   render() {
-    // console.log('from change password', this.props)
     return (
       <div>
         {

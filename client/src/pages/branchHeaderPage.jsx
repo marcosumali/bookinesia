@@ -20,7 +20,6 @@ class branchHeaderPage extends Component {
   }
 
   render() {
-    // console.log('from branch header page', this.props) 
     return (
       <div>
         <BranchHeader history={ this.props.history } />
