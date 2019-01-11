@@ -62,7 +62,7 @@ class accountSettings extends Component {
                 </div>
                 
                 {/* Form Section */}
-                <form>
+                <form className="col s12 m8 offset-m2 l4 offset-l4">
                   <div className="col s12 No-margin No-padding Margin-t-16 Form-box-white Padding-10 Padding-t-24">
                     {/* Name Input */}
                     <div className="input-field">
@@ -157,7 +157,7 @@ class accountSettings extends Component {
                               <label htmlFor="password" className="Form-text active">Password</label>
                               <span className="Input-info-error">{ this.props.settingsCustomerPasswordError }</span>
                             </div>
-                            <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                            <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                               {
                                 this.state.visibilityStatus ?
                                 <EyeSvg width="25px" height="22px" color="#666666" />
@@ -175,7 +175,7 @@ class accountSettings extends Component {
                                     <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword }/>
                                     <label htmlFor="password" className="Form-text active">Password</label>
                                   </div>
-                                  <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                  <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                                     {
                                       this.state.visibilityStatus ?
                                       <EyeSvg width="25px" height="22px" color="#666666" />
@@ -190,7 +190,7 @@ class accountSettings extends Component {
                                   <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPassword } />
                                   <label htmlFor="password" className="Form-text">Password</label>
                                 </div>
-                                <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                                   {
                                     this.state.visibilityStatus ?
                                     <EyeSvg width="25px" height="22px" color="#666666" />

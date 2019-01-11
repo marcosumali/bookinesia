@@ -5,8 +5,12 @@ import './transaction.css';
 
 export default class transactionDetailsLoading extends Component {
   render() {
+    let heightStyle = {
+      height: window.innerHeight
+    }
     return (
-      <div className="row No-margin No-padding Details-box">
+      <div className="row No-margin No-padding Details-box" style={ heightStyle }>
+        <div className="col s12 m8 offset-m2 l4 offset-l4 No-padding">
           <div className="Details-content-box">
 
             {/* Detail Header */}
@@ -146,6 +150,7 @@ export default class transactionDetailsLoading extends Component {
             </div>
           </div>
         </div>
+      </div>
     )
   }
 }

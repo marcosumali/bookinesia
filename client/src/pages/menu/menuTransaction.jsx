@@ -25,10 +25,12 @@ class menuTransaction extends Component {
             <div>
               {
                 this.props.transactionsLoading ?
-                <TransactionLoadingCard />
+                <div className="row No-margin Card-container Container-center-cross">
+                  <TransactionLoadingCard />
+                </div>
                 :
                 this.props.transactions.length > 0 ?
-                <div>
+                <div className="row No-margin No-padding Card-container Container-center-cross">
                   {
                     this.props.transactions && this.props.transactions.map((transaction, index) => {
                       return (

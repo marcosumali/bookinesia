@@ -45,7 +45,7 @@ class accountChangePassword extends Component {
         {
           this.props.authenticationStatus && this.props.authorizationStatus && this.props.user.registeredStatus ?
           <div className="row No-margin">
-            <div className="col s12 No-margin No-padding Form-box-white Padding-10 Margin-t-20">
+            <div className="col s12 m8 offset-m2 l4 offset-l4 Form-box-white Padding-10 Margin-t-20">
 
               <form>
                 {/* Old Password Input */}
@@ -59,7 +59,7 @@ class accountChangePassword extends Component {
                           <label htmlFor="oldPassword" className="Form-text active">Old Password</label>
                           <span className="Input-info-error">{ this.props.oldPasswordError }</span>
                         </div>
-                        <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('oldPassword') }>
+                        <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('oldPassword') }>
                           {
                             this.state.oldPassword ?
                             <EyeSvg width="25px" height="22px" color="#666666" />
@@ -77,7 +77,7 @@ class accountChangePassword extends Component {
                                 <input autoComplete="off" id="oldPassword" type="password" className="validate No-margin valid" onChange={ this.props.handleChangePasswordInputChanges } value={ this.props.oldPassword }/>
                                 <label htmlFor="oldPassword" className="Form-text active">Old Password</label>
                               </div>
-                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('oldPassword') }>
+                              <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('oldPassword') }>
                                 {
                                   this.state.oldPassword ?
                                   <EyeSvg width="25px" height="22px" color="#666666" />
@@ -92,7 +92,7 @@ class accountChangePassword extends Component {
                               <input autoComplete="off" id="oldPassword" type="password" className="validate No-margin" onChange={ this.props.handleChangePasswordInputChanges } value={ this.props.oldPassword } />
                               <label htmlFor="oldPassword" className="Form-text">Old Password</label>
                             </div>
-                            <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('oldPassword') }>
+                            <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('oldPassword') }>
                               {
                                 this.state.oldPassword ?
                                 <EyeSvg width="25px" height="22px" color="#666666" />
@@ -118,7 +118,7 @@ class accountChangePassword extends Component {
                           <label htmlFor="newPassword" className="Form-text active">New Password</label>
                           <span className="Input-info-error">{ this.props.newPasswordError }</span>
                         </div>
-                        <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('newPassword') }>
+                        <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('newPassword') }>
                           {
                             this.state.newPassword ?
                             <EyeSvg width="25px" height="22px" color="#666666" />
@@ -136,7 +136,7 @@ class accountChangePassword extends Component {
                                 <input autoComplete="off" id="newPassword" type="password" className="validate No-margin valid" onChange={ this.props.handleChangePasswordInputChanges } value={ this.props.newPassword }/>
                                 <label htmlFor="newPassword" className="Form-text active">New Password</label>
                               </div>
-                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('newPassword') }>
+                              <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('newPassword') }>
                                 {
                                   this.state.newPassword ?
                                   <EyeSvg width="25px" height="22px" color="#666666" />
@@ -151,7 +151,7 @@ class accountChangePassword extends Component {
                               <input autoComplete="off" id="newPassword" type="password" className="validate No-margin" onChange={ this.props.handleChangePasswordInputChanges } value={ this.props.newPassword } />
                               <label htmlFor="newPassword" className="Form-text">New Password</label>
                             </div>
-                            <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('newPassword') }>
+                            <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('newPassword') }>
                               {
                                 this.state.newPassword ?
                                 <EyeSvg width="25px" height="22px" color="#666666" />
@@ -177,7 +177,7 @@ class accountChangePassword extends Component {
                           <label htmlFor="newPasswordConfirm" className="Form-text active">New Password Confirmation</label>
                           <span className="Input-info-error">{ this.props.newPasswordConfirmError }</span>
                         </div>
-                        <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('newPasswordConfirm') }>
+                        <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('newPasswordConfirm') }>
                           {
                             this.state.newPasswordConfirm ?
                             <EyeSvg width="25px" height="22px" color="#666666" />
@@ -195,7 +195,7 @@ class accountChangePassword extends Component {
                                 <input autoComplete="off" id="newPasswordConfirm" type="password" className="validate No-margin valid" onChange={ this.props.handleChangePasswordInputChanges } value={ this.props.newPasswordConfirm }/>
                                 <label htmlFor="newPasswordConfirm" className="Form-text active">New Password Confirmation</label>
                               </div>
-                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('newPasswordConfirm') }>
+                              <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('newPasswordConfirm') }>
                                 {
                                   this.state.newPasswordConfirm ?
                                   <EyeSvg width="25px" height="22px" color="#666666" />
@@ -210,7 +210,7 @@ class accountChangePassword extends Component {
                               <input autoComplete="off" id="newPasswordConfirm" type="password" className="validate No-margin" onChange={ this.props.handleChangePasswordInputChanges } value={ this.props.newPasswordConfirm } />
                               <label htmlFor="newPasswordConfirm" className="Form-text">New Password Confirmation</label>
                             </div>
-                            <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility('newPasswordConfirm') }>
+                            <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility('newPasswordConfirm') }>
                               {
                                 this.state.newPasswordConfirm ?
                                 <EyeSvg width="25px" height="22px" color="#666666" />

@@ -6,7 +6,7 @@ import './transaction.css';
 export default class transactionLoadingCard extends Component {
   render() {
     return (
-      <div className="row No-margin Card-container">
+      <div className="col s12 m6 l3 No-margin Container-center Margin-b-32">
         <div className="Card-box-no-p Container-center-cross">
 
           {/* Transaction Card Header */}
@@ -38,7 +38,7 @@ export default class transactionLoadingCard extends Component {
                 <div className="col s7 No-padding No-margin Margin-b-4" style={{ marginRight: '0px' }}>
                   <div className="Loading-box-category"></div>
                 </div>
-                <div className="col s4 No-padding No-margin Margin-b-4">
+                <div className="col s3 No-padding No-margin Margin-b-4">
                   <div className="Loading-box-status"></div>
                 </div>
                 <div className="col s12 No-padding No-margin Margin-b-4">

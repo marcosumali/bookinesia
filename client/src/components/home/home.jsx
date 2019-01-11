@@ -68,8 +68,8 @@ class home extends Component {
     // Image measurement
     let imageUnderHeight = innerHeight - headerHeight - navbarHeight
     let imageUnderWidth = imageUnderHeight * 0.5925
-    let imageOverHeight = imageUnderHeight * 0.8543
-    let imageOverWidth = imageOverHeight * 0.5875
+    let imageOverHeight = imageUnderHeight * 0.8543 + 1
+    let imageOverWidth = imageOverHeight * 0.5875 + 2.5
     let imageOverPaddingLeft = (imageUnderWidth - imageOverWidth) / 2
 
     // Style Inliner
@@ -82,6 +82,12 @@ class home extends Component {
       width: innerWidth,
       height: 1050,
       marginTop: firstPageStyle.height,
+    }
+
+    if (innerWidth > 600 && innerWidth <= 992) {
+      secondPageStyle.height = 750
+    } else if (innerWidth > 992) {
+      secondPageStyle.height = 500
     }
 
     let thirdPageStyle = {
@@ -118,21 +124,23 @@ class home extends Component {
                         <div className="Header-text Text-center">{ carousel.description }</div>
                       </div>
                     </div>
-
+  
                     <div className="First-section-child Dot-box Container-center">
                       {
                         this.state.carousels && this.state.carousels.map((carousel, index) => {
                           return (
                             this.state.carouselIndex === index ?
                             <div 
-                              className="Dot-10-blue Margin-r-16" 
+                              className="Dot-10-blue" 
                               key={ 'carousel-dot' + index }
+                              style={{ marginRight: '1rem' }}
                             ></div>
                             :
                             <div 
-                              className="Dot-10-grey Margin-r-16" 
+                              className="Dot-10-grey" 
                               onClick={ () => this.changeCarouselIndex(index) }
                               key={ 'carousel-dot' + index }
+                              style={{ marginRight: '1rem' }}
                             ></div>
                           )
                         })
@@ -158,6 +166,7 @@ class home extends Component {
                       alt="over" 
                     />
                   </div>
+
                 </div>
                 :
                 <div key={ 'carousel' + index } ></div>
@@ -167,10 +176,10 @@ class home extends Component {
         </div>
 
         <div className="Second-section Container-center" style={ secondPageStyle }>
-          <div className="col s12 Container-center Margin-b-40 Margin-t-40">
+          <div className="col s12 Container-center">
             <div className="Section-text-header">Why Bookinesia?</div>
           </div>
-          <div className="col s12 Container-center Margin-b-40">
+          <div className="col s12 m5 offset-m1 l2 offset-l2 No-margin Container-center Margin-b-40">
             <div className="col s12 Container-center Margin-b-16">
               <div className="Icon-border Container-center">
                 <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/calendar.svg' } alt="online-icon"/>
@@ -180,10 +189,10 @@ class home extends Component {
               <div className="Icon-text-header">Online Booking</div>
             </div>
             <div className="col s12 Container-center">
-              <div className="Icon-text">Book an appointment online with your favourite barber anywhere and anytime as you pleased.</div>
+              <div className="Icon-text No-margin">Book an appointment online with your favourite barber anywhere and anytime as you pleased.</div>
             </div>
           </div>
-          <div className="col s12 Container-center Margin-b-40">
+          <div className="col s12 m5 l2 No-margin Container-center Margin-b-40">
             <div className="col s12 Container-center Margin-b-16">
               <div className="Icon-border Container-center">
                 <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/no-phone.svg' } alt="no-phone-icon"/>
@@ -193,10 +202,10 @@ class home extends Component {
               <div className="Icon-text-header">No Registration</div>
             </div>
             <div className="col s12 Container-center">
-              <div className="Icon-text">No registration are required to place a booking. Don't worry, we still keep track your transaction.</div>
+              <div className="Icon-text No-margin">No registration are required to place a booking. Don't worry, we still keep track your transaction.</div>
             </div>
           </div>
-          <div className="col s12 Container-center Margin-b-40">
+          <div className="col s12 m5 offset-m1 l2 No-margin Container-center Margin-b-40">
             <div className="col s12 Container-center Margin-b-16">
               <div className="Icon-border Container-center">
                 <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/hourglass.svg' } alt="real-time-icon"/>
@@ -206,10 +215,10 @@ class home extends Component {
               <div className="Icon-text-header">Real Time Queuing</div>
             </div>
             <div className="col s12 Container-center">
-              <div className="Icon-text">You can monitor your queuing number in the transaction menu so you can make the most of your time.</div>
+              <div className="Icon-text No-margin">You can monitor your queuing number in the transaction menu so you can make the most of your time.</div>
             </div>
           </div>
-          <div className="col s12 Container-center Margin-b-40">
+          <div className="col s12 m5 l2 No-margin Container-center Margin-b-40">
             <div className="col s12 Container-center Margin-b-16">
               <div className="Icon-border Container-center">
                 <img className="Icon" src={ process.env.PUBLIC_URL + '/assets/svg/icon/bell.svg' } alt="notif-icon"/>
@@ -219,7 +228,7 @@ class home extends Component {
               <div className="Icon-text-header">Up To Date Notification</div>
             </div>
             <div className="col s12 Container-center">
-              <div className="Icon-text">We will send email notifications to remind your booking so you can arrive on time.</div>
+              <div className="Icon-text No-margin">We will send email notifications to remind your booking so you can arrive on time.</div>
             </div>
           </div>
         </div>

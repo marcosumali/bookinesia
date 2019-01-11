@@ -13,8 +13,8 @@ class transactionCard extends Component {
   render() {
     // console.log('from transaction card', this.props)
     return (
-      <div>
-        <div className="row No-margin Card-container">
+      <div className="col s12 m6 l3 No-margin Container-center Margin-b-32">
+        <div className="Container-center">
           <div className="Card-box-no-p Container-center-cross">
   
             {/* Transaction Card Header */}

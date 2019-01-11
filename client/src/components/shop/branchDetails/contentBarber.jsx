@@ -76,7 +76,7 @@ class contentBarber extends Component {
               this.state.loadingBox.map((num, index) => {
                 return (
                   <div className="col s12 No-padding Container-one-line-only Margin-t-b-4 Padding-b-4" style={{ borderBottom: '1px solid #EAEAEA' }} key={ 'loading' + index }>
-                    <div className="Barber-img-box col s3 No-margin No-padding">
+                    <div className="Barber-img-box col s3 No-margin No-padding Container-center-axis">
                       <div className="Loading-circle-56"></div>
                     </div>
                     <div className="Barber-name-box col s8 No-margin No-padding Margin-t-15">
@@ -93,7 +93,7 @@ class contentBarber extends Component {
               this.state.barbers && this.state.barbers.map((barber, index) => {
                 return (
                   <div className="col s12 No-padding Container-one-line-only Margin-t-b-4 Padding-b-4 animated fadeIn" style={{ borderBottom: '1px solid #EAEAEA' }} key={ 'staff' + index } onClick={ () => this.showSchedule(index) }>
-                    <div className="Barber-img-box col s3 No-margin No-padding">
+                    <div className="Barber-img-box col s3 No-margin No-padding Container-center-axis">
                       <img className="Circle-img-56" src={ barber.picture } alt="barber" />
                     </div>
                     <div className="Barber-name-box col s8 No-margin No-padding Margin-t-15">

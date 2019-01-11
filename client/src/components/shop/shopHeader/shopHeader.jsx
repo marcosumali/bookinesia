@@ -24,14 +24,14 @@ class shopHeader extends Component {
           <div className="Shop-header-container Container-center-cross">
             {/* Previous Arrow Section */}
             <div 
-              className="col s2 Height-100 No-padding No-margin Container-center" 
+              className="col s2 m1 Height-100 No-padding No-margin Container-center" 
               onClick={ () => { this.props.history.goBack(); this.props.clearShopState(); this.props.clearCartState() } 
             }>
               <PreviousArrowSvg color="#666666" />
             </div>
 
             {/* Shop Logo Section */}
-            <div className="col s2 Height-100 No-padding No-margin Container-center">
+            <div className="col s2 m1 offset-m1 Height-100 No-padding Container-center">
               {
                 this.props.shopLoading === false ?
                 <img src={ this.props.shop.logo } className="No-padding Shop-logo animated fadeIn" alt="Shop-logo" />

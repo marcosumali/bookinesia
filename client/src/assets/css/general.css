@@ -331,6 +331,12 @@
   flex-wrap: nowrap; 
 }
 
+.Container-center-axis {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .Container-center-cross {
   display: flex;
   flex-wrap: wrap;

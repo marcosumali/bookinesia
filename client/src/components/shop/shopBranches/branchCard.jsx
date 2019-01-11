@@ -23,7 +23,7 @@ class branchCard extends Component {
             {
               this.props.branchesLoading ?
               // Loading Getting Data From Database
-              <div className="Branch-card-container">
+              <div className="col s11 m5 l3 No-margin No-padding Branch-card-container">
                 <div className="Branch-image">
                   <div className="Loading-branch-image"></div>
                 </div>
@@ -46,11 +46,11 @@ class branchCard extends Component {
               </div>
               :
               // Finish Getting Data From Database
-              <div>
+              <div className="Container-center-cross" style={{ justifyContent: 'space-evenly' }}>
                 {
                   this.props.branches && this.props.branches.map((branch, index) => {
                     return (
-                      <div className="Branch-card-container animated fadeIn" key={ 'branch' + index }>
+                      <div className="col s12 m5 l3 No-margin No-padding Branch-card-container animated fadeIn" key={ 'branch' + index }>
                         <div className="Branch-image">
                           <Link to={ `/detail/${branch.shopId}/${branch.name}` }>
                             <img className="Branch-image" src={ branch.picture } alt="branch-img" />

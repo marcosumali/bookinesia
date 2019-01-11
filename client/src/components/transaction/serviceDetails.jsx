@@ -115,7 +115,7 @@ class detailServices extends Component {
       <div className="row No-margin Margin-l-b-r-10">
         {
           this.props.branchExists ?
-            <form className="">
+            <form className="col s12 No-margin No-padding">
             {
               this.props.servicesLoading ?
               <div>
@@ -124,7 +124,7 @@ class detailServices extends Component {
                   this.state.loadingBox && this.state.loadingBox.map((num, index) => {
                     return (
                       <div key={ 'primeService' + index }>
-                        <div className="row No-margin Container-center-cross Margin-b-4">
+                        <div className="Container-center-cross Margin-b-4">
                           <div className="Input-loading Margin-b-4"></div>
                           <div className="col s12 Container-one-line No-padding Padding-left-check" style={{ justifyContent: 'space-between' }}>
                             <div className="col s5 No-margin No-padding">
@@ -145,7 +145,7 @@ class detailServices extends Component {
                   this.state.loadingBox && this.state.loadingBox.map((num, index) => {
                     return (
                       <div key={ 'secondService' + index }>
-                        <div className="row No-margin Container-center-cross Margin-b-4">
+                        <div className="Container-center-cross Margin-b-4">
                           <div className="Input-loading Margin-b-4"></div>
                           <div className="col s12 Container-one-line No-padding Padding-left-check" style={{ justifyContent: 'space-between' }}>
                             <div className="col s5 No-margin No-padding">
@@ -170,7 +170,7 @@ class detailServices extends Component {
                     <div key={ 'primeService' + index } className="animated fadeIn faster">
                       {
                         service.type === 'primary' ?
-                        <div className="row No-margin Container-center-cross Margin-b-4" onClick={ () => this.props.setPrimaryService(this.props.params, service, this.props.secondaryServices) }>
+                        <div className="Container-center-cross Margin-b-4" onClick={ () => this.props.setPrimaryService(this.props.params, service, this.props.secondaryServices) }>
                           <p className="col s12 No-margin No-padding" >
                             <input 
                               className="radio-blue with-gap" 
@@ -208,7 +208,7 @@ class detailServices extends Component {
                     <div key={ 'secondService' + index } className="animated fadeIn faster">
                       {
                         service.type === 'secondary' ?
-                        <div className="row No-margin Container-center-cross Margin-b-4">
+                        <div className="Container-center-cross Margin-b-4">
                           <input 
                             className="checkbox-blue filled-in" 
                             name="group2" 
@@ -239,7 +239,7 @@ class detailServices extends Component {
         }
         {
           this.props.noServiceSelectedStatus ?
-          <div className="Container-center Margin-t-8 Margin-b-4">
+          <div className="col s12 No-margin No-padding Container-center Margin-t-8 Margin-b-4">
             <div className="Confirm-text-error">Choose one of the provided services to continue.</div>
           </div>
           :
