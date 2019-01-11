@@ -144,7 +144,7 @@
 
 .Loading-box-category {
   background-color: #EAEAEA;
-  width: 10em;
+  width: 100%;
   height: 1em;
   border-radius: 5px;
 }
@@ -258,22 +258,22 @@
 .Status-box-progress {
   background-color: #f68606;
   border-radius: 5px;
-  width: 70%;
-  padding: 3px;
+  /* width: 70%; */
+  padding: 5px;
 }
 
 .Status-box-complete {
   background-color: #27B50A;
   border-radius: 5px;
-  width: 70%;
-  padding: 3px;
+  /* width: 70%; */
+  padding: 5px;
 }
 
 .Status-box-cancel {
   background-color: #666666;
   border-radius: 5px;
-  width: 70%;
-  padding: 3px;
+  /* width: 70%; */
+  padding: 5px;
 }
 
 .Status-text {

@@ -12,8 +12,8 @@ export default class detailsCard extends Component {
   render() {
     // console.log('from card', this.props);
     return (
-      <div className="Card-container">
-        <div className="col s12 Card-box">
+      <div className="col s12 Card-container Margin-b-24">
+        <div className="col s12 Card-box Padding-10">
           {/* Card Header - Svg and Name */}
           <div className="col s12 Container-one-line Margin-b-8">
             {

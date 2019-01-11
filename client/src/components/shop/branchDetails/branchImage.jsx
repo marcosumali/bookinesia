@@ -9,7 +9,7 @@ class branchImage extends Component {
   render() {
     // console.log('from branch image',this.props)
     return (
-      <div className="row No-margin No-padding">
+      <div className="col s12 No-margin No-padding">
         {
           this.props.branchLoading ?
           <div className="Branch-details-image-loading"></div>

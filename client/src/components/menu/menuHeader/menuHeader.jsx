@@ -28,7 +28,7 @@ class menuHeader extends Component {
 
           {/* Previous Arrow Section */}
           <div 
-            className="col s2 Height-100 No-padding No-margin Container-center" 
+            className="col s2 m1 Height-100 No-padding No-margin Container-center" 
             style={{ zIndex: '998' }}
             onClick={ () => { this.props.history.goBack(); this.props.clearUserState(); } 
           }>

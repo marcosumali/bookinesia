@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 
-// import Data from '../../assets/data/dummy/service.jsx';
 import '../../assets/css/general.css';
 import '../../assets/css/materialize/form.css';
 import './transaction.css';
@@ -15,52 +14,10 @@ class detailServices extends Component {
   constructor () {
     super()
     this.state = {
-      // data: Data,
       services: [],
       loadingBox: [1, 2],
     }    
   }
-
-  // handleChange = (e) => {
-  //   let target = e.target
-  //   let id = target.id            // id represent key of product in firestore
-  //   let type = target.type        // type of input e.g. radio or checkbox
-  //   let status = target.checked   // true or false
-
-  //   let serviceSelected = {
-  //     id,
-  //     type
-  //   }
-  //   console.log('service: ', serviceSelected)
-
-  //   if (type === 'radio') {
-  //     if (this.state.services.length <= 0 && status === true) {
-  //       this.state.services.push(serviceSelected)
-  //     } else {
-  //       this.state.services.map((service) => {
-  //         if (service.type === 'radio') {
-  //           let index = this.state.services.findIndex(stateService => stateService.id === service.id)
-  //           // console.log('check radio index', index)
-  //           this.state.services.splice(index, 1, serviceSelected)
-  //         }
-  //         return ''
-  //       })
-  //     }
-  //   } else if (type === 'checkbox') {
-  //     // console.log('check status checkbox', status)
-  //     // console.log('check isi array', this.state.services)
-  //     let index = this.state.services.findIndex(service => service.id === serviceSelected.id)
-  //     // console.log('check index bos', index)
-  //     if (status === true && index === -1) {
-  //       // console.log('check index true', index)
-  //       this.state.services.push(serviceSelected)
-  //     } else if (status === false && index !== -1) {
-  //       // console.log('check index false', index)
-  //       this.state.services.splice(index, 1)
-  //     }  
-  //   }
-  //   console.log('check final state service', this.state.services)
-  // }
 
   componentWillMount() {
     let params = this.props.params
@@ -115,7 +72,7 @@ class detailServices extends Component {
       <div className="row No-margin Margin-l-b-r-10">
         {
           this.props.branchExists ?
-            <form className="">
+            <form className="col s12 No-margin No-padding">
             {
               this.props.servicesLoading ?
               <div>
@@ -124,7 +81,7 @@ class detailServices extends Component {
                   this.state.loadingBox && this.state.loadingBox.map((num, index) => {
                     return (
                       <div key={ 'primeService' + index }>
-                        <div className="row No-margin Container-center-cross Margin-b-4">
+                        <div className="Container-center-cross Margin-b-4">
                           <div className="Input-loading Margin-b-4"></div>
                           <div className="col s12 Container-one-line No-padding Padding-left-check" style={{ justifyContent: 'space-between' }}>
                             <div className="col s5 No-margin No-padding">
@@ -145,7 +102,7 @@ class detailServices extends Component {
                   this.state.loadingBox && this.state.loadingBox.map((num, index) => {
                     return (
                       <div key={ 'secondService' + index }>
-                        <div className="row No-margin Container-center-cross Margin-b-4">
+                        <div className="Container-center-cross Margin-b-4">
                           <div className="Input-loading Margin-b-4"></div>
                           <div className="col s12 Container-one-line No-padding Padding-left-check" style={{ justifyContent: 'space-between' }}>
                             <div className="col s5 No-margin No-padding">
@@ -170,7 +127,7 @@ class detailServices extends Component {
                     <div key={ 'primeService' + index } className="animated fadeIn faster">
                       {
                         service.type === 'primary' ?
-                        <div className="row No-margin Container-center-cross Margin-b-4" onClick={ () => this.props.setPrimaryService(this.props.params, service, this.props.secondaryServices) }>
+                        <div className="Container-center-cross Margin-b-4" onClick={ () => this.props.setPrimaryService(this.props.params, service, this.props.secondaryServices) }>
                           <p className="col s12 No-margin No-padding" >
                             <input 
                               className="radio-blue with-gap" 
@@ -208,7 +165,7 @@ class detailServices extends Component {
                     <div key={ 'secondService' + index } className="animated fadeIn faster">
                       {
                         service.type === 'secondary' ?
-                        <div className="row No-margin Container-center-cross Margin-b-4">
+                        <div className="Container-center-cross Margin-b-4">
                           <input 
                             className="checkbox-blue filled-in" 
                             name="group2" 
@@ -239,7 +196,7 @@ class detailServices extends Component {
         }
         {
           this.props.noServiceSelectedStatus ?
-          <div className="Container-center Margin-t-8 Margin-b-4">
+          <div className="col s12 No-margin No-padding Container-center Margin-t-8 Margin-b-4">
             <div className="Confirm-text-error">Choose one of the provided services to continue.</div>
           </div>
           :

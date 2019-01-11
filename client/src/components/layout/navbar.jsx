@@ -38,14 +38,14 @@ class navbar extends Component {
                 <NavItem>
                   <div className="Container-center-cross Height-100 Justify-end" style={{ marginTop: '5px' }}>
                     <div className="Margin-r-16 ">
-                      <CloseSvg color="#ffffff" width="1.5em" height="1.5em" />
+                      <CloseSvg color="#ffffff" width="1.5rem" height="1.5rem" />
                     </div>
                   </div>
                 </NavItem>
                 <NavItem href="/">
                   <div className="Container-one-line Container-center-cross Height-100">
                     <div className="Margin-r-16 Margin-t-12">
-                      <HomeSvg color="#ffffff" width="1.5em" height="1.5em" />
+                      <HomeSvg color="#ffffff" width="1.5rem" height="1.5rem" />
                     </div>
                     <div className="Navbar-text">Home</div>
                   </div>
@@ -56,7 +56,7 @@ class navbar extends Component {
                     <NavItem href="/transactions">
                       <div className="Container-one-line Container-center-cross Height-100">
                         <div className="Margin-r-16 Margin-t-12">
-                          <ShoppingCartSvg color="#ffffff" width="1.5em" height="1.5em" />
+                          <ShoppingCartSvg color="#ffffff" width="1.5rem" height="1.5rem" />
                         </div>
                         <div className="Navbar-text">Transaction</div>
                       </div>
@@ -64,7 +64,7 @@ class navbar extends Component {
                     <NavItem href="/account">
                       <div className="Container-one-line Container-center-cross Height-100">
                         <div className="Margin-r-16 Margin-t-12">
-                          <SmileyFaceSvg color="#ffffff" width="1.5em" height="1.5em" />
+                          <SmileyFaceSvg color="#ffffff" width="1.5rem" height="1.5rem" />
                         </div>
                         <div className="Navbar-text">Account</div>
                       </div>

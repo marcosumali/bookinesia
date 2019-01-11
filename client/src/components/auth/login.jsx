@@ -46,12 +46,12 @@ class loginComponent extends Component {
   render() {
     // console.log('from login component', this.props)
     return (
-      <div>
+      <div className="row No-margin">
         {
           this.props.authenticationStatus ?
           <Redirect to="/" />
           :
-          <div className="row No-margin">
+          <div className="col s12 m8 offset-m2 l4 offset-l4">
         
           <div className="col s12 No-margin No-padding Container-center Margin-b-4">
             <div className="Auth-header">Log In</div>
@@ -126,7 +126,7 @@ class loginComponent extends Component {
                     <label htmlFor="password" className="Form-text active">Password</label>
                     <span className="Input-info-error">{ this.props.customerPasswordError }</span>
                   </div>
-                  <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                  <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                     {
                       this.state.visibilityStatus ?
                       <EyeSvg width="25px" height="22px" color="#666666" />
@@ -144,7 +144,7 @@ class loginComponent extends Component {
                           <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerPassword }/>
                           <label htmlFor="password" className="Form-text active">Password</label>
                         </div>
-                        <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                        <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                           {
                             this.state.visibilityStatus ?
                             <EyeSvg width="25px" height="22px" color="#666666" />
@@ -159,7 +159,7 @@ class loginComponent extends Component {
                         <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerPassword } />
                         <label htmlFor="password" className="Form-text">Password</label>
                       </div>
-                      <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                      <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                         {
                           this.state.visibilityStatus ?
                           <EyeSvg width="25px" height="22px" color="#666666" />

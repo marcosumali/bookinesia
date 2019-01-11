@@ -61,7 +61,7 @@ export const handleCookies = (purpose, cookies, data) => {
     let BUID = getCookies(cookies)
     if (BUID) {
       let customerData = verifyCookies(BUID)
-      console.log('check BUID', purpose, '===', customerData)
+      // console.log('check BUID', purpose, '===', customerData)
       let customerId = customerData.id
       if (purpose === 'during input') {
         dispatch(setFormValueBasedOnToken(customerData))
@@ -1301,7 +1301,7 @@ const getTransactionFailed = (data) => {
 }
 
 // To execute customer request to cancel transaction
-export const customerCancelTransaction = (transaction) => {
+export const customerCancelTransaction = (transaction, appointment) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let customerId = transaction.customerId
@@ -1319,6 +1319,8 @@ export const customerCancelTransaction = (transaction) => {
     .then(result => {
       if (result) {
         let transactionRef = firestore.collection('transaction').doc(transaction.id)
+        let appointmentRef = firestore.collection('appointment').doc(appointment.id)
+        let newMaxQueue = String(Number(appointment.maxQueue) + 1)
 
         transactionRef.update({
           status: 'canceled',
@@ -1326,7 +1328,15 @@ export const customerCancelTransaction = (transaction) => {
           updatedDate: new Date(Date.now()),
         })
         .then(() => {
-          swal("Canceled!", "Your appointment has been canceled", "success");
+          appointmentRef.update({
+            maxQueue: newMaxQueue
+          })
+          .then(() => {
+            swal("Canceled!", "Your appointment has been canceled", "success");
+          })
+          .catch(err => {
+            console.log('ERROR: cancel transactions - update appointment', err)
+          })
         })
         .catch(err => {
           console.log('ERROR: cancel transactions', err)

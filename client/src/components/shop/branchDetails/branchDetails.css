@@ -24,6 +24,7 @@
   border: solid 1px #EAEAEA;
   background-color: #ffffff;
   padding: 0.625em;
+  min-height: 16em !important;
 }
 
 .Card-svg {

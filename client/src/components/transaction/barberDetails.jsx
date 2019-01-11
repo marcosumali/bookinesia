@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 
 import BarberFullComponent from './barberFullyBooked';
-import Barber from '../../assets/data/dummy/barber';
 import '../../assets/css/general.css';
 import './transaction.css';
 import PreviousArrowSvg from '../svg/arrowPreviousSvg';
@@ -22,7 +21,6 @@ class detailBarbers extends Component {
   constructor() {
     super()
     this.state = {
-      dataBarber: Barber,
       loadingBarberBox: [1,2,3,4]
     }
   }

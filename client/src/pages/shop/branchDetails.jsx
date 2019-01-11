@@ -28,18 +28,30 @@ class branchDetails extends Component {
 
         {
           this.props.branchExists ?
-          <div>
-            <BranchImage />
+          <div className="row No-margin No-padding">
+            <div className="col s12 No-margin No-padding">
+              <BranchImage />
+            </div>
 
-            <DetailsCard section="Opening Hours" />
+            <div className="col s12 m6 No-margin No-padding">
+              <DetailsCard section="Opening Hours" />
+            </div>
 
-            <DetailsCard section="Services" />
+            <div className="col s12 m6 No-margin No-padding">
+              <DetailsCard section="Services" />
+            </div>
 
-            <DetailsCard section="Barber's Schedule" />
+            <div className="col s12 No-margin No-padding">
+              <DetailsCard section="Barber's Schedule" />
+            </div>
 
-            <DetailsCard section="Location" />
+            <div className="col s12 No-margin No-padding">
+              <DetailsCard section="Location" />
+            </div>
 
-            <NextButton text="Book Now" />
+            <div className="col s12 No-margin No-padding">
+              <NextButton text="Book Now" />
+            </div>
           </div>
           :
           <Redirect to="/branch-not-found" />
