@@ -32,7 +32,6 @@ class detailBarbers extends Component {
   }
 
   render() {
-    // console.log('from barber detail transaction', this.props)
     return (
       <div className="row No-margin">
         {

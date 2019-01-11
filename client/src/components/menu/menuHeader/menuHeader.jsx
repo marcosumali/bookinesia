@@ -21,7 +21,6 @@ class menuHeader extends Component {
   }
 
   render() {
-    // console.log('from menuHeader', this.props)
     return (
       <div className="row No-margin">
         <div className="Menu-header-container Container-center-cross">

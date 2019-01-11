@@ -39,7 +39,6 @@ class detailServices extends Component {
 
     let storeSecondaryServices = this.props.secondaryServices
     let checkedIndex = storeSecondaryServices.indexOf(id)
-    // console.log('handle props', storeSecondaryServices, checkedIndex)
 
     if (type === 'checkbox' && status) {
       if (checkedIndex <= -1) {
@@ -66,8 +65,7 @@ class detailServices extends Component {
     return status
   }
 
-  render() {    
-    // console.log('props from service details', this.props)
+  render() {
     return (
       <div className="row No-margin Margin-l-b-r-10">
         {

@@ -57,11 +57,6 @@ class home extends Component {
     let innerHeight = window.innerHeight
     
     // Hardcode Image measurement
-    // let imageUnderWidth = 240
-    // let imageUnderHeight = 405
-    // let imageOverWidth = 203.3
-    // let imageOverHeight = 346
-    // let imageOverPaddingLeft = 18.5
     let headerHeight = 104.45
     let navbarHeight = 56
     
@@ -105,7 +100,6 @@ class home extends Component {
       marginLeft: ((innerWidth - imageUnderWidth) / 2) + imageOverPaddingLeft
     }
 
-    // console.log('from home', this.props)
     return (
       <div className="row No-margin No-padding">
         <div className="First-section" style={ firstPageStyle }>

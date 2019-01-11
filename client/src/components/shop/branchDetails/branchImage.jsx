@@ -7,7 +7,6 @@ import './branchDetails.css';
 
 class branchImage extends Component {
   render() {
-    // console.log('from branch image',this.props)
     return (
       <div className="col s12 No-margin No-padding">
         {

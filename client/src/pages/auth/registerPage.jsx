@@ -6,7 +6,6 @@ import RegisterComponentPage from '../../components/auth/register';
 
 class registerPage extends Component {
   render() {
-    // console.log('from register page', this.props)
     return (
       <div className="Padding-20">
         <RegisterComponentPage history={ this.props.history } />

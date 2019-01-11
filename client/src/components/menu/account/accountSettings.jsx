@@ -40,7 +40,6 @@ class accountSettings extends Component {
   }
 
   render() {
-    // console.log('from settings', this.props)
     return (
       <div className="row No-margin">
         {

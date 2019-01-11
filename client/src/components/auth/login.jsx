@@ -44,7 +44,6 @@ class loginComponent extends Component {
   }
 
   render() {
-    // console.log('from login component', this.props)
     return (
       <div className="row No-margin">
         {
@@ -62,33 +61,6 @@ class loginComponent extends Component {
           </div>
   
           <form className="col s12 No-margin No-padding">
-            {/* Phone Input */}
-            {/* <div className="input-field ">
-              {
-                this.props.customerPhoneError !== false?
-                <div>
-                  <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerPhone }/>
-                  <label htmlFor="phone" className="Form-text active">Phone No.</label>
-                  <span className="Input-info-error">{ this.props.customerPhoneError }</span>
-                </div>
-                :
-                <div>
-                  {
-                    this.props.customerPhone !== "" ?
-                    <div>
-                      <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerPhone }/>
-                      <label htmlFor="phone" className="Form-text active">Phone No.</label>
-                    </div>
-                    :
-                    <div>
-                      <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleLoginInputChanges } value={ this.props.customerPhone }/>
-                      <label htmlFor="phone" className="Form-text">Phone No.</label>
-                    </div>
-                  }
-                </div>
-              }
-            </div> */}
-
             {/* Email Input */}
             <div className="input-field">
               {
@@ -195,8 +167,6 @@ class loginComponent extends Component {
 
 const mapStateToProps = state => {
   return {
-    // customerPhone: state.user.loginCustomerPhone,
-    // customerPhoneError: state.user.loginCustomerPhoneError,
     loginErrorMessage: state.user.loginErrorMessage,
     customerEmail: state.user.loginCustomerEmail,
     customerEmailError: state.user.loginCustomerEmailError,

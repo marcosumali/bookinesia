@@ -27,7 +27,6 @@ class transactionDetails extends Component {
     let heightStyle = {
       height: window.innerHeight
     }
-    // console.log('from details', this.props)
     return (
       <div>
         {

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-// import ShopHeader from '../../components/shop/shopHeader/shopHeader';
 import TransactionCard from '../../components/transaction/transactionCard';
 import { setParams } from '../../store/firestore/shop/shop.actions';
 
@@ -15,8 +14,6 @@ class transactionSuccess extends Component {
   render() {
     return (
       <div>
-        {/* <ShopHeader /> */}
-
         <TransactionCard section="" />
       </div>
     )

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-// import ShopHeader from '../../components/shop/shopHeader/shopHeader';
 import TransactionCard from '../../components/transaction/transactionCard';
 import NextButton from '../../components/button/nextButton';
 import { setParams } from '../../store/firestore/shop/shop.actions';
@@ -14,10 +13,8 @@ class transactionService extends Component {
   }
   
   render() {
-    // console.log('from trans service page', this.props)
     return (
       <div>
-        {/* <ShopHeader /> */}
 
         <TransactionCard section="Choose Your Services" />
 

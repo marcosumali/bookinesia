@@ -21,7 +21,6 @@ class contentHours extends Component {
   }
 
   render() {
-    // console.log('from content hours', this.props)
     return (
       <div className="col s12 Card-content-m-28">
         {
