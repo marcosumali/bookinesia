@@ -1,0 +1,239 @@
+/* ---------- Transaction Page ---------- */
+.Card-container {
+  padding-left: 10px;
+  padding-bottom: 20px;
+  padding-right: 10px;
+}
+
+.Card-box {
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.16);
+  border: solid 1px #EAEAEA;
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+.Card-box-no-p {
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.16);
+  border: solid 1px #EAEAEA;
+  background-color: #ffffff;
+}
+
+.Card-header {
+  width: 100%;
+  -webkit-text-stroke: 1px #5499c3;
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+  margin-left: 4px !important;
+}
+
+.Card-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Barber-name {
+  font-family: Montserrat;
+  font-size: 1.5em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+/* input[type="radio"] {
+  border: 2px solid #5499c3 !important;
+} */
+
+.Date-container {
+  height: 2.5em;
+  background-color: #5499c3;
+}
+
+.Previous-arrow-box {
+  height: 100%;
+}
+
+.Next-arrow-box {
+  height: 100%;
+}
+
+.Schedule-date {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Schedule-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Schedule-text-full {
+  font-family: Montserrat;
+  font-size: 2em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Schedule-no {
+  font-family: Montserrat;
+  font-size: 4.5em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Confirm-text {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #666666;
+}
+
+.Confirm-text-full {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: italic;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color:#f68606;
+}
+
+.Confirm-text-error {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #d00;
+}
+
+.Confirm-text-blue {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Confirm-header {
+  -webkit-text-stroke: 1px #5499c3;
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Form-text {
+  font-family: Montserrat !important;
+  font-size: 0.75em !important;
+}
+
+.Thanks-container {
+  background-color: #5499c3;
+}
+
+.Thanks-text {
+  -webkit-text-stroke: 1px #ffffff;
+  font-family: Montserrat;
+  font-size: 1.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Input-loading {
+  width: 100%;
+  height: 1.5em;
+  background-color: #EAEAEA;
+  border-radius: 5px;
+}
+
+.Label-loading {
+  width: 100%;
+  height: 1em;
+  background-color: #EAEAEA;
+  border-radius: 5px;
+}
+
+.QueueNo-loading {
+  width: 100%;
+  height: 4.5em;
+  background-color: #EAEAEA;
+  border-radius: 5px; 
+}
+
+.Input-error {
+  border-bottom: 1px solid #d00 !important;
+  box-shadow: 0 1px 0 0 #d00 !important;
+}
+
+.Input-error:focus {
+  border-bottom: 1px solid #5499c3 !important;
+  box-shadow: 0 1px 0 0 #5499c3 !important;
+}
+
+.Input-info-error {
+  font-size: 0.75em;
+  color: #d00;
+}
+
+.Input-info {
+  font-size: 0.75em;
+  color: #bbbaba;
+}
+

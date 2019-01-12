@@ -1,0 +1,131 @@
+.Nav-box {
+  width: 100%;
+  background-color: #ffffff;
+  margin-bottom: 1em;
+  box-shadow: 0 0rem 1rem rgba(0, 0, 0, 0.075);
+  z-index: 1;
+}
+
+.Navbar-text {
+  font-family: Montserrat;
+  font-size: 1.4rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Mobile-white-box-transparent {
+  width: 90%;
+  height: 3.25em;
+  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid #ffffff;
+}
+
+.Mobile-white-box-filled {
+  width: 90%;
+  height: 3.25em;
+  border-radius: 5px;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+.Mobile-white-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Mobile-blue-text {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Mobile-bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 5.5em;
+}
+
+.Web-right {
+  position: absolute;
+  right: 1em;
+}
+
+/* Editing Materialize CSS  */
+a.button-collapse > i {
+  color: #666666;
+}
+
+a.brand-logo {
+  font-family: Montserrat;
+  font-size: 1.4em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+  margin-top: 0.84em;
+  /* margin-left: 2.5em; */
+}
+
+#sidenav-overlay {
+  z-index: 0;
+}
+
+#nav-mobile {
+  background-color: #5499c3;
+}
+
+#nav-mobile > li > a {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.drag-target {
+  height: 10%;
+}
+
+.side-nav {
+  width: 100%;
+}
+
+.side-nav a {
+  height: 4rem;
+}
+
+@media only screen and (min-width: 1024px) {
+  .Navbar-text {
+    color: #5499c3;
+  }
+
+  nav ul a {
+    color: #666666;
+  }
+
+  a.brand-logo {
+    margin-left: 1em;
+    margin-top: 0.9em;
+  }
+}

@@ -1,0 +1,137 @@
+/* ---------- Shop Branch Card Component ---------- */
+.Branch-card-container {
+  margin: 0px 17px 17px 17px !important;
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+  box-shadow: 5px 5px 5px #b5b5b5;
+  border-radius: 5px;
+  /* border: solid 1px #707070; */
+}
+
+.Branch-image {
+  width: 100%;
+  height: 190px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.Loading-branch-image {
+  background-color: #EAEAEA;
+  width: 100%;
+  height: 190px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.Branch-description-box {
+  width: 100%;
+  height: 52px;
+  background-color: #ffffff;
+  padding: 8px;
+  border-left: solid 1px #EAEAEA;
+  border-right: solid 1px #EAEAEA;
+  border-bottom: solid 1px #EAEAEA;
+  border-radius: 0px 0px 5px 5px;
+}
+
+.Branch-name {
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Loading-branch-name {
+  background-color: #EAEAEA;
+  width: 5em;
+  height: 1em;
+  border-radius: 5px;
+}
+
+.Loading-branch-status {
+  background-color: #EAEAEA;
+  width: 3em;
+  height: 1em;
+  border-radius: 5px;
+}
+
+.Loading-branch-hours {
+  background-color: #EAEAEA;
+  width: 7em;
+  height: 0.75em;
+  border-radius: 5px; 
+}
+
+.Loading-book-box {
+  background-color: #EAEAEA;
+  width: 100%;
+  height: 1.875em;
+  border-radius: 5px; 
+}
+
+
+.Branch-opening-hours {
+  font-family: Montserrat;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
+
+.Branch-status-box {
+  width: 1.875em;
+  height: 1em;
+  border-radius: 3px;
+  background-color: #5499c3;
+  margin-left: 0.625em;
+}
+
+.Branch-status-box-close {
+  width: 1.875em;
+  height: 1em;
+  border-radius: 3px;
+  background-color: #b5b5b5;
+  margin-left: 0.625em;
+}
+
+.Branch-status {
+  font-family: Montserrat;
+  font-size: 8px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.Book-button-container {
+  height: 100%;
+}
+
+.Book-button-box {
+  width: 100%;
+  height: 2.1em;
+  border-radius: 3px;
+  border: solid 1.5px #5499c3;
+  background-color: #ffffff;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.Book-button-text{
+  -webkit-text-stroke: 1px #5499c3;
+  font-family: Montserrat;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #5499c3;
+}
