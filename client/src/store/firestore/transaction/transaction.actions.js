@@ -1005,7 +1005,6 @@ export const createNewTransaction = (customerId, props) => {
     let service = props.selectedServices
     let staff = props.selectedStaff
     let appointment = props.selectedAppointment
-    let appointmentId = appointment.id
     let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
@@ -1030,7 +1029,7 @@ export const createNewTransaction = (customerId, props) => {
       branchId,
       service,
       staff,
-      appointmentId,
+      appointment,
       customerId,
       name,
       phone,
@@ -1054,23 +1053,23 @@ export const createNewTransaction = (customerId, props) => {
       .then(async ref => {
         let refId = ref.id
         dispatch(updateAppointmentCurrentTransaction(appointment))
-        let emailData = {
-          name,
-          email,
-          transactionId: refId,
-          date: appointment.date,
-          shopName: params.shopName,
-          shopLogo: props.shop.logo,
-          branchName: params.branchName,
-          queueNo,
-          staffName: staff.name,
-          staffImage: staff.picture,
-          service,
-        }
-        let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailCustomerBookTransaction', emailData)
-        if (sendEmailResult.status === 200) {
+        // let emailData = {
+        //   name,
+        //   email,
+        //   transactionId: refId,
+        //   date: appointment.date,
+        //   shopName: params.shopName,
+        //   shopLogo: props.shop.logo,
+        //   branchName: params.branchName,
+        //   queueNo,
+        //   staffName: staff.name,
+        //   staffImage: staff.picture,
+        //   service,
+        // }
+        // let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailCustomerBookTransaction', emailData)
+        // if (sendEmailResult.status === 200) {
           window.location.assign(`/book/success/${refId}`)
-        }
+        // }
       })
       .catch(err => {
         console.log('ERROR: create new transaction', err)

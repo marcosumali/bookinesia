@@ -1072,7 +1072,7 @@ export const getTransactionsBasedOnCustomerId = (customerId) => {
     await Promise.all(transactions && transactions.map(async transaction => {
       let shopId = transaction.shopId
       let branchId = transaction.branchId
-      let appointmentId = transaction.appointmentId
+      let appointmentId = transaction.appointment.id
 
       let shop = await dispatch(getTransactionShopData(shopId, false))
       transaction['shop'] = shop
@@ -1262,7 +1262,7 @@ export const getTransactionDetails = (transactionId, customerId) => {
         if (customerId === data.customerId) {
           dispatch(getTransactionShopData(data.shopId, true))
           dispatch(getTransactionBranchData(data.branchId, true))
-          dispatch(getTransactionAppointmentData(data.appointmentId, true))
+          dispatch(getTransactionAppointmentData(data.appointment.id, true))
           dispatch(getTransactionSuccess(combineData))
         } else {
           dispatch(setAuthorizationStatus(false))
