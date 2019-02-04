@@ -178,8 +178,10 @@ exports.sendEmailCustomerBookTransaction = functions.https.onRequest((req, res) 
   let newDate = `${returnWhatDay(Number(new Date(date).getDay()))}, ${new Date(date).getDate()} ${returnWhatMonth(Number(new Date(date).getMonth()))} ${new Date(date).getFullYear()}` 
   
   let shopName = req.body.shopName
+  let shopNameCapitalize = shopName.charAt(0).toUpperCase() + shopName.slice(1)
   let shopLogo = req.body.shopLogo
   let branchName = req.body.branchName
+  let branchNameCapitalize = branchName.charAt(0).toUpperCase() + branchName.slice(1)
   let queueNo = req.body.queueNo
   let staffName = req.body.staffName
   let staffImage = req.body.staffImage
@@ -231,7 +233,7 @@ exports.sendEmailCustomerBookTransaction = functions.https.onRequest((req, res) 
   let mailOptions = {
     from: `"Bookinesia" ${AUTHEMAIL}`,
     to: customerEmail,
-    subject: `Your appointment through BOOKINESIA on ${new Date(date).toDateString()}`, 
+    subject: `Your transaction receipt at ${shopNameCapitalize}-${branchNameCapitalize} on ${new Date(date).toDateString()}`, 
     html: `${templateWithData}`
   };
 
