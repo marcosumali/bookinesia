@@ -13,7 +13,6 @@ const AUTHEMAIL = process.env.AUTHEMAIL
 const AUTHPASS = process.env.AUTHPASS
 const REGISTER_EMAIL = fs.readFileSync(__dirname + '/nodemailer/templates/welcome.customer.html', 'utf-8')
 const GUEST_EMAIL = fs.readFileSync(__dirname + '/nodemailer/templates/welcome.guest.html', 'utf-8')
-const CUSTOMER_BOOK_TRANSACTION = fs.readFileSync(__dirname + '/nodemailer/templates/customer.book.transaction.html', 'utf-8')
 
 admin.initializeApp(functions.config().firebase);
 
@@ -160,94 +159,6 @@ exports.sendEmailWelcomeGuest = functions.https.onRequest((req, res) => {
       console.log(`Guest Welcome Message sent: %s`, info.messageId)
       res.status(200).json({
         message: 'Guest Welcome Message is sent',
-        messageId: info.messageId
-      })    
-    }
-  })
-})
-
-
-exports.sendEmailCustomerBookTransaction = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {})
-
-  let customerName = req.body.name
-  let customerEmail = req.body.email
-  let transactionId = req.body.transactionId
-  
-  let date = req.body.date
-  let newDate = `${returnWhatDay(Number(new Date(date).getDay()))}, ${new Date(date).getDate()} ${returnWhatMonth(Number(new Date(date).getMonth()))} ${new Date(date).getFullYear()}` 
-  
-  let shopName = req.body.shopName
-  let shopNameCapitalize = shopName.charAt(0).toUpperCase() + shopName.slice(1)
-  let shopLogo = req.body.shopLogo
-  let branchName = req.body.branchName
-  let branchNameCapitalize = branchName.charAt(0).toUpperCase() + branchName.slice(1)
-  let queueNo = req.body.queueNo
-  let staffName = req.body.staffName
-  let staffImage = req.body.staffImage
-  let services = req.body.service
-  
-  let currency = ''
-  let monetisedServices = []
-  services && services.map((service) => {
-    let newService = {
-      name: service.name,
-      description: service.description,
-      currency: service.currency,
-      price: formatMoney(service.price)
-    }
-    currency = service.currency
-    monetisedServices.push(newService)
-  })
-
-  let totalAmount = formatMoney(getTotalTransaction(services))
-  let emailTemplate = CUSTOMER_BOOK_TRANSACTION
-
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: `${AUTHEMAIL}`,
-      pass: `${AUTHPASS}`
-    }
-  });
-
-  // setting up email with data in handlebars
-  let template = handlebars.compile(emailTemplate)
-  let data = { 
-    'name': customerName,
-    'transactionId': transactionId,
-    'date': newDate,
-    'shopName': shopName,
-    'shopLogo': shopLogo,
-    'branchName': branchName,
-    'queueNo': queueNo,
-    'staffName': staffName,
-    'staffImage': staffImage,
-    'services': monetisedServices,
-    'totalAmount': totalAmount,
-    'currency': currency
-  }
-  let templateWithData = template(data)
-
-  // setup email data with unicode symbols
-  let mailOptions = {
-    from: `"Bookinesia" ${AUTHEMAIL}`,
-    to: customerEmail,
-    subject: `Your transaction receipt at ${shopNameCapitalize}-${branchNameCapitalize} on ${new Date(date).toDateString()}`, 
-    html: `${templateWithData}`
-  };
-
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('ERROR: Customer Book Transaction Message not sent ', error)
-      res.status(400).json({
-        message: 'ERROR: Customer Book Transaction Message not sent',
-      })    
-    } else {
-      console.log(`Customer Book Transaction Message sent: %s`, info.messageId)
-      res.status(200).json({
-        message: 'Customer Book Transaction Message is sent',
         messageId: info.messageId
       })    
     }
