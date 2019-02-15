@@ -9,7 +9,7 @@
 
 .Menu-header-text {
   width: 100%;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05em;
   font-weight: bold;
   font-style: normal;
@@ -44,7 +44,7 @@
 .Shop-header-category {
   width: 100%;
   height: auto;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -58,7 +58,7 @@
 .Shop-header-name {
   width: 100%;
   height: auto;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.5em;
   font-weight: normal;
   font-style: normal;

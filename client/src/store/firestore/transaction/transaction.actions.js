@@ -1022,6 +1022,7 @@ export const createNewTransaction = (customerId, props) => {
       type: 'customer',
       id: customerId
     }
+    let paymentMethod = ''
     let window = props.window
     
     let newTransaction = {
@@ -1041,7 +1042,8 @@ export const createNewTransaction = (customerId, props) => {
       createdDate,
       updatedDate,
       createdBy,
-      updatedBy
+      updatedBy,
+      paymentMethod,
     }
 
     let firestore = getFirestore()

@@ -70,9 +70,10 @@ export const getShopsData = () => {
     let firestore = getFirestore()
     let shopRef = firestore.collection('shop')
 
-    let shops = []
-    await shopRef.get()
-    .then(snapshot => {
+    shopRef
+    .where('disableStatus', '==', false)
+    .onSnapshot(snapshot => {
+      let shops = []
       if (snapshot.empty === false) {
         snapshot.forEach(doc => {
           let data = doc.data()
@@ -81,15 +82,11 @@ export const getShopsData = () => {
             shops.push(data)
           }
         })
+        dispatch(getShopsDataSuccess(shops))
       } else {
-        dispatch(getShopsDataFailed(false))
+        dispatch(getShopsDataSuccess(shops))
       }
     })
-    .catch(err => {
-      console.log('ERROR:Get shops data', err)
-    })
-
-    await dispatch(getShopsDataSuccess(shops))
   }
 }
 
@@ -99,14 +96,6 @@ const getShopsDataSuccess = (data) => {
     payload: data
   }
 }
-
-const getShopsDataFailed = (data) => {
-  return {
-    type: 'GET_SHOPS_DATA_FAILED',
-    payload: data
-  }
-}
-
 
 // ---------------------------------------------- BRANCH ACTION ----------------------------------------------
 export const getBranchesData = (shopName) => {

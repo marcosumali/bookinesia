@@ -34,7 +34,7 @@
 .Card-header {
   width: 100%;
   -webkit-text-stroke: 1px #5499c3;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -46,7 +46,7 @@
 }
 
 .Card-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -57,7 +57,7 @@
 }
 
 .Card-text-black {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -68,7 +68,7 @@
 }
 
 .Card-text-inner {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: normal;
   font-style: normal;

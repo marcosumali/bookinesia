@@ -1,18 +1,4 @@
 /* ---------- General Component ---------- */
-.Dot-10-blue {
-  height: 0.625em;
-  width: 0.625em;
-  border-radius: 50%;
-  background-color: #5499c3;
-}
-
-.Dot-10-grey {
-  height: 0.625em;
-  width: 0.625em;
-  border-radius: 50%;
-  background-color: #EAEAEA;
-}
-
 .Background-grey {
   background-color: #EAEAEA;
 }
@@ -337,10 +323,36 @@
   justify-content: center;
 }
 
+.Container-nowrap-center {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.Container-nowrap-center-cross {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
 .Container-center-cross {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.Container-wrap-center-cross {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.Container-wrap-center {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .Container-end {
@@ -409,7 +421,7 @@
 }
 
 .Next-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 18px;
   font-weight: normal;
   font-style: normal;
@@ -420,7 +432,7 @@
 }
 
 .Next-text-disable {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 18px;
   font-weight: normal;
   font-style: normal;

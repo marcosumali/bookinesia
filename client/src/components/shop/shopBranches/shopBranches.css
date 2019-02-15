@@ -33,7 +33,7 @@
 }
 
 .Branch-name {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -73,7 +73,7 @@
 
 
 .Branch-opening-hours {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: normal;
   font-style: normal;
@@ -100,7 +100,7 @@
 }
 
 .Branch-status {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 8px;
   font-weight: normal;
   font-style: normal;
@@ -126,7 +126,7 @@
 
 .Book-button-text{
   -webkit-text-stroke: 1px #5499c3;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
