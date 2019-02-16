@@ -174,7 +174,7 @@ class customerDetails extends Component {
                 <p className="No-margin Confirm-header">Customer Details:</p>
               </div>
               <div className="col s12 No-margin No-padding">
-                <p className="No-margin Confirm-text Text-justify">Barbershop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</p>
+                <p className="No-margin Confirm-text Text-justify">Shop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</p>
               </div>
               <form className="col s12 No-margin No-padding">
                 {/* Name Input */}

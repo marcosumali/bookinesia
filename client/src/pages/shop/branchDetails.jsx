@@ -38,7 +38,7 @@ class branchDetails extends Component {
             </div>
 
             <div className="col s12 No-margin No-padding">
-              <DetailsCard section="Barber's Schedule" />
+              <DetailsCard section="Provider's Schedule" />
             </div>
 
             <div className="col s12 No-margin No-padding">

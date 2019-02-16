@@ -104,13 +104,15 @@ export const getBranchesData = (shopName) => {
 
     let branchRef = firestore.collection('branch')
 
-    branchRef.where('shopId', '==', shopName).get()
+    branchRef
+    .where('shopId', '==', shopName)
+    .where('disableStatus', '==', false)
+    .get()
     .then(snapshot => {
       if (snapshot.empty === false) {
         let branchesData = []
         snapshot.forEach(doc => {
           let data = doc.data()
-          // console.log('get branch data', data)
           branchesData.push(data)
         })
         dispatch(getSpecificBranchScheduleData(branchesData))
@@ -195,7 +197,10 @@ const getSpecificBranchScheduleData = (branchesData) => {
 
       let branchScheduleRef = firestore.collection('branchSchedule')
 
-      await branchScheduleRef.where('branchId', '==', `${shopName}-${branchName}`).where('day', '==', nowDay).get()
+      await branchScheduleRef
+      .where('branchId', '==', `${shopName}-${branchName}`)
+      .where('day', '==', nowDay)
+      .get()
       .then(snapshot => {
         if (snapshot.empty === false) {
           snapshot.forEach(doc => {
@@ -204,12 +209,21 @@ const getSpecificBranchScheduleData = (branchesData) => {
             let closingDate = new Date(nowYear, nowMonth, nowDate, Number(data.closeHours), Number(data.closeMinutes))
             let openStatus = getStoreOpenStatus(newDate, openingDate, closingDate)
 
-            let combineData = {
-              ...branchData,
-              ...data,
-              openStatus
+            if (data.disableStatus === false) {
+              let combineData = {
+                ...branchData,
+                ...data,
+                openStatus
+              }
+              newBranchesData.push(combineData)
+            } else {
+              let combineData = {
+                ...branchData,
+                ...data,
+                openStatus: 'closed',
+              }
+              newBranchesData.push(combineData)
             }
-            newBranchesData.push(combineData)
           })
         } else {
           dispatch(getBranchesDataFailed(false))
@@ -272,7 +286,10 @@ export const getServicesData = (shopName, branchName) => {
 
     let serviceRef = firestore.collection('service')
 
-    serviceRef.where('branchId', '==', `${shopName}-${branchName}`).get()
+    serviceRef
+    .where('branchId', '==', `${shopName}-${branchName}`)
+    .where('disableStatus', '==', false)
+    .get()
     .then(snapshot => {
       if (snapshot.empty === false) {
         let servicesData = []
@@ -316,7 +333,11 @@ export const getStaffsData = (shopName, branchName) => {
 
     let staffRef = firestore.collection('staff')
 
-    staffRef.where('branchId', '==', `${shopName}-${branchName}`).where('job', '==', 'barber').get()
+    staffRef
+    .where('branchId', '==', `${shopName}-${branchName}`)
+    .where('job', '==', 'barber')
+    .where('disableStatus', '==', false)
+    .get()
     .then(snapshot => {
       if (snapshot.empty === false) {
         let staffsData = []

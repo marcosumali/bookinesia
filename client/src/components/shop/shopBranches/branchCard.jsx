@@ -21,7 +21,6 @@ class branchCard extends Component {
           <div>
             {
               this.props.branchesLoading ?
-              // Loading Getting Data From Database
               <div className="col s11 m5 l3 No-margin No-padding Branch-card-container">
                 <div className="Branch-image">
                   <div className="Loading-branch-image"></div>
@@ -44,7 +43,6 @@ class branchCard extends Component {
                 </div>
               </div>
               :
-              // Finish Getting Data From Database
               <div className="Container-center-cross" style={{ justifyContent: 'space-evenly' }}>
                 {
                   this.props.branches && this.props.branches.map((branch, index) => {
@@ -70,7 +68,12 @@ class branchCard extends Component {
                                 </div>
                               }
                             </div>
-                            <p className="Branch-opening-hours No-margin">Opening Hours: {branch.openHours}.{branch.openMinutes} - {branch.closeHours}.{branch.closeMinutes} </p>
+                            {
+                              branch.disableStatus === false ?
+                              <p className="Branch-opening-hours No-margin">Opening Hours: {branch.openHours}.{branch.openMinutes} - {branch.closeHours}.{branch.closeMinutes} </p>
+                              :
+                              <div></div>
+                            }
                           </div>
                           <div className="col s4 No-padding Book-button-container Container-end">
                             <Link to={ `/book/now/${branch.shopId}/${branch.name}` }>

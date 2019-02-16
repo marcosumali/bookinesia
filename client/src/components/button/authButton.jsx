@@ -29,7 +29,7 @@ class authButton extends Component {
               </div>
               :
               <div className="Container-center Auth-button-box" onClick={ () => this.props.customerLoginInputValidation(this.props) }>
-                <div className="Auth-button-text">Log In</div>
+                <div className="Auth-button-text">Sign In</div>
               </div>
             }
           </div>

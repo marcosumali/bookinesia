@@ -45,8 +45,8 @@
   line-height: 175%;
 }
 
-.Empty-box {
-  min-height: 20vh;
+.Image-box {
+  height: 80vh;
 }
 
 .Image-home {
@@ -82,6 +82,10 @@
 
 /* For Tablet CSS */
 @media only screen and (min-width: 768px) {
+  .Image-box {
+    height: 60vh;
+  }
+  
   .Dot-box {
     position: inherit;
     margin-top: 0em;
@@ -99,6 +103,10 @@
 
 /* For Laptop CSS */
 @media only screen and (min-width: 1440px) {
+  .Image-box {
+    height: 75vh;
+  }
+
   .Header-inner-box {
     margin-top: 8em;
   }

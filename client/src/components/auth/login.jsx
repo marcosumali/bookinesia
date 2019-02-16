@@ -53,7 +53,7 @@ class loginComponent extends Component {
           <div className="col s12 m8 offset-m2 l4 offset-l4">
         
           <div className="col s12 No-margin No-padding Container-center Margin-b-4">
-            <div className="Auth-header">Log In</div>
+            <div className="Auth-header">SIGN IN</div>
           </div>
   
           <div className="col s12 No-margin No-padding  Container-center Margin-b-16">

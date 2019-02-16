@@ -122,12 +122,12 @@ class homeHeader extends Component {
           </div>
           :
           <div className="col m12 No-margin No-padding">
-            <div className="col m5 Container-center">
+            <div className="col m5 Container-center Image-box">
               {
                 this.state.carousels && this.state.carousels.map((carousel, index) => {
                   return this.state.carouselIndex === index ?
                   <div className="col m12 l10 No-padding Container-center" key={ 'carousel' + index }>
-                    <div className="col m9 l8 No-margin Image-box">
+                    <div className="col m9 l8 No-margin">
                       <img 
                         className="Image-home" 
                         src={ process.env.PUBLIC_URL + `/assets/img/home/${carousel.imagePath}` } 

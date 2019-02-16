@@ -54,7 +54,7 @@ function getStoreOpenStatus(currentDate, openingDate, closingDate) {
   if (currentDate > openingDate && currentDate < closingDate) {
     return 'open'
   } else {
-    return 'close'
+    return 'closed'
   }
 }
 

@@ -14,7 +14,7 @@ export default class supportDetails extends Component {
 
           <div className="col s12 No-margin No-padding Margin-b-10 Text-justify">
             <div className="Contact-info-text Margin-b-4">Questions about your transaction history or cancellation?</div>
-            <div className="Contact-info-text Margin-b-4">Your barbershop wants to user our services? </div>
+            <div className="Contact-info-text Margin-b-4">Your service provider wants to user our services? </div>
             <div className="Contact-info-text">We are committed to find your answers as quickly as possible.</div>
           </div>
 

@@ -6,8 +6,9 @@
   font-stretch: normal;
   line-height: 1.2;
   text-decoration: underline;
+  text-decoration-color: #5499c3;
   letter-spacing: normal;
-  color: #5499c3;
+  color: #666666;
 }
 
 .Text-auth-info {

@@ -131,7 +131,7 @@ class navbar extends Component {
                       Not yet registered?
                     </NavItem>
                     <NavItem href="/login">
-                      Log In
+                      Sign In
                     </NavItem>
                   </div>
                   :
