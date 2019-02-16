@@ -1012,6 +1012,8 @@ export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
       let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeGuest', { name, email })
       if (sendEmailResult.status === 200) {
         dispatch(createNewTransaction(uid, props))
+      } else {
+        dispatch(createNewTransaction(uid, props))
       }
     })
     .catch(err => {

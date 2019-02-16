@@ -421,29 +421,21 @@ export const customerLoginInputValidation = (props) => {
     if (email.length <= 0) {
       await dispatch(setLoginEmailInputError(emptyError))
     } 
-    
-    if (email.length > 0 && validateEmail(email) === false) {
-      await dispatch(setLoginEmailInputError(emailInvalidError))
-    }
 
     if (password.length <= 0) {
       await dispatch(setLoginPasswordInputError(emptyError))
     } 
     
-    if (password.length > 0 && password.length < 8) {
-      await dispatch(setLoginPasswordInputError(passwordMinError))
-    }
-
     // Input is OK    
-    if (email.length > 0 && validateEmail(email)) {
+    if (email.length > 0) {
       await dispatch(setLoginEmailInputOK(false))
     }
 
-    if (password.length >= 8) {
+    if (password.length > 0) {
       await dispatch(setLoginPasswordInputOK(false))
     } 
         
-    if (email.length > 0 && validateEmail(email) === true && password.length >= 8) {
+    if (email.length > 0 && password.length > 0) {
       dispatch(authSignIn(props))
     } else {
       dispatch(setLoadingStatus(false))

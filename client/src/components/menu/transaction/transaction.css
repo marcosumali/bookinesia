@@ -286,6 +286,7 @@
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
+  text-transform: capitalize;
 }
 
 .Cancel-box {

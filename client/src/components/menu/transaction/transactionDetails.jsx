@@ -215,15 +215,15 @@ class transactionDetails extends Component {
           
                       {/* Cancel Button */}
                       {
-                        this.props.transaction.status === 'canceled' ?
-                        <div className="col s12 No-margin No-padding Margin-b-24"></div>
-                        :
+                        this.props.transaction.status === 'booking confirmed' ?
                         <div 
                           className="col s12 No-margin No-padding Cancel-box Container-center" 
                           onClick={ () => this.props.customerCancelTransaction(this.props.transaction, this.props.appointment) }
                         >
                           <div className="Cancel-text">Cancel</div>
                         </div>
+                        :
+                        <div className="col s12 No-margin No-padding Margin-b-24"></div>
                       }
           
                     </div>
