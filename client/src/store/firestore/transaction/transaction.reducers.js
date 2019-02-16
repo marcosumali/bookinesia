@@ -10,7 +10,7 @@ let initialState = {
   selectedStaff: '',
   selectedStaffLoading: true,
   selectedStaffExists: true,
-  appointments: [],
+  appointments: '',
   appointmentsExists: true,
   appointmentsLoading: true,
   appointmentIndex: 0,
@@ -99,6 +99,11 @@ const transactionDataList = (state = { ...initialState }, action) => {
         selectedStaff: action.payload,
         appointmentsLoading: true,
         appointmentIndex: 0,
+      })
+    case 'SET_APPOINTMENT_LOADING':
+      return ({
+        ...state,
+        appointmentsLoading: action.payload,
       })
     case 'GET_SPECIFIC_APPOINTMENTS_DATA_SUCCESS':
       return ({

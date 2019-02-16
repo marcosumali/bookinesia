@@ -33,7 +33,7 @@
   line-height: 1.2;
   letter-spacing: normal;
   color: #5499c3;
-  margin-left: 4px !important;
+  /* margin-left: 4px !important; */
 }
 
 .Card-text {

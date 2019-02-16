@@ -8,7 +8,6 @@ import './transaction.css';
 import CheckSvg from '../../svg/checkSvg';
 import TransactionDetailsLoading from './transactionDetailsLoading';
 import { 
-  getTransactionDetails,
   handleCookies,
   customerCancelTransaction
 } from '../../../store/firestore/customer/customer.actions';
@@ -263,7 +262,6 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  getTransactionDetails,
   handleCookies,
   customerCancelTransaction
 }, dispatch)

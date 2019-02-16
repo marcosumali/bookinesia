@@ -14,7 +14,7 @@ class branchDetails extends Component {
     this.props.setParams(params)
     let shopName = params.shopName
     let branchName = params.branchName
-    this.props.getBranchData(shopName, branchName)
+    // Branch data is collected in branch header component
     // To set route link even if the user refresh the page, user click continue, it will still go to service page
     this.props.setRouteLink(`/book/now/${shopName}/${branchName}`)
   }

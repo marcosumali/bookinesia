@@ -387,7 +387,10 @@ const getStaffScheduleData = (staffsData) => {
       
       let staffScheduleRef = firestore.collection('staffSchedule')
 
-      await staffScheduleRef.where('staffId', '==', `${staffId}`).get()
+      await staffScheduleRef
+      .where('staffId', '==', `${staffId}`)
+      .where('disableStatus', '==', false)
+      .get()
       .then(snapshot => {
         if (snapshot.empty === false) {
           let staffSchedulesData = []

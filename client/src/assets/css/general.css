@@ -336,6 +336,20 @@
   align-items: center;
 }
 
+.Container-nowrap-start {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start
+}
+
+.Container-nowrap-end {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .Container-center-cross {
   display: flex;
   flex-wrap: wrap;
