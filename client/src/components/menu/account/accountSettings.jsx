@@ -95,7 +95,7 @@ class accountSettings extends Component {
                       {
                         this.props.settingsCustomerPhoneError !== false?
                         <div>
-                          <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                          <input id="phone" type="tel" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
                           <label htmlFor="phone" className="Form-text active">Phone No.</label>
                           <span className="Input-info-error">{ this.props.settingsCustomerPhoneError }</span>
                         </div>
@@ -104,12 +104,12 @@ class accountSettings extends Component {
                           {
                             this.props.settingsCustomerPhone !== "" ?
                             <div>
-                              <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                              <input id="phone" type="tel" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
                               <label htmlFor="phone" className="Form-text active">Phone No.</label>
                             </div>
                             :
                             <div>
-                              <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                              <input id="phone" type="tel" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
                               <label htmlFor="phone" className="Form-text">Phone No.</label>
                             </div>
                           }

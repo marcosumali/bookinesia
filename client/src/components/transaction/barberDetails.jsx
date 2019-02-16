@@ -105,16 +105,18 @@ class detailBarbers extends Component {
                     {/* Schedule Date Section */}
                     <div className="col s12 No-padding No-margin Date-container Container-center-cross">
                       <div className="col s12 No-padding No-margin Date-container Container-center-cross animated fadeIn">
-                        <div 
-                          className="col s4 No-padding No-margin Previous-arrow-box Container-center-cross"
-                          onClick={ () => this.props.setAppointmentIndex(
-                            'previous', 
-                            appointmentData, 
-                            this.props.selectedDate, 
-                            this.props.params, 
-                            this.props.selectedStaff) }
-                        >
-                          <PreviousArrowSvg color="#ffffff"/>
+                        <div className="col s4 No-padding No-margin Previous-arrow-box Container-center-cross">
+                          <div
+                            className="col s4 No-padding No-margin Previous-arrow-box Container-center-cross"
+                            onClick={ () => this.props.setAppointmentIndex(
+                              'previous', 
+                              appointmentData, 
+                              this.props.selectedDate, 
+                              this.props.params, 
+                              this.props.selectedStaff) }
+                          >
+                            <PreviousArrowSvg color="#ffffff"/>
+                          </div>
                         </div>
                         <div className="col s4 No-padding No-margin Date-box Container-center">
                           <BasicDateInput 
@@ -127,16 +129,18 @@ class detailBarbers extends Component {
                             handleChangesDateFunction={ (e) => this.props.handleBasicDateInput(e, this.props.selectedStaff, this.props.params) }       
                           />
                         </div>
-                        <div 
-                          className="col s4 No-padding No-margin Next-arrow-box Container-nowrap-end" 
-                          onClick={ () => this.props.setAppointmentIndex(
-                            'next', 
-                            appointmentData, 
-                            this.props.selectedDate, 
-                            this.props.params, 
-                            this.props.selectedStaff) }
-                        >
-                          <NextArrowSvg color="#ffffff" />
+                        <div className="col s4 No-padding No-margin Next-arrow-box Container-nowrap-end">
+                          <div
+                            className="col s4 No-padding No-margin Next-arrow-box Container-nowrap-end" 
+                            onClick={ () => this.props.setAppointmentIndex(
+                              'next', 
+                              appointmentData, 
+                              this.props.selectedDate, 
+                              this.props.params, 
+                              this.props.selectedStaff) }
+                          >
+                            <NextArrowSvg color="#ffffff" />
+                          </div>
                         </div>
                       </div>
                     </div>

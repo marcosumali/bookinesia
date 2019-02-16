@@ -539,7 +539,7 @@ export const getSpecificAppointments = (competentStaff, params, date) => {
             id
           }
           dispatch(getSpecificAppointmentsSuccess(combineData))
-          // dispatch(setSelectedAppointment(appointmentsData, 0))
+          dispatch(setSelectedAppointmentSuccess(combineData))
           dispatch(setConfirmPageRouteLink(params, competentStaff, combineData))
         })
       } else {
@@ -595,12 +595,6 @@ export const setAppointmentLoading = (data) => {
 }
 
 // To set appointment data to store based on user's click request from previous action setAppointmentIndex
-export const setSelectedAppointment = (appointmentsData, newAppoinmentIndex) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(setSelectedAppointmentSuccess(appointmentsData[newAppoinmentIndex]))
-  }
-}
-
 const setSelectedAppointmentSuccess = (data) => {
   return {
     type: 'SET_SELECTED_APPOINTMENT',

@@ -212,7 +212,7 @@ class customerDetails extends Component {
                   {
                     this.props.customerPhoneError !== false?
                     <div>
-                      <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                      <input id="phone" type="tel" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                       <label htmlFor="phone" className="Form-text active">Phone No.</label>
                       <span className="Input-info-error">{ this.props.customerPhoneError }</span>
                     </div>
@@ -221,12 +221,12 @@ class customerDetails extends Component {
                       {
                         this.props.customerPhone !== "" ?
                         <div>
-                          <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                          <input id="phone" type="tel" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                           <label htmlFor="phone" className="Form-text active">Phone No.</label>
                         </div>
                         :
                         <div>
-                          <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                          <input id="phone" type="tel" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                           <label htmlFor="phone" className="Form-text">Phone No.</label>
                         </div>
                       }
