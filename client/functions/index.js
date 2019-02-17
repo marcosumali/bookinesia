@@ -37,9 +37,10 @@ exports.getUserBasedOnUid = functions.https.onRequest((req, res) => {
   })
   .catch(function(error) {
     console.log("ERROR: fetching user data by UID", error)
-    // res.status(400).json({
-    //   message: 'ERROR: fetching user data by UID',
-    // })
+    res.status(400).json({
+      message: 'ERROR: fetching user data by UID',
+      error
+    })
   })
 })
 
@@ -64,9 +65,10 @@ exports.getUserBasedOnEmail = functions.https.onRequest((req, res) => {
   })
   .catch(function(error) {
     console.log("ERROR: fetching user data by Email", error)
-    // res.status(400).json({
-    //   message: 'ERROR: fetching user data by Email',
-    // })
+    res.status(400).json({
+      message: 'ERROR: fetching user data by Email',
+      error
+    })
   })
 })
 
