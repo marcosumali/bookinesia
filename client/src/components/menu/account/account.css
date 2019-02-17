@@ -3,7 +3,7 @@
 }
 
 .Account-name-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.25em;
   font-weight: normal;
   font-style: normal;
@@ -28,7 +28,7 @@
 
 
 .Settings-button-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -44,7 +44,7 @@
 }
 
 .Account-info-header {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: bold;
   font-style: normal;
@@ -55,7 +55,7 @@
 }
 
 .Account-info-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -81,7 +81,7 @@
 }
 
 .White-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -99,7 +99,7 @@
 }
 
 .Black-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -110,7 +110,7 @@
 }
 
 .Grey-text-small {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: normal;
   font-style: normal;
@@ -121,7 +121,7 @@
 }
 
 .Text-error {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: normal;
   font-style: normal;

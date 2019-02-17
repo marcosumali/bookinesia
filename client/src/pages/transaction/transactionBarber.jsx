@@ -16,7 +16,7 @@ class transactionBarber extends Component {
     return (
       <div>
 
-        <TransactionCard section="Choose Your Barber & Schedule" />
+        <TransactionCard section="Choose Your Provider & Schedule" />
 
         {/* Break line is set to anticipate fix bottom over-shadow contents */}
         <br></br>

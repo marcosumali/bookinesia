@@ -12,7 +12,7 @@ export default class loginButton extends Component {
           <div className="Container-center Margin-r-10">
             <LoginSvg color="#5499c3" width="1.5em" height="1.5em" />
           </div>
-          <div className="Mobile-blue-text">Log In Bookinesia</div>
+          <div className="Mobile-blue-text">Sign In Bookinesia</div>
         </div>
       </a>
     )

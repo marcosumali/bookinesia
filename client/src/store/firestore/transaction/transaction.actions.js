@@ -23,6 +23,9 @@ import {
   incorrectPasswordError, 
   tooManyRequestError 
 } from '../customer/customer.actions';
+import {
+  setCalendarDate,
+} from '../../dashboard/dasboard.actions';
 
 // ---------------------------------------------- GENERAL ACTION ----------------------------------------------
 // To clear transaction state when user go back
@@ -290,7 +293,9 @@ export const getServicesBasedOnParams = (params) => {
             ...data,
             id
           }
-          selectedServices.push(combineData)
+          if (data.disableStatus === false) {
+            selectedServices.push(combineData)
+          }
         } else {
           dispatch(getServicesBasedOnParamsFailed(false))
         }
@@ -335,7 +340,10 @@ export const getStaffServiceDataBasedOnParams = (params) => {
     await Promise.all(servicesCode && servicesCode.map(async serviceCode => {      
       let staffServiceRef = firestore.collection('staffService')
 
-      await staffServiceRef.where('serviceId', '==', `${shopName}-${branchName}-${serviceCode}`).get()
+      await staffServiceRef
+        .where('serviceId', '==', `${shopName}-${branchName}-${serviceCode}`)
+        .where('disableStatus', '==', false)
+        .get()
         .then(snapshot => {
           if (snapshot.empty === false) {
             snapshot.forEach(doc => {
@@ -387,7 +395,8 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
     await Promise.all(competentStaffsId && competentStaffsId.map(async competentStaffId => {
       let staffRef = firestore.collection('staff').doc(competentStaffId)
 
-      await staffRef.get()
+      await staffRef
+        .get()
         .then(doc => {
           if (doc.exists) {
             let data = doc.data()
@@ -396,7 +405,9 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
               ...data,
               id
             }
-            detailCompetentStaffs.push(combineData)
+            if (data.disableStatus === false) {
+              detailCompetentStaffs.push(combineData)
+            }
           } else {
             dispatch(getCompetentStaffsDataFailed(false))
           }
@@ -410,7 +421,13 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
     // To set first staff as initial selected staffs to store
     await dispatch(setSelectedStaff(detailCompetentStaffs[0], params))
     // To set first staff appointments as initial selected staffs to store
-    await dispatch(getSpecificAppointments(detailCompetentStaffs[0], params))
+    let inputDate = new Date(Date.now())
+    let year = inputDate.getFullYear()
+    let month = inputDate.getMonth() + 1
+    let date = inputDate.getDate()
+    let acceptedDate = `${year}-${month}-${date}`
+    await dispatch(setCalendarDate(acceptedDate))
+    await dispatch(getSpecificAppointments(detailCompetentStaffs[0], params, acceptedDate))
   }
 }
 
@@ -435,7 +452,12 @@ export const setSelectedStaff = (selectedStaff, params) => {
     // To show selected staff to store each time user click staff image
     dispatch(setSelectedStaffSuccess(selectedStaff))
     // To show selected staff appointments to store each time user click staff image
-    dispatch(getSpecificAppointments(selectedStaff, params))
+    let inputDate = new Date(Date.now())
+    let year = inputDate.getFullYear()
+    let month = inputDate.getMonth() + 1
+    let date = inputDate.getDate()
+    let acceptedDate = `${year}-${month}-${date}`
+    dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
   }
 }
 
@@ -466,7 +488,11 @@ export const getStaffBasedOnParams = (params) => {
           ...data,
           id
         }
-        dispatch(getStaffBasedOnParamsSuccess(combineData))
+        if (data.disableStatus === false) {
+          dispatch(getStaffBasedOnParamsSuccess(combineData))
+        } else {
+          dispatch(getStaffBasedOnParamsFailed(false))
+        }
       } else {
         dispatch(getStaffBasedOnParamsFailed(false))
       }
@@ -494,17 +520,15 @@ const getStaffBasedOnParamsFailed = (data) => {
 
 // ---------------------------------------------- APPOINTMENT ACTION ----------------------------------------------
 // To get appoinment data for specific service provicer
-export const getSpecificAppointments = (competentStaff, params) => {
+export const getSpecificAppointments = (competentStaff, params, date) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let appointmentRef = firestore.collection('appointment')
-    let appointmentsData = []
 
     appointmentRef
     .where('staffId', '==', `${competentStaff.id}`)
-    .orderBy('date', 'desc')
-    .limit(7)
-    // Query snapshot to handle realtime update data from firestore
+    .where('date', '==', date)
+    .where('disableStatus', '==', false)
     .onSnapshot(function(querySnapshot) {
       if (querySnapshot.empty === false) {
         querySnapshot.forEach(doc => {
@@ -514,13 +538,15 @@ export const getSpecificAppointments = (competentStaff, params) => {
             ...data,
             id
           }
-          appointmentsData.unshift(combineData)
+          dispatch(getSpecificAppointmentsSuccess(combineData))
+          dispatch(setSelectedAppointmentSuccess(combineData))
+          dispatch(setConfirmPageRouteLink(params, competentStaff, combineData))
         })
-        dispatch(getSpecificAppointmentsSuccess(appointmentsData))
-        dispatch(setSelectedAppointment(appointmentsData, 0))
-        dispatch(setConfirmPageRouteLink(params, competentStaff, appointmentsData[0]))
       } else {
-        dispatch(getSpecificAppointmentsFailed(false))
+        let data = {
+          message: 'no-appointment'
+        }
+        dispatch(getSpecificAppointmentsSuccess(data))
       }
     })
   }
@@ -533,42 +559,42 @@ const getSpecificAppointmentsSuccess = (data) => {
   }
 }
 
-const getSpecificAppointmentsFailed = (data) => {
-  return {
-    type: 'GET_SPECIFIC_APPOINTMENTS_DATA_FAILED',
-    payload: data
-  }
-}
-
 // To set appointment index to store and to show appointment based on appoinment index and user's click request
-export const setAppointmentIndex = (status, appointmentsData, appoinmentIndex, params, selectedStaff) => {
+export const setAppointmentIndex = (status, appointmentsData, selectedDate, params, selectedStaff) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let inputDate = new Date(selectedDate)
     if (status === 'next') {
-      dispatch(setAppointmentIndexSuccess(appoinmentIndex+1))
-      dispatch(setSelectedAppointment(appointmentsData, appoinmentIndex+1))
-      dispatch(setConfirmPageRouteLink(params, selectedStaff, appointmentsData[appoinmentIndex+1]))
+      let tomorrowDate = new Date(inputDate.setDate(inputDate.getDate() + 1))
+      let year = tomorrowDate.getFullYear()
+      let month = tomorrowDate.getMonth() + 1
+      let date = tomorrowDate.getDate()  
+      let acceptedDate = `${year}-${month}-${date}`
+      dispatch(setAppointmentLoading(true))
+      dispatch(setCalendarDate(acceptedDate))
+      dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
     } else if (status === 'previous') {
-      dispatch(setAppointmentIndexSuccess(appoinmentIndex-1))
-      dispatch(setSelectedAppointment(appointmentsData, appoinmentIndex-1))
-      dispatch(setConfirmPageRouteLink(params, selectedStaff, appointmentsData[appoinmentIndex-1]))
+      let yesterdayDate = new Date(inputDate.setDate(inputDate.getDate() - 1))
+      let year = yesterdayDate.getFullYear()
+      let month = yesterdayDate.getMonth() + 1
+      let date = yesterdayDate.getDate()  
+      let acceptedDate = `${year}-${month}-${date}`
+      // Appointment loading to false is embedded in reducers of getSpecificAppointment data success
+      dispatch(setAppointmentLoading(true))
+      dispatch(setCalendarDate(acceptedDate))
+      dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
     }
   }
 }
 
-const setAppointmentIndexSuccess = (data) => {
+
+export const setAppointmentLoading = (data) => {
   return {
-    type: 'SET_APPOINTMENT_INDEX',
+    type: 'SET_APPOINTMENT_LOADING',
     payload: data
   }
 }
 
 // To set appointment data to store based on user's click request from previous action setAppointmentIndex
-export const setSelectedAppointment = (appointmentsData, newAppoinmentIndex) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(setSelectedAppointmentSuccess(appointmentsData[newAppoinmentIndex]))
-  }
-}
-
 const setSelectedAppointmentSuccess = (data) => {
   return {
     type: 'SET_SELECTED_APPOINTMENT',
@@ -986,6 +1012,8 @@ export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
       let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeGuest', { name, email })
       if (sendEmailResult.status === 200) {
         dispatch(createNewTransaction(uid, props))
+      } else {
+        dispatch(createNewTransaction(uid, props))
       }
     })
     .catch(err => {
@@ -999,9 +1027,8 @@ export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
 // ---------------------------------------------- TRANSACTION ACTION ----------------------------------------------
 export const createNewTransaction = (customerId, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let params = props.params
-    let shopId = params.shopName
-    let branchId = `${shopId}-${params.branchName}`
+    let shop = props.shop
+    let branch = props.branch
     let service = props.selectedServices
     let staff = props.selectedStaff
     let appointment = props.selectedAppointment
@@ -1022,11 +1049,13 @@ export const createNewTransaction = (customerId, props) => {
       type: 'customer',
       id: customerId
     }
+    let paymentMethod = ''
+    let paymentInformation = ''
     let window = props.window
     
     let newTransaction = {
-      shopId,
-      branchId,
+      shop,
+      branch,
       service,
       staff,
       appointment,
@@ -1041,7 +1070,9 @@ export const createNewTransaction = (customerId, props) => {
       createdDate,
       updatedDate,
       createdBy,
-      updatedBy
+      updatedBy,
+      paymentMethod,
+      paymentInformation,
     }
 
     let firestore = getFirestore()
@@ -1053,23 +1084,7 @@ export const createNewTransaction = (customerId, props) => {
       .then(async ref => {
         let refId = ref.id
         dispatch(updateAppointmentCurrentTransaction(appointment))
-        // let emailData = {
-        //   name,
-        //   email,
-        //   transactionId: refId,
-        //   date: appointment.date,
-        //   shopName: params.shopName,
-        //   shopLogo: props.shop.logo,
-        //   branchName: params.branchName,
-        //   queueNo,
-        //   staffName: staff.name,
-        //   staffImage: staff.picture,
-        //   service,
-        // }
-        // let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailCustomerBookTransaction', emailData)
-        // if (sendEmailResult.status === 200) {
-          window.location.assign(`/book/success/${refId}`)
-        // }
+        window.location.assign(`/book/success/${refId}`)
       })
       .catch(err => {
         console.log('ERROR: create new transaction', err)

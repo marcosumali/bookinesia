@@ -107,7 +107,7 @@ class accountDetails extends Component {
                                 <LogOutSvg width="18px" height="18px" color="#ffffff" />
                               </div>
                               <div className="Container-center">
-                                <div className="White-text">Log Out</div>
+                                <div className="White-text">Sign Out</div>
                               </div>
                             </div>
                           </div>

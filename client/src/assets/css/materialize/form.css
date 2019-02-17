@@ -7,6 +7,21 @@ input[type=tel],
 input[type=number]  {
   height: 2rem;
 }
+input[type=date] {
+  margin: 0px;
+  height: 2em;
+  border-bottom: 0px solid #ffffff;
+}
+[type="date"] {
+  background:#fff url(https://firebasestorage.googleapis.com/v0/b/bookinesia-com.appspot.com/o/0.general%2Fround-calendar_today-24px.png?alt=media&token=fa4e62b6-28c2-4fa0-a27c-22f80f135b9f)  100% 50% no-repeat ;
+}
+[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
 /* label color */
 .input-field label {
   color: #666666;
@@ -27,6 +42,10 @@ input[type=number]  {
 .input-field input[type=password]:focus + label {
   color: #5499c3;
 }
+.input-field input[type=date]:focus + label {
+  color: #5499c3;
+}
+
 /* label underline focus color */
 .input-field input[type=text]:focus {
   border-bottom: 1px solid #5499c3;
@@ -48,6 +67,11 @@ input[type=number]  {
   border-bottom: 1px solid #5499c3;
   box-shadow: 0 1px 0 0 #5499c3;
 }
+.input-field input[type=date]:focus {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+
  /* valid color */
 .input-field input[type=text].valid {
   border-bottom: 1px solid #5499c3;
@@ -66,6 +90,10 @@ input[type=number]  {
   box-shadow: 0 1px 0 0 #5499c3;
 }
 .input-field input[type=password].valid {
+  border-bottom: 1px solid #5499c3;
+  box-shadow: 0 1px 0 0 #5499c3;
+}
+.input-field input[type=date].valid {
   border-bottom: 1px solid #5499c3;
   box-shadow: 0 1px 0 0 #5499c3;
 }

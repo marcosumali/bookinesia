@@ -14,7 +14,7 @@ export default class detailsCard extends Component {
       <div className="col s12 Card-container Margin-b-24">
         <div className="col s12 Card-box Padding-10">
           {/* Card Header - Svg and Name */}
-          <div className="col s12 Container-one-line Margin-b-8">
+          <div className="col s12 No-padding Container-one-line Margin-b-8">
             {
             this.props.section === 'Opening Hours' ?
               <TimeSvg height="1.5em" width="1.5em" color="#5499c3" />
@@ -22,7 +22,7 @@ export default class detailsCard extends Component {
               this.props.section === 'Services' ?
               <ServiceSvg height="1.5em" width="1.5em" color="#5499c3" />
               :
-              this.props.section === `Barber's Schedule` ?
+              this.props.section === `Provider's Schedule` ?
               <FaceSvg height="1.5em" width="1.5em" color="#5499c3" />
               :
               this.props.section === 'Location' ?

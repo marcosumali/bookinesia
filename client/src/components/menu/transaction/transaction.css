@@ -32,7 +32,7 @@
 
 .Branch-header-name {
   width: 100%;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -44,19 +44,19 @@
 
 .Branch-header-date {
   width: 100%;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   line-height: 1.2;
   letter-spacing: normal;
-  color: #5499c3;
+  color: #666666;
 }
 
 .Shop-header-name {
   width: 100%;
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.5em;
   font-weight: normal;
   font-style: normal;
@@ -67,7 +67,7 @@
 }
 
 .Schedule-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -78,7 +78,7 @@
 }
 
 .Schedule-text-big {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 2em;
   font-weight: normal;
   font-style: normal;
@@ -89,7 +89,7 @@
 }
 
 .Schedule-text-white {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -100,7 +100,7 @@
 }
 
 .Schedule-no-white {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 4.5em;
   font-weight: normal;
   font-style: normal;
@@ -111,7 +111,7 @@
 }
 
 .Transaction-header {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 2em;
   font-weight: normal;
   font-style: normal;
@@ -212,7 +212,7 @@
 }
 
 .Header-text-orange {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -223,7 +223,7 @@
 }
 
 .Header-text-blue {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.5em;
   font-weight: normal;
   font-style: normal;
@@ -234,7 +234,7 @@
 }
 
 .Content-header-blue {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05em;
   font-weight: bold;
   font-style: normal;
@@ -245,7 +245,7 @@
 }
 
 .Content-text-gray {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8em;
   font-weight: normal;
   font-style: normal;
@@ -277,7 +277,7 @@
 }
 
 .Status-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: normal;
   font-style: normal;
@@ -286,6 +286,7 @@
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
+  text-transform: capitalize;
 }
 
 .Cancel-box {
@@ -298,7 +299,7 @@
 }
 
 .Cancel-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: bold;
   font-style: normal;

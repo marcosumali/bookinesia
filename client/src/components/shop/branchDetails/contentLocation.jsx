@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import '../../../assets/css/general.css';
 import './branchDetails.css';
-import MapContainer from './locationMap';
+import MapContainer from './locationEmbedMap';
 
 class contentLocation extends Component {
   render() {
@@ -20,7 +20,12 @@ class contentLocation extends Component {
     return (
       <div className="row No-margin No-padding">
         <div className="col s12 No-padding Margin-b-8" style={ mapStyles }>
-          <MapContainer branch={ this.props.branch }/>
+          {
+            this.props.branchLoading ?
+            <div className="Map-loading"></div>
+            :
+            <MapContainer branch={ this.props.branch }/>
+          }
         </div>
         <div className="col s12 No-padding">
           <p className="Card-text No-margin" style={{ fontSize: '0.75em' }}>{ this.props.branch.address }</p>
@@ -34,6 +39,7 @@ const mapStateToProps = state => {
   return {
     params: state.shop.params,
     branch: state.shop.branch,
+    branchLoading: state.shop.branchLoading,
   }
 }
 

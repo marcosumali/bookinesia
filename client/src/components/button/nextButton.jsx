@@ -16,7 +16,8 @@ class nextButton extends Component {
             Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ||
             this.props.selectedStaffLoading ||
             this.props.selectedAppointmentLoading ||
-            this.props.selectedServicesLoading ?
+            this.props.selectedServicesLoading ||
+            this.props.selectedAppointment.disableStatus ?
             <div className="Next-button-disable Container-center">
               <p className="Next-text-disable">{ this.props.text }</p>
             </div>
@@ -51,9 +52,15 @@ class nextButton extends Component {
             </div>
           :
           this.props.text === 'Continue' && this.props.onPage === 'BarberPage' ?
-            Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) || 
+            this.props.selectedAppointment.length <= 0 ||
             this.props.competentStaffsLoading || 
-            this.props.appointmentsLoading ?
+            this.props.appointmentsLoading ? 
+            <div className="Next-button-disable Container-center">
+              <p className="Next-text-disable">{ this.props.text }</p>
+            </div>
+            :
+            Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) || 
+            this.props.selectedAppointment.message === 'no-appointment' ? 
             <div className="Next-button-disable Container-center">
               <p className="Next-text-disable">{ this.props.text }</p>
             </div>
@@ -99,6 +106,7 @@ const mapStateToProps = state => {
     selectedServices: state.cart.selectedServices,
     loadingStatus: state.user.loadingStatus,
     shop: state.shop.shop,
+    branch: state.shop.branch,
     showPasswordInputStatus: state.cart.showPasswordInputStatus,
     // Service Transaction Page Needs
     primaryService: state.cart.primaryService,

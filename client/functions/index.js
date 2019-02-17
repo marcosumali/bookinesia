@@ -4,16 +4,14 @@ const cors = require('cors')({origin: true});
 const admin = require('firebase-admin');
 const fs = require('fs')
 const nodemailer = require('nodemailer')
+const sgTransport = require('nodemailer-sendgrid-transport');
 const handlebars = require('handlebars');
 
-const { formatMoney, getTotalTransaction } = require('./helpers/currency');
-const { returnWhatDay, returnWhatMonth } = require('./helpers/date');
-
-const AUTHEMAIL = process.env.AUTHEMAIL
-const AUTHPASS = process.env.AUTHPASS
+const CEO_EMAIL = process.env.EMAIL_CEO
+const AUTH_USERNAME = process.env.SENDGRID_USERNAME
+const AUTH_PASS = process.env.SENDGRID_PASS
 const REGISTER_EMAIL = fs.readFileSync(__dirname + '/nodemailer/templates/welcome.customer.html', 'utf-8')
 const GUEST_EMAIL = fs.readFileSync(__dirname + '/nodemailer/templates/welcome.guest.html', 'utf-8')
-const CUSTOMER_BOOK_TRANSACTION = fs.readFileSync(__dirname + '/nodemailer/templates/customer.book.transaction.html', 'utf-8')
 
 admin.initializeApp(functions.config().firebase);
 
@@ -39,9 +37,10 @@ exports.getUserBasedOnUid = functions.https.onRequest((req, res) => {
   })
   .catch(function(error) {
     console.log("ERROR: fetching user data by UID", error)
-    // res.status(400).json({
-    //   message: 'ERROR: fetching user data by UID',
-    // })
+    res.status(400).json({
+      message: 'ERROR: fetching user data by UID',
+      error
+    })
   })
 })
 
@@ -66,9 +65,10 @@ exports.getUserBasedOnEmail = functions.https.onRequest((req, res) => {
   })
   .catch(function(error) {
     console.log("ERROR: fetching user data by Email", error)
-    // res.status(400).json({
-    //   message: 'ERROR: fetching user data by Email',
-    // })
+    res.status(400).json({
+      message: 'ERROR: fetching user data by Email',
+      error
+    })
   })
 })
 
@@ -79,15 +79,8 @@ exports.sendEmailWelcomeCustomer = functions.https.onRequest((req, res) => {
   let customerName = req.body.name
   let customerNameCapitalize = customerName.charAt(0).toUpperCase() + customerName.slice(1)
   let customerEmail = req.body.email
-  let emailTemplate = REGISTER_EMAIL
 
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: `${AUTHEMAIL}`,
-      pass: `${AUTHPASS}`
-    }
-  });
+  let emailTemplate = REGISTER_EMAIL
 
   // setting up email with data in handlebars
   let template = handlebars.compile(emailTemplate)
@@ -96,24 +89,35 @@ exports.sendEmailWelcomeCustomer = functions.https.onRequest((req, res) => {
 
   // setup email data with unicode symbols
   let mailOptions = {
-    from: `"Bookinesia" ${AUTHEMAIL}`,
+    from: `"Bookinesia" ${CEO_EMAIL}`,
     to: customerEmail,
     subject: `Welcome To Bookinesia, ${data.name}`, 
     html: `${templateWithData}`
-  };
+  }
 
   // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('ERROR: Customer Welcome Message not sent', error)
+  let options = {
+    auth: {
+      api_user: `${AUTH_USERNAME}`,
+      api_key: `${AUTH_PASS}`
+    }
+  }
+  
+  let client = nodemailer.createTransport(sgTransport(options))
+
+  client.sendMail(mailOptions, function(err, info){
+    if (err){
+      console.log('ERROR: Customer Welcome Message not sent ', err)
       res.status(400).json({
         message: 'ERROR: Customer Welcome Message not sent',
+        err,
       })    
-    } else {
-      console.log(`Customer Welcome Message sent: %s`, info.messageId)
+    }
+    else {
+      // console.log(`Customer Welcome Message sent`, info.message)
       res.status(200).json({
         message: 'Customer Welcome Message is sent',
-        messageId: info.messageId
+        messageInfo: info.message
       })    
     }
   })
@@ -126,15 +130,8 @@ exports.sendEmailWelcomeGuest = functions.https.onRequest((req, res) => {
   let customerName = req.body.name
   let customerNameCapitalize = customerName.charAt(0).toUpperCase() + customerName.slice(1)
   let customerEmail = req.body.email
-  let emailTemplate = GUEST_EMAIL
 
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: `${AUTHEMAIL}`,
-      pass: `${AUTHPASS}`
-    }
-  });
+  let emailTemplate = GUEST_EMAIL
 
   // setting up email with data in handlebars
   let template = handlebars.compile(emailTemplate)
@@ -143,112 +140,35 @@ exports.sendEmailWelcomeGuest = functions.https.onRequest((req, res) => {
 
   // setup email data with unicode symbols
   let mailOptions = {
-    from: `"Bookinesia" ${AUTHEMAIL}`,
+    from: `"Bookinesia" ${CEO_EMAIL}`,
     to: customerEmail,
     subject: `Welcome To Bookinesia, ${data.name}`, 
     html: `${templateWithData}`
-  };
+  }
 
   // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('ERROR: Guest Welcome Message not sent ', error)
+  let options = {
+    auth: {
+      api_user: `${AUTH_USERNAME}`,
+      api_key: `${AUTH_PASS}`
+    }
+  }
+
+  let client = nodemailer.createTransport(sgTransport(options))
+
+  client.sendMail(mailOptions, function(err, info){
+    if (err){
+      console.log('ERROR: Guest Welcome Message not sent ', err)
       res.status(400).json({
         message: 'ERROR: Guest Welcome Message not sent',
+        err,
       })    
-    } else {
-      console.log(`Guest Welcome Message sent: %s`, info.messageId)
+    }
+    else {
+      // console.log(`Guest Welcome Message sent`, info.message)
       res.status(200).json({
         message: 'Guest Welcome Message is sent',
-        messageId: info.messageId
-      })    
-    }
-  })
-})
-
-
-exports.sendEmailCustomerBookTransaction = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {})
-
-  let customerName = req.body.name
-  let customerEmail = req.body.email
-  let transactionId = req.body.transactionId
-  
-  let date = req.body.date
-  let newDate = `${returnWhatDay(Number(new Date(date).getDay()))}, ${new Date(date).getDate()} ${returnWhatMonth(Number(new Date(date).getMonth()))} ${new Date(date).getFullYear()}` 
-  
-  let shopName = req.body.shopName
-  let shopNameCapitalize = shopName.charAt(0).toUpperCase() + shopName.slice(1)
-  let shopLogo = req.body.shopLogo
-  let branchName = req.body.branchName
-  let branchNameCapitalize = branchName.charAt(0).toUpperCase() + branchName.slice(1)
-  let queueNo = req.body.queueNo
-  let staffName = req.body.staffName
-  let staffImage = req.body.staffImage
-  let services = req.body.service
-  
-  let currency = ''
-  let monetisedServices = []
-  services && services.map((service) => {
-    let newService = {
-      name: service.name,
-      description: service.description,
-      currency: service.currency,
-      price: formatMoney(service.price)
-    }
-    currency = service.currency
-    monetisedServices.push(newService)
-  })
-
-  let totalAmount = formatMoney(getTotalTransaction(services))
-  let emailTemplate = CUSTOMER_BOOK_TRANSACTION
-
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: `${AUTHEMAIL}`,
-      pass: `${AUTHPASS}`
-    }
-  });
-
-  // setting up email with data in handlebars
-  let template = handlebars.compile(emailTemplate)
-  let data = { 
-    'name': customerName,
-    'transactionId': transactionId,
-    'date': newDate,
-    'shopName': shopName,
-    'shopLogo': shopLogo,
-    'branchName': branchName,
-    'queueNo': queueNo,
-    'staffName': staffName,
-    'staffImage': staffImage,
-    'services': monetisedServices,
-    'totalAmount': totalAmount,
-    'currency': currency
-  }
-  let templateWithData = template(data)
-
-  // setup email data with unicode symbols
-  let mailOptions = {
-    from: `"Bookinesia" ${AUTHEMAIL}`,
-    to: customerEmail,
-    subject: `Your transaction receipt at ${shopNameCapitalize}-${branchNameCapitalize} on ${new Date(date).toDateString()}`, 
-    html: `${templateWithData}`
-  };
-
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('ERROR: Customer Book Transaction Message not sent ', error)
-      res.status(400).json({
-        message: 'ERROR: Customer Book Transaction Message not sent',
-      })    
-    } else {
-      console.log(`Customer Book Transaction Message sent: %s`, info.messageId)
-      res.status(200).json({
-        message: 'Customer Book Transaction Message is sent',
-        messageId: info.messageId
+        messageInfo: info.message
       })    
     }
   })

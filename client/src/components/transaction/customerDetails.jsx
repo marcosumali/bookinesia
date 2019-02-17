@@ -98,7 +98,7 @@ class customerDetails extends Component {
                   <div className="col s10 No-margin No-padding Barber-booked-details">
                     <div className="col s12 No-margin No-padding Barber-booked-name-box Margin-b-8">
                       <div className="col s2 No-margin No-padding">
-                        <p className="No-margin Confirm-text">Barber</p>
+                        <p className="No-margin Confirm-text">Provider</p>
                       </div>
                       <div className="col s1 No-margin No-padding Container-center">
                         <p className="No-margin Confirm-text">:</p>
@@ -124,9 +124,12 @@ class customerDetails extends Component {
                       </div>
                     </div>
                     <div className="col s12 No-margin No-padding">
-                      {
+                      { 
+                        this.props.selectedAppointment.disableStatus ?
+                        <p className="No-margin Confirm-text-full">The provider has no schedule today. Please go back and select other provider or schedule to continue.</p>
+                        :
                         Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ?
-                        <p className="No-margin Confirm-text-full">The barber is fully booked. Please go back and select other schedule or barber to continue.</p>
+                        <p className="No-margin Confirm-text-full">The provider is fully booked. Please go back and select other provider or schedule to continue.</p>
                         :
                         <p className="No-margin Confirm-text">Queue No. { Number(this.props.selectedAppointment.currentTransaction)+1 }</p>
                       }
@@ -174,7 +177,7 @@ class customerDetails extends Component {
                 <p className="No-margin Confirm-header">Customer Details:</p>
               </div>
               <div className="col s12 No-margin No-padding">
-                <p className="No-margin Confirm-text Text-justify">Barbershop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</p>
+                <p className="No-margin Confirm-text Text-justify">Shop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</p>
               </div>
               <form className="col s12 No-margin No-padding">
                 {/* Name Input */}
@@ -209,7 +212,7 @@ class customerDetails extends Component {
                   {
                     this.props.customerPhoneError !== false?
                     <div>
-                      <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                      <input id="phone" type="tel" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                       <label htmlFor="phone" className="Form-text active">Phone No.</label>
                       <span className="Input-info-error">{ this.props.customerPhoneError }</span>
                     </div>
@@ -218,12 +221,12 @@ class customerDetails extends Component {
                       {
                         this.props.customerPhone !== "" ?
                         <div>
-                          <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                          <input id="phone" type="tel" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                           <label htmlFor="phone" className="Form-text active">Phone No.</label>
                         </div>
                         :
                         <div>
-                          <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                          <input id="phone" type="tel" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                           <label htmlFor="phone" className="Form-text">Phone No.</label>
                         </div>
                       }

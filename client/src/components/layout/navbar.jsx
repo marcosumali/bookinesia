@@ -100,7 +100,7 @@ class navbar extends Component {
           :
           <Navbar className="Nav-box" brand='Bookinesia' right fixed>
             <div>              
-              <div style={{ marginLeft: '10em' }}>
+              <div style={{ marginLeft: '12em' }}>
                 {
                   this.props.userExists && this.props.user !== "" ?
                   <div>
@@ -131,7 +131,7 @@ class navbar extends Component {
                       Not yet registered?
                     </NavItem>
                     <NavItem href="/login">
-                      Log In
+                      Sign In
                     </NavItem>
                   </div>
                   :

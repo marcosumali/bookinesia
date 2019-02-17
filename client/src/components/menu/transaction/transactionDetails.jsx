@@ -8,7 +8,6 @@ import './transaction.css';
 import CheckSvg from '../../svg/checkSvg';
 import TransactionDetailsLoading from './transactionDetailsLoading';
 import { 
-  getTransactionDetails,
   handleCookies,
   customerCancelTransaction
 } from '../../../store/firestore/customer/customer.actions';
@@ -33,7 +32,7 @@ class transactionDetails extends Component {
           this.props.authorizationStatus ?
           <div>
             {
-              this.props.transactionLoading || this.props.shopLoading || this.props.branchLoading || this.props.appointmentLoading ?
+              this.props.transactionLoading || this.props.appointmentLoading ?
               <TransactionDetailsLoading />
               :
               <div className="row No-margin No-padding Details-box animated fadeIn" style={ heightStyle }>
@@ -42,10 +41,10 @@ class transactionDetails extends Component {
                     {/* Detail Header */}
                     <div className="Details-header-box Padding-10 Container-center">
                       <div className="col s12 No-margin No-padding Container-center">
-                        <div className="Header-text-blue Text-capitalize">{ this.props.shop.name }</div>
+                        <div className="Header-text-blue Text-capitalize">{ this.props.transaction.shop.name }</div>
                       </div>
                       <div className="col s12 No-margin No-padding Container-center">
-                        <div className="Header-text-orange Text-capitalize">{ this.props.branch.name }</div>
+                        <div className="Header-text-orange Text-capitalize">{ this.props.transaction.branch.name }</div>
                       </div>
                     </div>
       
@@ -216,15 +215,15 @@ class transactionDetails extends Component {
           
                       {/* Cancel Button */}
                       {
-                        this.props.transaction.status === 'canceled' ?
-                        <div className="col s12 No-margin No-padding Margin-b-24"></div>
-                        :
+                        this.props.transaction.status === 'booking confirmed' ?
                         <div 
                           className="col s12 No-margin No-padding Cancel-box Container-center" 
                           onClick={ () => this.props.customerCancelTransaction(this.props.transaction, this.props.appointment) }
                         >
                           <div className="Cancel-text">Cancel</div>
                         </div>
+                        :
+                        <div className="col s12 No-margin No-padding Margin-b-24"></div>
                       }
           
                     </div>
@@ -263,7 +262,6 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  getTransactionDetails,
   handleCookies,
   customerCancelTransaction
 }, dispatch)

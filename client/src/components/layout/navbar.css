@@ -2,12 +2,12 @@
   width: 100%;
   background-color: #ffffff;
   margin-bottom: 1em;
-  box-shadow: 0 0rem 1rem rgba(0, 0, 0, 0.075);
+  box-shadow: none;
   z-index: 1;
 }
 
 .Navbar-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.4rem;
   font-weight: normal;
   font-style: normal;
@@ -34,7 +34,7 @@
 }
 
 .Mobile-white-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -45,7 +45,7 @@
 }
 
 .Mobile-blue-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -72,16 +72,13 @@ a.button-collapse > i {
 }
 
 a.brand-logo {
-  font-family: Montserrat;
-  font-size: 1.4em;
-  font-weight: normal;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.75em;
+  font-weight: bold;
   font-style: normal;
   font-stretch: normal;
-  line-height: 1.2;
   letter-spacing: normal;
   color: #5499c3;
-  margin-top: 0.84em;
-  /* margin-left: 2.5em; */
 }
 
 #sidenav-overlay {
@@ -93,7 +90,7 @@ a.brand-logo {
 }
 
 #nav-mobile > li > a {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -115,17 +112,22 @@ a.brand-logo {
   height: 4rem;
 }
 
-@media only screen and (min-width: 1024px) {
-  .Navbar-text {
-    color: #5499c3;
-  }
+nav ul a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  color: #F68606;
+}
 
+@media only screen and (min-width: 1024px) {
   nav ul a {
-    color: #666666;
+    color: #f68606;
   }
 
   a.brand-logo {
     margin-left: 1em;
-    margin-top: 0.9em;
   }
 }

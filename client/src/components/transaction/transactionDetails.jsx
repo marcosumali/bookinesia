@@ -14,7 +14,7 @@ export default class transactionDetail extends Component {
           this.props.content === 'Choose Your Services' ?
           <ServiceDetails />
           :
-          this.props.content === `Choose Your Barber & Schedule` ?
+          this.props.content === `Choose Your Provider & Schedule` ?
           <BarberDetails />
           :
           this.props.content === `Transaction Details` ?
