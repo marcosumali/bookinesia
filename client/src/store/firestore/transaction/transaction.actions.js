@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { setRouteLink } from '../shop/shop.actions';
-import { validateEmail } from '../../../helpers/form';
+import { validateEmail, validatePhone } from '../../../helpers/form';
 import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
 import { 
   setLoadingStatus, 
@@ -13,12 +13,14 @@ import {
 import { 
   authSignInAnonymouslyAndCreateNewTransaction, 
   authEmailValidation, 
-  authPasswordValidation 
+  authPasswordValidation,
+  authUserValidation
 } from '../auth/auth.actions';
 import { 
   emptyError, 
-  phoneMinError, 
-  emailInvalidError, 
+  // phoneMinError, 
+  emailInvalidError,
+  phoneInvalidError, 
   passwordMinError, 
   incorrectPasswordError, 
   tooManyRequestError 
@@ -706,12 +708,13 @@ export const customerInputValidation = (props) => {
     let name = props.customerName
     let phone = props.customerPhone
     let email = props.customerEmail
+    let picture = 'noPicture'
     let password = props.customerPassword
     let cookies = props.cookies
     let showPasswordInputStatus = props.showPasswordInputStatus
 
     // To set loading status to true
-    dispatch(setLoadingStatus(true))
+    // dispatch(setLoadingStatus(true))
 
     // Input is ERROR
     if (name.length <= 0) {
@@ -722,8 +725,9 @@ export const customerInputValidation = (props) => {
       dispatch(setPhoneInputError(emptyError))
     } 
     
-    if (phone.length > 0 && phone.length < 8) {
-      dispatch(setPhoneInputError(phoneMinError))
+    let phoneResult = validatePhone(phone)
+    if (phone.length > 0 && phoneResult.status === false) {
+      dispatch(setPhoneInputError(phoneInvalidError))
     }
 
     if (email.length <= 0) {
@@ -734,67 +738,121 @@ export const customerInputValidation = (props) => {
       dispatch(setEmailInputError(emailInvalidError))
     }
 
-    if (password.length <= 0) {
-      await dispatch(setPasswordInputError(emptyError))
-    } 
-    
-    if (password.length > 0 && password.length < 8) {
-      await dispatch(setPasswordInputError(passwordMinError))
-    }
-
     // Input is OK
     if (name.length > 0) {
-      dispatch(setNameInputOK(false))
+      dispatch(setNameInputError(false))
     } 
     
-    if (phone.length >= 8) {
-      dispatch(setPhoneInputOK(false))
+    if (phoneResult.status === true) {
+      dispatch(setPhoneInputError(false))
     } 
     
     if (email.length > 0 && validateEmail(email)) {
-      dispatch(setEmailInputOK(false))
+      dispatch(setEmailInputError(false))
     }
+    
+    if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true) {
+      console.log('masuk pak eko')
+    //   let BUID = getCookies(cookies)
+    //   if (BUID) {
+    //     let customerData = verifyCookies(BUID)
+    //     let customerId = customerData.id
+    //     dispatch(createNewTransaction(customerId, props))
+    //   } else {
+    //     let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
+    //     // console.log('+++', customerExistenceBasedOnEmail)
+    //     if (customerExistenceBasedOnEmail === true) {
+    //       if (showPasswordInputStatus.message === false) {
+    //         let newStatus = {
+    //           message: 'true',
+    //           user: 'registeredUser',
+    //         }
+    //         dispatch(setShowPasswordInputstatus(newStatus))
+    //         dispatch(setLoadingStatus(false))
+    //       } else {
+    //         if (password.length <= 0) {
+    //           dispatch(setPasswordInputError(emptyError))
+    //           dispatch(setLoadingStatus(false))
+    //         } 
+    //         if (password.length > 0) {
+    //           dispatch(setPasswordInputError(false))
 
-    if (password.length >= 8) {
-      await dispatch(setPasswordInputOK(false))
-    } 
+    //           let authUser = await dispatch(authUserValidation(email, password))
+    //           let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
+
+    //           if (authUser.id) {
+    //             let customerData = {
+    //               id: authUser.id, 
+    //               name: authUser.name, 
+    //               email: authUser.email, 
+    //               phone,
+    //               picture: authUser.picture,
+    //             }
+    //             // setNewCookies(cookies, customerData)
+    //             // dispatch(createNewTransaction(customerId, props))
+
+    //           } else if (authUser === false) {
+    //             dispatch(setPasswordInputError(incorrectPasswordError))
+    //             dispatch(setLoadingStatus(false))
+    //           } else if (authUser === 'too-many-requests') {
+    //             dispatch(setPasswordInputError(tooManyRequestError))
+    //             dispatch(setLoadingStatus(false))
+    //           }
+    //         } 
+    //       }
+    //     } else if (customerExistenceBasedOnEmail === false) {
+    //       // create new user
+    //       let newStatus = {
+    //         message: 'true',
+    //         user: 'newUser',
+    //       }
+    //       dispatch(setShowPasswordInputstatus(newStatus))
+
+    //     } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
+    //       dispatch(setPasswordInputError(tooManyRequestError))
+    //       dispatch(setLoadingStatus(false))
+    //     }
+
+
+    //   }
+      
+      // if (showPasswordInputStatus === false || (showPasswordInputStatus && password.length >= 8)) {
+      //   let BUID = getCookies(cookies)
+      //   if (BUID) {
+      //     let customerData = verifyCookies(BUID)
+      //     let customerId = customerData.id
+      //     dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
+      //   } else {
+      //     let authUserExistence = await dispatch(authEmailValidation(email))
+      //     let userExistence = await dispatch(validateCustomerExistence('phone', phone))
+      //     // console.log('auth exist', authUserExistence, '===', userExistence)
+      //     if (authUserExistence === 'too-many-requests') {
+      //       dispatch(setPasswordInputError(tooManyRequestError))
+      //       dispatch(setLoadingStatus(false))
+      //     } else {
+      //       if (authUserExistence && userExistence) {
+      //         dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
+      //       } else if (authUserExistence && userExistence === false ) {
+      //         dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
+      //       } else if (authUserExistence === false && userExistence) {
+      //         let registeredUser = await dispatch(getCustomerByField('phone', phone))
+      //         let uid = registeredUser.id
     
-    if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true) {
-      if (showPasswordInputStatus === false || (showPasswordInputStatus && password.length >= 8)) {
-        let BUID = getCookies(cookies)
-        if (BUID) {
-          let customerData = verifyCookies(BUID)
-          let customerId = customerData.id
-          dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
-        } else {
-          let authUserExistence = await dispatch(authEmailValidation(email))
-          let userExistence = await dispatch(validateCustomerExistence('phone', phone))
-          // console.log('auth exist', authUserExistence, '===', userExistence)
-          if (authUserExistence === 'too-many-requests') {
-            dispatch(setPasswordInputError(tooManyRequestError))
-            dispatch(setLoadingStatus(false))
-          } else {
-            if (authUserExistence && userExistence) {
-              dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
-            } else if (authUserExistence && userExistence === false ) {
-              dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
-            } else if (authUserExistence === false && userExistence) {
-              let registeredUser = await dispatch(getCustomerByField('phone', phone))
-              let uid = registeredUser.id
-    
-              let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
-              if (authResponseByUID.status === 200) {
-                let authUser = authResponseByUID.data.user
-                dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))
-              }
-            } else if (authUserExistence === false && userExistence === false) {
-              dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
-            }
-          }
-        }
-      } else {
-        dispatch(setLoadingStatus(false))
-      }
+      //         let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
+      //         if (authResponseByUID.status === 200) {
+      //           let authUser = authResponseByUID.data.user
+      //           dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))
+      //         }
+      //       } else if (authUserExistence === false && userExistence === false) {
+      //         dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
+      //       }
+      //     }
+      //   }
+      // } else {
+      //   dispatch(setLoadingStatus(false))
+      // }
+
+
     } else {
       dispatch(setLoadingStatus(false))
     }
@@ -873,35 +931,6 @@ const setEmailInputError = (data) => {
 const setPasswordInputError = (data) => {
   return {
     type: 'SET_CUSTOMER_PASSWORD_ERROR',
-    payload: data
-  }
-}
-
-// To handle changes from input text if OK
-const setNameInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_NAME_OK',
-    payload: data
-  }
-}
-
-const setPhoneInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_PHONE_OK',
-    payload: data
-  }
-}
-
-const setEmailInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_EMAIL_OK',
-    payload: data
-  }
-}
-
-const setPasswordInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_PASSWORD_OK',
     payload: data
   }
 }

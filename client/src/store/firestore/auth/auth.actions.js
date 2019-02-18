@@ -21,6 +21,7 @@ import {
   createNewCustomerAndCreateNewTransaction
 } from '../transaction/transaction.actions';
 import swal from 'sweetalert';
+import axios from 'axios';
 
 export const loginDisableError = `Your account has been disabled. We're sorry for the inconvenience.`
 
@@ -65,20 +66,26 @@ export const authUpdateUserProfileByField = (field, value) => {
   }
 }
 
-export const authCreateUser = (props) => {
+export const authCreateUser = (props, formattedPhone) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail
     let password = props.customerPassword
+    let phone = formattedPhone
+    let picture = 'noPicture'
 
     let firebase = getFirebase()
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(async response => {
       let uid = response.user.uid
 
-      let updateProfileResult = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
+      let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
 
-      if (updateProfileResult === true) {
-        dispatch(createNewCustomer(uid, props))
+      let updateProfilePicture = await dispatch(authUpdateUserProfileByField('photoURL', picture))
+
+      let adminUpdateProfile = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/adminUpdateUserProfile', { uid, phone })
+
+      if (updateProfileName === true && updateProfilePicture === true && adminUpdateProfile.status === 200) {
+        dispatch(createNewCustomer(uid, props, formattedPhone))
       }
     })
     .catch(function(err) {
@@ -130,6 +137,32 @@ export const authSignOut = (cookies) => {
       console.log('ERROR: sign out', err)
     });
   }
+}
+
+export const authUserValidation = (email, password) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let validateResult = 'no-user'
+
+    let firebase = getFirebase()
+    await firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((response) => {
+      let id = response.user.uid
+      let email = response.user.email
+      let name = response.user.displayName
+      let picture = response.user.photoURL
+      let user = { id, email, name, picture }
+      validateResult = user
+    })
+    .catch(err => {
+      if (err.code === 'auth/too-many-requests') {
+        validateResult = 'too-many-requests'
+      } else {
+        validateResult = false
+      }
+    })
+
+    return validateResult
+  }  
 }
 
 export const authPasswordValidation = (customerData, password) => {
@@ -263,24 +296,6 @@ export const authSignInAnonymouslyAndCreateNewTransaction = (props) => {
   }
 }
 
-// To migrate user from anonymous user to registered user
-export const authMigrateAnonymousUser = (props) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let email = props.customerEmail
-    let password = props.customerPassword
-
-    let firebase = getFirebase()
-    let credential = firebase.auth.EmailAuthProvider.credential(email, password)
-    
-    firebase.auth().currentUser.linkAndRetrieveDataWithCredential(credential)
-    .then(function(usercred) {
-      let uid = usercred.user.uid
-      dispatch(migrateRegisteredStatus(uid, props))
-    }, function(err) {
-      console.log("ERROR: migrating account", err)
-    })
-  }
-}
 
 // To redirect sign out and delete cookies user if the user has changed their email and reverse it through firebase auth email
 export const authRedirectAndSignOut = (props) => {
@@ -312,9 +327,9 @@ export const afterLoginValidation = (uid, email, props) => {
     .then(doc => {
       if (doc.exists) {
         let id = doc.id
-        let { name, phone, picture, registeredStatus } = doc.data()
+        let { name, phone, picture } = doc.data()
         let customerData = {
-          id, name, email, phone, picture, registeredStatus
+          id, name, email, phone, picture
         }
         dispatch(setLoginError(''))
         setNewCookies(cookies, customerData)
@@ -326,35 +341,6 @@ export const afterLoginValidation = (uid, email, props) => {
     })
     .catch(err => {
       console.log('ERROR: customer login validation', err)
-    })
-  }
-}
-
-export const migrateRegisteredStatus = (id, props) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let window = props.window
-    let cookies = props.cookies
-    let name = props.customerName
-    let phone = props.customerPhone
-    let email = props.customerEmail
-    let picture = ''
-    let registeredStatus = true
-    
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(id)
-
-    customerRef.update({
-      registeredStatus
-    })
-    .then(() => {
-      let customerData = {
-        id, name, email, phone, picture, registeredStatus
-      }
-      setNewCookies(cookies, customerData)
-      window.location.assign('/')
-    })
-    .catch(err => {
-      console.log('ERROR: updating migration status', err)
     })
   }
 }

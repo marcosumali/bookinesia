@@ -34,7 +34,7 @@ class accountDetails extends Component {
                   <div className="col s12 No-margin No-padding Padding-10 Container-center Margin-b-10">
                     <div className="col s3 No-margin No-padding Container-center">
                       {
-                        this.props.user.picture.length <= 0 ?
+                        this.props.user.picture.length <= 0 || this.props.user.picture === 'noPicture' ?
                         <AccountCircleSvg width="4em" height="4em" color="#EAEAEA" />
                         :
                         <div></div>
@@ -131,6 +131,7 @@ class accountDetails extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log('--', state.firebase)
   state.firebase.profile['email'] = state.firebase.auth.email
   return {
     cookies: state.user.cookies,

@@ -206,8 +206,7 @@ class registerComponent extends Component {
             </form>
   
             <div className="col s12 No-margin No-padding Text-justify Margin-b-24 Margin-t-20">
-              <div className="Text-auth-info">Shop and us will use this contact information to reach out to you and send out notifications.</div>
-              <div className="Text-auth-info">Please ensure you input active contact information.</div>
+              <div className="Text-auth-info">Shop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</div>
             </div>
           
             <AuthButton onPage="registerPage" history={ this.props.history } />

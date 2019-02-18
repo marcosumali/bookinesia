@@ -18,56 +18,95 @@ admin.initializeApp(functions.config().firebase);
 exports.getUserBasedOnUid = functions.https.onRequest((req, res) => {
   // Put this line to your function
   // Automatically allow cross-origin requests
-  cors(req, res, () => {})
+  cors(req, res, () => {
+    let uid = req.body.uid
   
-  let uid = req.body.uid
-
-  admin.auth().getUser(uid)
-  .then(function(userRecord) {
-    let userData = userRecord.toJSON() 
-    let user = {
-      id: userData.uid,
-      email: userData.email,
-      name: userData.displayName
-    }
-    res.status(200).json({
-      message: 'Get user based on UID successful',
-      user
+    admin.auth().getUser(uid)
+    .then(function(userRecord) {
+      let userData = userRecord.toJSON() 
+      let user = {
+        id: userData.uid,
+        email: userData.email,
+        name: userData.displayName,
+        picture: userData.photoURL,
+        phone: userData.phoneNumber,
+      }
+      res.status(200).json({
+        message: 'Get user based on UID successful',
+        user
+      })
     })
-  })
-  .catch(function(error) {
-    console.log("ERROR: fetching user data by UID", error)
-    res.status(400).json({
-      message: 'ERROR: fetching user data by UID',
-      error
+    .catch(function(error) {
+      console.log("ERROR: fetching user data by UID", error)
+      res.status(400).json({
+        message: 'ERROR: fetching user data by UID',
+        error
+      })
     })
   })
 })
 
 
 exports.getUserBasedOnEmail = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {})
+  cors(req, res, () => {
+    let email = req.body.email
   
-  let email = req.body.email
-
-  admin.auth().getUserByEmail(email)
-  .then(function(userRecord) {
-    let userData = userRecord.toJSON()
-    let user = {
-      id: userData.uid,
-      email: userData.email,
-      name: userData.displayName
-    }
-    res.status(200).json({
-      message: 'Get user based on email successful',
-      user
+    admin.auth().getUserByEmail(email)
+    .then(function(userRecord) {
+      let userData = userRecord.toJSON()
+      let user = {
+        id: userData.uid,
+        email: userData.email,
+        name: userData.displayName,
+        picture: userData.photoURL,
+        phone: userData.phoneNumber,
+      }
+      res.status(200).json({
+        message: 'Get user based on email successful',
+        user,
+      })
+    })
+    .catch(function(error) {
+      console.log("ERROR: fetching user data by Email", error)
+      res.status(400).json({
+        message: 'ERROR: fetching user data by Email',
+        error
+      })
     })
   })
-  .catch(function(error) {
-    console.log("ERROR: fetching user data by Email", error)
-    res.status(400).json({
-      message: 'ERROR: fetching user data by Email',
-      error
+})
+
+
+exports.adminUpdateUserProfile = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    let uid = req.body.uid
+    let phone = req.body.phone
+  
+    admin.auth().updateUser(uid, {
+      phoneNumber: phone,
+    })
+    .then(function(userRecord) {
+      let userData = userRecord.toJSON()
+      let user = {
+        id: userData.uid,
+        email: userData.email,
+        name: userData.displayName,
+        picture: userData.photoURL,
+        phone: userData.phoneNumber,
+      }
+      res.status(200).json({
+        message: 'Update user profile successful',
+        user,
+        phone
+      })
+    })
+    .catch(function(error) {
+      console.log("ERROR: update user profile", error)
+      res.status(400).json({
+        message: 'ERROR: update user profile',
+        error,
+        phone
+      })
     })
   })
 })

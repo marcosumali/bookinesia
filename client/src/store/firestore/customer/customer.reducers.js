@@ -189,26 +189,6 @@ const customerDataList = (state = { ...initialState }, action) => {
         ...state,
         registerCustomerPasswordError: action.payload
       })
-    case 'SET_REGISTER_NAME_OK':
-      return ({
-        ...state,
-        registerCustomerNameError: action.payload
-      })
-    case 'SET_REGISTER_EMAIL_OK':
-      return ({
-        ...state,
-        registerCustomerEmailError: action.payload
-      })
-    case 'SET_REGISTER_PHONE_OK':
-      return ({
-        ...state,
-        registerCustomerPhoneError: action.payload
-      })
-    case 'SET_REGISTER_PASSWORD_OK':
-      return ({
-        ...state,
-        registerCustomerPasswordError: action.payload
-      })
     case 'SET_REGISTER_FORM_VALUE_BUID':
       return ({
         ...state,
