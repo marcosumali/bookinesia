@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import CalenderSvg from '../svg/calendarSvg';
-import NoPhoneSvg from '../svg/noPhoneSvg';
 import HourGlassSvg from '../svg/hourGlassSvg';
 import BellSvg from '../svg/bellSvg';
 
@@ -19,20 +18,6 @@ export default class homeFeatures extends Component {
             </div>
             <div className="col s12 m12 Feature-text-box">
               <div className="Feature-text">Book an appointment online anywhere and anytime as you pleased. No more frustrating experience to book an appointment at your favourite service provider.</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col s12 m12 No-margin Feature-box No-padding Container-wrap-center-cross">
-          <div className="col s12 m4 No-margin No-padding Container-wrap-center">
-            <NoPhoneSvg height="9em" width="9em" />
-          </div>
-          <div className="col s12 m7 No-margin No-padding Container-wrap-center-cross">
-            <div className="col s12 m12 Feature-header-box">
-              <div className="Feature-header-text">Speedy System</div>
-            </div>
-            <div className="col s12 m12 Feature-text-box">
-              <div className="Feature-text">No registration are required to place a booking at your favourite service provider. Don't worry, we still keep track your transaction.</div>
             </div>
           </div>
         </div>

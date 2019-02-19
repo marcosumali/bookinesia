@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { getCookies, verifyCookies, setNewCookies } from '../../../helpers/auth';
 import { validateEmail, validatePhone } from '../../../helpers/form';
-import { getTransaction } from '../transaction/transaction.actions';
+import { getTransaction, createNewTransaction } from '../transaction/transaction.actions';
 import { 
   authSignIn, 
   authPasswordValidation, 
@@ -21,8 +21,8 @@ export const phoneInvalidError = 'Invalid phone number.'
 export const emailRegisteredError = 'Email is already registered. Please sign in.'
 export const loginError = 'The email or password you entered is incorrect. Please try again.'
 export const incorrectPasswordError = 'Incorrect password.'
-export const tooManyRequestError = 'Too many unsuccessful authorisation attempts. Try again later.'
-export const tooManyRegistrationError = 'Too many unsuccessful registration attempts. Try again later.'
+export const tooManyRequestError = 'Too many unsuccessful authorisation attempts.Try again later.'
+export const tooManyRegistrationError = 'Too many unsuccessful registration attempts.Try again later.'
 const oldPasswordError = 'The old password you entered is incorrect.'
 const samePasswordError = `The new password can't be the same with your old password.`
 const notSameNewPasswordError = 'Your new password and its confirmation do not match.'
@@ -54,7 +54,7 @@ export const handleCookies = (purpose, cookies, data) => {
     let BUID = getCookies(cookies)
     if (BUID) {
       let customerData = verifyCookies(BUID)
-      console.log('check BUID', purpose, '===', customerData)
+      // console.log('check BUID', purpose, '===', customerData)
       let customerId = customerData.id
       if (purpose === 'during input') {
         dispatch(setFormValueBasedOnToken(customerData))
@@ -74,7 +74,7 @@ export const handleCookies = (purpose, cookies, data) => {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authentication register') {
-        if (customerData.registeredStatus === true) {
+        if (customerId) {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authorization transaction') {
@@ -204,8 +204,8 @@ export const customerRegisterInputValidation = (props) => {
     
     if (phone.length <= 0) {
       await dispatch(setRegisterPhoneInputError(emptyError))
-    } 
-    
+    }
+
     let phoneResult = validatePhone(phone)
     if (phone.length > 0 && phoneResult.status === false) {
       await dispatch(setRegisterPhoneInputError(phoneInvalidError))
@@ -254,7 +254,7 @@ export const customerRegisterInputValidation = (props) => {
     }
 
     if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && customerExistenceBasedOnEmail === false && password.length >= 8  ) {
-      await dispatch(authCreateUser(props, phoneResult.phone))
+      await dispatch(authCreateUser(props, phoneResult.phone, null))
     } else {
       await dispatch(setLoadingStatus(false))
     }
@@ -361,7 +361,6 @@ export const customerLoginInputValidation = (props) => {
     } else {
       dispatch(setLoadingStatus(false))
     }
-    
   }
 }
 
@@ -477,8 +476,9 @@ export const customerSettingsInputValidation = (props) => {
       await dispatch(setSettingPhoneInputError(emptyError))
     } 
     
-    if (phone.length > 0 && phone.length < 8) {
-      await dispatch(setSettingPhoneInputError(phoneMinError))
+    let phoneResult = validatePhone(phone)
+    if (phone.length > 0 && phoneResult.status === false) {
+      await dispatch(setRegisterPhoneInputError(phoneInvalidError))
     }
 
     if (email.length <= 0) {
@@ -499,22 +499,22 @@ export const customerSettingsInputValidation = (props) => {
 
     // Input is OK
     if (name.length > 0) {
-      await dispatch(setSettingNameInputOK(false))
+      await dispatch(setSettingNameInputError(false))
     } 
     
-    if (phone.length >= 8) {
-      await dispatch(setSettingPhoneInputOK(false))
+    if (phoneResult.status === true) {
+      await dispatch(setSettingPhoneInputError(false))
     }
     
     if (email.length > 0 && validateEmail(email)) {
-      await dispatch(setSettingEmailInputOK(false))
+      await dispatch(setSettingEmailInputError(false))
     }
 
     if (password.length >= 8) {
-      await dispatch(setSettingPasswordInputOK(false))
+      await dispatch(setSettingPasswordInputError(false))
     }     
 
-    if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
+    if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
       // console.log('pass through')
       let BUID = getCookies(cookies)
       if (BUID) {
@@ -522,7 +522,7 @@ export const customerSettingsInputValidation = (props) => {
 
         let passwordStatus = await dispatch(authPasswordValidation(customerData, password))
         if (passwordStatus === true) {
-          dispatch(authUpdateEmail(customerData, password, email, props))
+          dispatch(authUpdateEmail(customerData, password, email, props, phoneResult.phone))
         } else if (passwordStatus === false) {
           dispatch(setSettingPasswordInputError(incorrectPasswordError))
           dispatch(setLoadingStatus(false))          
@@ -568,89 +568,38 @@ const setSettingPasswordInputError = (data) => {
   }
 }
 
-// To handle changes from input text if OK
-const setSettingNameInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_NAME_OK',
-    payload: data
-  }
-}
-
-const setSettingPhoneInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_PHONE_OK',
-    payload: data
-  }
-}
-
-const setSettingEmailInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_EMAIL_OK',
-    payload: data
-  }
-}
-
-const setSettingPasswordInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_PASSWORD_OK',
-    payload: data
-  }
-}
-
 // To update customer account information
-export const customerUpdateAccount = (customerId, props) => {
+export const customerUpdateAccount = (customerData, props, formattedPhone) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let customerId = customerData.id
+    let picture = customerData.picture
     let name = props.settingsCustomerName
-    let phone = props.settingsCustomerPhone
+    let phone = formattedPhone
     let email = props.settingsCustomerEmail
     let history = props.history
     let cookies = props.cookies
 
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(customerId)
+    let cookieCustomerData = {
+      id: customerId, name, email, phone, picture
+    }
 
-    customerRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let id = doc.id
-        let { picture, registeredStatus } = doc.data()
-        
-        let customerData = {
-          id, name, email, phone, picture, registeredStatus
-        }
-
-        // To handle authorization
-        if (customerId === id) {
-          
-          let customerUpdateRef = firestore.collection('customer').doc(id)
-          
-          customerUpdateRef.update({
-            name,
-            phone,
-          })
-          .then(() => {
-            swal("Account Updated", "", "success")
-            setNewCookies(cookies, customerData)
-            history.push('/account')
-            dispatch(setSettingCustomerPassword(''))
-            dispatch(setLoadingStatus(false))
-          })
-          .catch(err => {
-            console.log('ERROR: Update customer data', err)
-          })
-        } else {
-          dispatch(setAuthorizationStatus(false))
-          dispatch(setLoadingStatus(false))
-        }
-      } else {
-        dispatch(setAuthorizationStatus(false))
-        dispatch(setLoadingStatus(false))
-      }
+    let firestore = getFirestore()          
+    let customerUpdateRef = firestore.collection('customer').doc(customerId)
+    
+    customerUpdateRef.update({
+      name,
+      phone,
+    })
+    .then(() => {
+      swal("Account Updated", "", "success")
+      setNewCookies(cookies, cookieCustomerData)
+      history.push('/account')
+      dispatch(setSettingCustomerPassword(''))
+      dispatch(setLoadingStatus(false))
     })
     .catch(err => {
-      console.log('ERROR: Get customer data to update account information', err)
+      console.log('ERROR: Update customer data', err)
     })
-  
   }
 }
 
@@ -838,81 +787,8 @@ const setNewPasswordConfirmInputOK = (data) => {
 }
 
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------
-// To validate customer existence and ensure each customer only have 1 account before register new account
-export const validateCustomerExistence = (field, value) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-    let customerExistence = false
-
-    await customerRef.where(field, '==', value).get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          customerExistence = true
-        })
-      } else {
-        customerExistence = false
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: validate customer data', err)
-    })
-
-    return customerExistence
-  }
-}
-
-// Get single customer data by field provided
-export const getCustomerByField = (field, value) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-    let user = 'not-found'
-
-    await customerRef.where(field, '==', value).get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          let id = doc.id
-          let data = doc.data()
-          data['id'] = id
-          user = data
-        })
-      } 
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by field', err)
-    })
-
-    return user
-  }
-}
-
-// Get single customer data by ID
-export const getCustomerById = (uid) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(uid)
-    let user = 'not-found'
-
-    await customerRef.get()
-    .then(doc => {
-      let id = doc.id
-      let data = doc.data()
-      data['id'] = id
-      user = data
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by ID', err)
-    })
-
-    return user
-  }
-}
-
 // To create new customer
-export const createNewCustomer = (uid, props, formattedPhone) => {
+export const createNewCustomer = (uid, props, formattedPhone, createTransactionStatus) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let name = props.customerName
     let phone = formattedPhone
@@ -941,9 +817,17 @@ export const createNewCustomer = (uid, props, formattedPhone) => {
       setNewCookies(cookies, customerData)
       let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeCustomer', { name, email })
       if (sendEmailResult.status === 200) {
-        window.location.assign('/')
+        if (createTransactionStatus === 'continue') {
+          dispatch(createNewTransaction(uid, props))
+        } else {
+          window.location.assign('/')
+        }
       } else {
-        window.location.assign('/')
+        if (createTransactionStatus === 'continue') {
+          dispatch(createNewTransaction(uid, props))
+        } else {
+          window.location.assign('/')
+        }
       }
     })
     .catch(err => {

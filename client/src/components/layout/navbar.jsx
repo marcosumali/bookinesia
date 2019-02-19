@@ -83,9 +83,6 @@ class navbar extends Component {
               </div>
               <div className="Container-center Mobile-bottom">
                 {
-                  this.props.userExists && this.props.user !== "" && this.props.user.registeredStatus === false ?
-                  <RegisterButton />
-                  :
                   this.props.userExists === false ?
                   <div className="Container-center Display-flex Width-100 No-padding">
                     <RegisterButton />
@@ -120,11 +117,6 @@ class navbar extends Component {
               </div>
               <div className="Web-right">
                 {
-                  this.props.userExists && this.props.user !== "" && this.props.user.registeredStatus === false ?                  
-                  <NavItem href="/register">
-                    Not yet registered?
-                  </NavItem>
-                  :
                   this.props.userExists === false ?
                   <div>
                     <NavItem href="/register">

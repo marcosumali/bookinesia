@@ -264,10 +264,15 @@ class customerDetails extends Component {
                 
                 {/* Password Input */}
                 {
-                  this.props.showPasswordInputStatus ?
+                  this.props.showPasswordInputStatus.message === true ?
                   <div>
-                    <div className="Margin-b-10">
-                      <div className="No-margin Confirm-text Text-justify">We noticed that you have registered and signed out previously, please input your password to authorised the transaction.</div>
+                    <div className="Margin-b-20">
+                      {
+                        this.props.showPasswordInputStatus.user === 'registeredUser' ?
+                        <div className="No-margin Confirm-text Text-justify">We noticed that you have registered and signed out previously, please input your password to authorise the transaction and to be signed in.</div>
+                        :
+                        <div className="No-margin Confirm-text Text-justify">To secure your account, please input your password to register a new Bookinesia account and authorise the transaction.</div>
+                      }
                     </div>
                     <div className="input-field Margin-b-10">
                       {

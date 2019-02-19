@@ -18,7 +18,8 @@ import {
   tooManyRequestError
 } from '../customer/customer.actions';
 import {
-  createNewCustomerAndCreateNewTransaction
+  createNewTransaction,
+  setPasswordInputError,
 } from '../transaction/transaction.actions';
 import swal from 'sweetalert';
 import axios from 'axios';
@@ -66,7 +67,7 @@ export const authUpdateUserProfileByField = (field, value) => {
   }
 }
 
-export const authCreateUser = (props, formattedPhone) => {
+export const authCreateUser = (props, formattedPhone, createTransactionStatus) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail
     let password = props.customerPassword
@@ -85,7 +86,7 @@ export const authCreateUser = (props, formattedPhone) => {
       let adminUpdateProfile = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/adminUpdateUserProfile', { uid, phone })
 
       if (updateProfileName === true && updateProfilePicture === true && adminUpdateProfile.status === 200) {
-        dispatch(createNewCustomer(uid, props, formattedPhone))
+        dispatch(createNewCustomer(uid, props, formattedPhone, createTransactionStatus))
       }
     })
     .catch(function(err) {
@@ -97,7 +98,6 @@ export const authCreateUser = (props, formattedPhone) => {
         dispatch(setRegisterPasswordInputError(passwordMinError))
       }
     })
-
   }
 }
 
@@ -111,7 +111,7 @@ export const authSignIn = (props) => {
     .then((response) => {
       let uid = response.user.uid
       let email = response.user.email
-      dispatch(afterLoginValidation(uid, email, props))
+      dispatch(afterLoginValidation(uid, email, props, null))
     })
     .catch(err => {
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-email') {
@@ -122,6 +122,33 @@ export const authSignIn = (props) => {
         dispatch(setLoadingStatus(false))
       } else if (err.code === 'auth/too-many-requests') {
         dispatch(setLoginError(tooManyRequestError))
+        dispatch(setLoadingStatus(false))
+      }
+    })
+  }
+}
+
+export const authSignInTransaction = (props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    let email = props.customerEmail
+    let password = props.customerPassword
+
+    let firebase = getFirebase()
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((response) => {
+      let uid = response.user.uid
+      let email = response.user.email
+      dispatch(afterLoginValidation(uid, email, props, 'continue'))
+    })
+    .catch(err => {
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-email') {
+        dispatch(setPasswordInputError(loginError))
+        dispatch(setLoadingStatus(false))
+      } else if (err.code === 'auth/user-disabled') {
+        dispatch(setPasswordInputError(loginDisableError))
+        dispatch(setLoadingStatus(false))
+      } else if (err.code === 'auth/too-many-requests') {
+        dispatch(setPasswordInputError(tooManyRequestError))
         dispatch(setLoadingStatus(false))
       }
     })
@@ -150,7 +177,8 @@ export const authUserValidation = (email, password) => {
       let email = response.user.email
       let name = response.user.displayName
       let picture = response.user.photoURL
-      let user = { id, email, name, picture }
+      let phone = response.user.phoneNumber
+      let user = { id, email, name, picture, phone }
       validateResult = user
     })
     .catch(err => {
@@ -213,9 +241,10 @@ export const authEmailValidation = (email) => {
   }
 }
 
-export const authUpdateEmail = (customerData, password, newEmail, props) => {
+export const authUpdateEmail = (customerData, password, newEmail, props, formattedPhone) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firebase = getFirebase()
+    let phone = formattedPhone
 
     let user = firebase.auth().currentUser
     let email = customerData.email
@@ -225,10 +254,17 @@ export const authUpdateEmail = (customerData, password, newEmail, props) => {
     )
 
     user.reauthenticateAndRetrieveDataWithCredential(credential).then(function() {
-      user.updateEmail(newEmail).then(function() {
+      user.updateEmail(newEmail).then(async function() {
         let customerId = customerData.id
-        dispatch(authUpdateUserProfileByField('displayName', props.settingsCustomerName))
-        dispatch(customerUpdateAccount(customerId, props))
+        
+        let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.settingsCustomerName))
+
+        let adminUpdateProfile = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/adminUpdateUserProfile', { uid: customerId, phone })
+
+        if (updateProfileName === true && adminUpdateProfile.status === 200) {
+          dispatch(customerUpdateAccount(customerData, props, formattedPhone))
+        }
+
       }).catch(function(err) {
         console.log('ERROR: update email', err)
         if (err.code === 'auth/email-already-in-use') {
@@ -270,33 +306,6 @@ export const authUpdatePassword = (customerData, oldPassword, newPassword, histo
   }
 }
 
-export const authSignInAnonymouslyAndCreateNewTransaction = (props) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let email = props.customerEmail
-    let firebase = getFirebase()
-    
-    firebase.auth().signInAnonymously()
-    .then(response => {
-      let uid = response.user.uid
-      let user = firebase.auth().currentUser
-
-      user.updateEmail(email)
-      .then(async function() {
-        let updateProfileResult = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
-        if (updateProfileResult === true) {
-          dispatch(createNewCustomerAndCreateNewTransaction(uid, props))
-        }
-      }).catch(function(err) {
-        console.log('ERROR: update profile anonymous', err)
-      })
-    })
-    .catch(function(err) {
-      console.log('ERROR: sign in guest', err)
-    })
-  }
-}
-
-
 // To redirect sign out and delete cookies user if the user has changed their email and reverse it through firebase auth email
 export const authRedirectAndSignOut = (props) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -315,7 +324,7 @@ export const authRedirectAndSignOut = (props) => {
 
 
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------
-export const afterLoginValidation = (uid, email, props) => {
+export const afterLoginValidation = (uid, email, props, createTransactionStatus) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let cookies = props.cookies
     let window = props.window
@@ -333,7 +342,11 @@ export const afterLoginValidation = (uid, email, props) => {
         }
         dispatch(setLoginError(''))
         setNewCookies(cookies, customerData)
-        window.location.assign('/')
+        if (createTransactionStatus === 'continue') {
+          dispatch(createNewTransaction(customerData.id, props))
+        } else {
+          window.location.assign('/')
+        }
       } else {
         dispatch(setLoginError(loginError))
         dispatch(setLoadingStatus(false))

@@ -308,26 +308,6 @@ const customerDataList = (state = { ...initialState }, action) => {
         ...state,
         settingsCustomerPasswordError: action.payload
       })
-    case 'SET_SETTING_NAME_OK':
-      return ({
-        ...state,
-        settingsCustomerNameError: action.payload
-      })
-    case 'SET_SETTING_EMAIL_OK':
-      return ({
-        ...state,
-        settingsCustomerEmailError: action.payload
-      })
-    case 'SET_SETTING_PHONE_OK':
-      return ({
-        ...state,
-        settingsCustomerPhoneError: action.payload
-      })
-    case 'SET_SETTING_PASSWORD_OK':
-      return ({
-        ...state,
-        settingsCustomerPasswordError: action.payload
-      })
     case 'SET_OLD_PASSWORD':
       return ({
         ...state,

@@ -1,24 +1,18 @@
-import axios from 'axios';
-
 import { setRouteLink } from '../shop/shop.actions';
-import { validateEmail, validatePhone } from '../../../helpers/form';
-import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
+import { validateEmail, validatePhone, formatPhone } from '../../../helpers/form';
+import { verifyCookies, getCookies } from '../../../helpers/auth';
 import { 
   setLoadingStatus, 
   setAuthorizationStatus, 
-  validateCustomerExistence, 
-  getCustomerByField, 
-  getCustomerById 
 } from '../customer/customer.actions';
 import { 
-  authSignInAnonymouslyAndCreateNewTransaction, 
   authEmailValidation, 
-  authPasswordValidation,
-  authUserValidation
+  authUserValidation,
+  authCreateUser,
+  authSignInTransaction,
 } from '../auth/auth.actions';
 import { 
   emptyError, 
-  // phoneMinError, 
   emailInvalidError,
   phoneInvalidError, 
   passwordMinError, 
@@ -708,13 +702,12 @@ export const customerInputValidation = (props) => {
     let name = props.customerName
     let phone = props.customerPhone
     let email = props.customerEmail
-    let picture = 'noPicture'
     let password = props.customerPassword
     let cookies = props.cookies
     let showPasswordInputStatus = props.showPasswordInputStatus
 
     // To set loading status to true
-    // dispatch(setLoadingStatus(true))
+    dispatch(setLoadingStatus(true))
 
     // Input is ERROR
     if (name.length <= 0) {
@@ -726,6 +719,7 @@ export const customerInputValidation = (props) => {
     } 
     
     let phoneResult = validatePhone(phone)
+
     if (phone.length > 0 && phoneResult.status === false) {
       dispatch(setPhoneInputError(phoneInvalidError))
     }
@@ -752,156 +746,76 @@ export const customerInputValidation = (props) => {
     }
     
     if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true) {
-      console.log('masuk pak eko')
-    //   let BUID = getCookies(cookies)
-    //   if (BUID) {
-    //     let customerData = verifyCookies(BUID)
-    //     let customerId = customerData.id
-    //     dispatch(createNewTransaction(customerId, props))
-    //   } else {
-    //     let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
-    //     // console.log('+++', customerExistenceBasedOnEmail)
-    //     if (customerExistenceBasedOnEmail === true) {
-    //       if (showPasswordInputStatus.message === false) {
-    //         let newStatus = {
-    //           message: 'true',
-    //           user: 'registeredUser',
-    //         }
-    //         dispatch(setShowPasswordInputstatus(newStatus))
-    //         dispatch(setLoadingStatus(false))
-    //       } else {
-    //         if (password.length <= 0) {
-    //           dispatch(setPasswordInputError(emptyError))
-    //           dispatch(setLoadingStatus(false))
-    //         } 
-    //         if (password.length > 0) {
-    //           dispatch(setPasswordInputError(false))
 
-    //           let authUser = await dispatch(authUserValidation(email, password))
-    //           let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
-
-    //           if (authUser.id) {
-    //             let customerData = {
-    //               id: authUser.id, 
-    //               name: authUser.name, 
-    //               email: authUser.email, 
-    //               phone,
-    //               picture: authUser.picture,
-    //             }
-    //             // setNewCookies(cookies, customerData)
-    //             // dispatch(createNewTransaction(customerId, props))
-
-    //           } else if (authUser === false) {
-    //             dispatch(setPasswordInputError(incorrectPasswordError))
-    //             dispatch(setLoadingStatus(false))
-    //           } else if (authUser === 'too-many-requests') {
-    //             dispatch(setPasswordInputError(tooManyRequestError))
-    //             dispatch(setLoadingStatus(false))
-    //           }
-    //         } 
-    //       }
-    //     } else if (customerExistenceBasedOnEmail === false) {
-    //       // create new user
-    //       let newStatus = {
-    //         message: 'true',
-    //         user: 'newUser',
-    //       }
-    //       dispatch(setShowPasswordInputstatus(newStatus))
-
-    //     } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
-    //       dispatch(setPasswordInputError(tooManyRequestError))
-    //       dispatch(setLoadingStatus(false))
-    //     }
-
-
-    //   }
-      
-      // if (showPasswordInputStatus === false || (showPasswordInputStatus && password.length >= 8)) {
-      //   let BUID = getCookies(cookies)
-      //   if (BUID) {
-      //     let customerData = verifyCookies(BUID)
-      //     let customerId = customerData.id
-      //     dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
-      //   } else {
-      //     let authUserExistence = await dispatch(authEmailValidation(email))
-      //     let userExistence = await dispatch(validateCustomerExistence('phone', phone))
-      //     // console.log('auth exist', authUserExistence, '===', userExistence)
-      //     if (authUserExistence === 'too-many-requests') {
-      //       dispatch(setPasswordInputError(tooManyRequestError))
-      //       dispatch(setLoadingStatus(false))
-      //     } else {
-      //       if (authUserExistence && userExistence) {
-      //         dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
-      //       } else if (authUserExistence && userExistence === false ) {
-      //         dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
-      //       } else if (authUserExistence === false && userExistence) {
-      //         let registeredUser = await dispatch(getCustomerByField('phone', phone))
-      //         let uid = registeredUser.id
-    
-      //         let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
-      //         if (authResponseByUID.status === 200) {
-      //           let authUser = authResponseByUID.data.user
-      //           dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))
-      //         }
-      //       } else if (authUserExistence === false && userExistence === false) {
-      //         dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
-      //       }
-      //     }
-      //   }
-      // } else {
-      //   dispatch(setLoadingStatus(false))
-      // }
-
-
-    } else {
-      dispatch(setLoadingStatus(false))
-    }
-  }
-}
-
-
-export const checkAuthUserByEmailAndCreateNewTransaction = (props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let email = props.customerEmail
-
-    let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
-    if (authResponseByEmail.status === 200) {
-      let authUser = authResponseByEmail.data.user
-      let id = authUser.id
-      let registeredUser = await dispatch(getCustomerById(id))
-      dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))            
-    }
-  }
-}
-
-// To final check auth user is authorised to create new transsaction by inputting password
-export const checkAuthUserToCreateTransaction = (props, authUser, registeredUser) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let showPasswordInputStatus = props.showPasswordInputStatus
-    let password = props.customerPassword
-
-    if (registeredUser.registeredStatus) {
-      if (showPasswordInputStatus) {
-        if (password.length >= 8) {
-          let passwordStatus = await dispatch(authPasswordValidation(authUser, password))
-          if (passwordStatus === true) {
-            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
-          } else if (passwordStatus === 'too-many-requests') {
-            dispatch(setPasswordInputError(tooManyRequestError))
+      let BUID = getCookies(cookies)
+      if (BUID) {
+        let customerData = verifyCookies(BUID)
+        let customerId = customerData.id
+        dispatch(createNewTransaction(customerId, props))
+      } else {
+        let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
+        // console.log('+++', customerExistenceBasedOnEmail)
+        if (customerExistenceBasedOnEmail === true) {
+          if (showPasswordInputStatus.message === false) {
+            let newStatus = {
+              message: true,
+              user: 'registeredUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
             dispatch(setLoadingStatus(false))
-          } else if (passwordStatus === false) {
-            dispatch(setPasswordInputError(incorrectPasswordError))
-            dispatch(setLoadingStatus(false))
+          } else {
+            if (password.length <= 0) {
+              dispatch(setPasswordInputError(emptyError))
+              dispatch(setLoadingStatus(false))
+            } 
+            if (password.length > 0) {
+              dispatch(setPasswordInputError(false))
+
+              let authUser = await dispatch(authUserValidation(email, password))
+              if (authUser.id) {
+                // Next will sign in user, save new cookies and create new Transaction
+                dispatch(authSignInTransaction(props))
+              } else if (authUser === false) {
+                dispatch(setPasswordInputError(incorrectPasswordError))
+                dispatch(setLoadingStatus(false))
+              } else if (authUser === 'too-many-requests') {
+                dispatch(setPasswordInputError(tooManyRequestError))
+                dispatch(setLoadingStatus(false))
+              }
+            } 
           }
-        } else {
+        } else if (customerExistenceBasedOnEmail === false) {
+          if (showPasswordInputStatus.message === false) {
+            let newStatus = {
+              message: true,
+              user: 'newUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
+            dispatch(setLoadingStatus(false))
+          } else if (showPasswordInputStatus.message === true) {
+            if (password.length <= 0) {
+              dispatch(setPasswordInputError(emptyError))
+              dispatch(setLoadingStatus(false))
+            }
+            
+            if (password.length > 0 && password.length < 8) {
+              dispatch(setPasswordInputError(passwordMinError))
+              dispatch(setLoadingStatus(false))
+            }
+
+            if (password.length >= 8) {
+              dispatch(setPasswordInputError(false))
+              // Next will create new user, save cookies and create new transaction
+              dispatch(authCreateUser(props, phoneResult.phone, 'continue'))
+            }
+          }
+        } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
+          dispatch(setPasswordInputError(tooManyRequestError))
           dispatch(setLoadingStatus(false))
         }
-      } else {
-        dispatch(setShowPasswordInputstatus(true))
-        dispatch(setLoadingStatus(false))
       }
     } else {
-      dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
+      dispatch(setLoadingStatus(false))
     }
   }
 }
@@ -928,7 +842,7 @@ const setEmailInputError = (data) => {
   }
 }
 
-const setPasswordInputError = (data) => {
+export const setPasswordInputError = (data) => {
   return {
     type: 'SET_CUSTOMER_PASSWORD_ERROR',
     payload: data
@@ -942,116 +856,6 @@ const setShowPasswordInputstatus = (data) => {
   }
 }
 
-// To check customer existence using input from phone form, then save new cookies, and create new transaction
-// OR create new customer and create new transaction
-export const getCustomerByPhoneAndCreateNewTransaction = (props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let customerEmail = props.customerEmail
-    let customerPhone = props.customerPhone
-    let cookies = props.cookies
-
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-
-    customerRef
-    .where('phone', '==', customerPhone)
-    .get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          let id = doc.id
-          let { name, phone, picture, registeredStatus } = doc.data()
-          let customerData = {
-            id, name, phone, email: customerEmail, picture, registeredStatus
-          }
-          setNewCookies(cookies, customerData)
-          dispatch(createNewTransaction(id, props))
-        })
-      } else {
-        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by phone and create new transaction', err)
-    })
-  }
-}
-
-export const authUserCreateNewTransaction = (authUser, firestoreUser, props) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let cookies = props.cookies
-    let { email } = authUser
-    let { id, name, phone, picture, registeredStatus } = firestoreUser
-    let customerData = {
-      id, name, phone, email, picture, registeredStatus
-    }
-    setNewCookies(cookies, customerData)
-    dispatch(createNewTransaction(id, props))
-  }
-}
-
-// To check customer existence using decoded ID from cookies and create new transaction
-// OR create new customer, save new cookies and create new transaction
-export const getCustomerByIdAndCreateNewTransaction = (customerId, props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(customerId)
-
-    customerRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let id = doc.id
-        dispatch(createNewTransaction(id, props))
-      } else {
-        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by Id and create new transaction', err)
-    })
-  }
-}
-
-// To create new customer with registered status false they haven't registered and then create new transaction
-export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let cookies = props.cookies
-    let name = props.customerName.toLowerCase()
-    let phone = props.customerPhone
-    let email = props.customerEmail
-    let picture = ''
-    let registeredStatus = false
-
-    let newCustomer = {
-      name,
-      phone,
-      picture,
-      registeredStatus
-    }
-
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(uid)
-
-    customerRef.set(newCustomer)
-    .then(async () => {
-      let customerData = {
-        id: uid, name, phone, email, picture, registeredStatus
-      }
-      setNewCookies(cookies, customerData)
-      let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeGuest', { name, email })
-      if (sendEmailResult.status === 200) {
-        dispatch(createNewTransaction(uid, props))
-      } else {
-        dispatch(createNewTransaction(uid, props))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: Get and create new customer', err)
-    })
-
-  }
-}
-
 
 // ---------------------------------------------- TRANSACTION ACTION ----------------------------------------------
 export const createNewTransaction = (customerId, props) => {
@@ -1062,7 +866,7 @@ export const createNewTransaction = (customerId, props) => {
     let staff = props.selectedStaff
     let appointment = props.selectedAppointment
     let name = props.customerName.toLowerCase()
-    let phone = props.customerPhone
+    let phone = formatPhone(props.customerPhone, 'NATIONAL')
     let email = props.customerEmail
     let queueNo = String(Number(appointment.currentTransaction) + 1)
     let startDate = ''

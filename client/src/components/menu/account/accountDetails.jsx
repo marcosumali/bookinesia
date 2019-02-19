@@ -46,21 +46,16 @@ class accountDetails extends Component {
                       </div>
                       <div className="col s12 No-margin No-padding">
                         <div className="col s5 No-margin No-padding">
-                          {
-                            this.props.user.registeredStatus ?
-                            <Link to="/settings">
-                              <div className="col s12 No-margin No-padding Container-center Settings-button-box Container-one-line">
-                                <div className="Container-center Margin-r-4">
-                                  <SettingSvg width="18px" height="18px" color="#ffffff" />
-                                </div>
-                                <div className="Container-center">
-                                  <div className="Settings-button-text">Settings</div>
-                                </div>
+                          <Link to="/settings">
+                            <div className="col s12 No-margin No-padding Container-center Settings-button-box Container-one-line">
+                              <div className="Container-center Margin-r-4">
+                                <SettingSvg width="18px" height="18px" color="#ffffff" />
                               </div>
-                            </Link>
-                            :
-                            <div></div>
-                          }
+                              <div className="Container-center">
+                                <div className="Settings-button-text">Settings</div>
+                              </div>
+                            </div>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -83,42 +78,37 @@ class accountDetails extends Component {
                   </div>
 
                   {/* Change Password Button */}
-                  {
-                    this.props.user.registeredStatus ?
-                    <div>
-                      <Link to="/change-password">
-                        <div className="col s12 No-margin No-padding Margin-b-16 Container-center">
-                          <div className="Blue-button-pass Container-one-line Container-center Width-100">
-                            <div className="Margin-r-4 Container-center">
-                              <KeySvg width="18px" height="18px" color="#ffffff" />
+                  <div>
+                    <Link to="/change-password">
+                      <div className="col s12 No-margin No-padding Margin-b-16 Container-center">
+                        <div className="Blue-button-pass Container-one-line Container-center Width-100">
+                          <div className="Margin-r-4 Container-center">
+                            <KeySvg width="18px" height="18px" color="#ffffff" />
+                          </div>
+                            <div className="Container-center">
+                              <div className="White-text">Change Password</div>
                             </div>
-                              <div className="Container-center">
-                                <div className="White-text">Change Password</div>
-                              </div>
+                        </div>
+                      </div>
+                    </Link>
+
+                    <div className="Fix-bottom">
+                      <a href="/">
+                        <div className="col s12 m8 offset-m2 Margin-b-24 Container-center" onClick={ () => this.logOut() }>
+                          <div className="Blue-button Container-one-line Container-center">
+                            <div className="Margin-r-4 Container-center">
+                              <LogOutSvg width="18px" height="18px" color="#ffffff" />
+                            </div>
+                            <div className="Container-center">
+                              <div className="White-text">Sign Out</div>
+                            </div>
                           </div>
                         </div>
-                      </Link>
-
-                      <div className="Fix-bottom">
-                        <a href="/">
-                          <div className="col s12 m8 offset-m2 Margin-b-24 Container-center" onClick={ () => this.logOut() }>
-                            <div className="Blue-button Container-one-line Container-center">
-                              <div className="Margin-r-4 Container-center">
-                                <LogOutSvg width="18px" height="18px" color="#ffffff" />
-                              </div>
-                              <div className="Container-center">
-                                <div className="White-text">Sign Out</div>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
+                      </a>
                     </div>
-                    :
-                    <div></div>
-                  }
+                    
+                  </div>
                 </div>
-
               </div>
             }
           </div>
@@ -131,7 +121,6 @@ class accountDetails extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('--', state.firebase)
   state.firebase.profile['email'] = state.firebase.auth.email
   return {
     cookies: state.user.cookies,

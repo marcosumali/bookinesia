@@ -46,13 +46,24 @@ function validatePhone(phone) {
     } else {
       result.status = false
     }
+
+    return result
   } 
-  
-  return result
 }
+
+
+function formatPhone(phone, format) {
+  // Accepted format: 'NATIONAL', 'INTERNATIONAL', 'E.164', 'RFC3966', 'IDD'
+  let phoneJSON = parsePhoneNumberFromString(String(phone), 'ID')
+  let formattedPhone = phoneJSON.format(format)
+
+  return formattedPhone
+}
+
 
 module.exports = {
   validateEmail,
   returnPassword,
   validatePhone,
+  formatPhone
 }
