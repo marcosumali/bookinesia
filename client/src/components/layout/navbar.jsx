@@ -31,7 +31,7 @@ class navbar extends Component {
       <div>
         {
           windowInnerWidth < 1024 ?
-          <Navbar className="Nav-box" brand='Bookinesia' right fixed>
+          <Navbar className="Nav-box" brand='Bookinesia' right>
             <div>  
               <div>
                 <NavItem>
@@ -95,7 +95,7 @@ class navbar extends Component {
             </div>
           </Navbar>
           :
-          <Navbar className="Nav-box" brand='Bookinesia' right fixed>
+          <Navbar className="Nav-box" brand='Bookinesia' right>
             <div>              
               <div style={{ marginLeft: '12em' }}>
                 {
