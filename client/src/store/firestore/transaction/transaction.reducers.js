@@ -30,7 +30,10 @@ let initialState = {
   customerPasswordError: false,
   transaction: '',
   noServiceSelectedStatus: false,
-  showPasswordInputStatus: false,
+  showPasswordInputStatus: {
+    message: false,
+    user: '',
+  }
 }
 
 const transactionDataList = (state = { ...initialState }, action) => {
@@ -195,26 +198,6 @@ const transactionDataList = (state = { ...initialState }, action) => {
         customerPhoneError: action.payload
       })
     case 'SET_CUSTOMER_PASSWORD_ERROR':
-      return ({
-        ...state,
-        customerPasswordError: action.payload
-      })
-    case 'SET_CUSTOMER_NAME_OK':
-      return ({
-        ...state,
-        customerNameError: action.payload
-      })
-    case 'SET_CUSTOMER_EMAIL_OK':
-      return ({
-        ...state,
-        customerEmailError: action.payload
-      })
-    case 'SET_CUSTOMER_PHONE_OK':
-      return ({
-        ...state,
-        customerPhoneError: action.payload
-      })
-    case 'SET_CUSTOMER_PASSWORD_OK':
       return ({
         ...state,
         customerPasswordError: action.payload

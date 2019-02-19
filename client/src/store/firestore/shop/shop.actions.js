@@ -281,25 +281,23 @@ const getBranchScheduleDataFailed = (data) => {
 
 // ---------------------------------------------- SERVICE ACTION ----------------------------------------------
 export const getServicesData = (shopName, branchName) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
 
+    let servicesData = []
     let serviceRef = firestore.collection('service')
-
-    serviceRef
+    await serviceRef
     .where('branchId', '==', `${shopName}-${branchName}`)
     .where('disableStatus', '==', false)
     .get()
     .then(snapshot => {
       if (snapshot.empty === false) {
-        let servicesData = []
         snapshot.forEach(doc => {
           let data = doc.data()
           let id = doc.id
           data['id'] = id
           servicesData.push(data)
         })
-        dispatch(getServicesDataSuccess(servicesData))
       } else {
         dispatch(getServicesDataFailed(false))
       }
@@ -307,6 +305,35 @@ export const getServicesData = (shopName, branchName) => {
     .catch(err => {
       console.log('ERROR:Get services of branch data', err)
     })
+
+    let staffServicesData = []
+    let staffServiceRef = firestore.collection('staffService')
+    await staffServiceRef
+    .where('branchId', '==', `${shopName}-${branchName}`)
+    .where('disableStatus', '==', false)
+    .get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        let data = doc.data()
+        let id = doc.id
+        data['id'] = id
+        staffServicesData.push(data)
+      })
+    })
+    .catch(err => {
+      console.log('ERROR:Get staff services of branch data', err)
+    })
+
+    let result = []
+    servicesData && servicesData.map(service => {
+      let serviceIndex = staffServicesData.findIndex(staffService => staffService.serviceId === service.id)
+      if (serviceIndex > -1) {
+        result.push(service)
+      }
+      return ''
+    })
+
+    await dispatch(getServicesDataSuccess(result))
   }
 }
 

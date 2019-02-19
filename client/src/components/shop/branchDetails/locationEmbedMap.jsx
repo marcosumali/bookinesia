@@ -13,9 +13,9 @@ export default class locationEmbedMap extends Component {
         src={ branch.iframeUrl } 
         width={ setWidth } 
         height={ setHeight }
-        frameborder="0" 
+        frameBorder="0" 
         style={{ border: 0 }} 
-        allowfullscreen
+        allowFullScreen
       />
     )
   }

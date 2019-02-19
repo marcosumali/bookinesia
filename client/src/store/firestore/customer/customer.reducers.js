@@ -189,26 +189,6 @@ const customerDataList = (state = { ...initialState }, action) => {
         ...state,
         registerCustomerPasswordError: action.payload
       })
-    case 'SET_REGISTER_NAME_OK':
-      return ({
-        ...state,
-        registerCustomerNameError: action.payload
-      })
-    case 'SET_REGISTER_EMAIL_OK':
-      return ({
-        ...state,
-        registerCustomerEmailError: action.payload
-      })
-    case 'SET_REGISTER_PHONE_OK':
-      return ({
-        ...state,
-        registerCustomerPhoneError: action.payload
-      })
-    case 'SET_REGISTER_PASSWORD_OK':
-      return ({
-        ...state,
-        registerCustomerPasswordError: action.payload
-      })
     case 'SET_REGISTER_FORM_VALUE_BUID':
       return ({
         ...state,
@@ -324,26 +304,6 @@ const customerDataList = (state = { ...initialState }, action) => {
         settingsCustomerPhoneError: action.payload
       })
     case 'SET_SETTING_PASSWORD_ERROR':
-      return ({
-        ...state,
-        settingsCustomerPasswordError: action.payload
-      })
-    case 'SET_SETTING_NAME_OK':
-      return ({
-        ...state,
-        settingsCustomerNameError: action.payload
-      })
-    case 'SET_SETTING_EMAIL_OK':
-      return ({
-        ...state,
-        settingsCustomerEmailError: action.payload
-      })
-    case 'SET_SETTING_PHONE_OK':
-      return ({
-        ...state,
-        settingsCustomerPhoneError: action.payload
-      })
-    case 'SET_SETTING_PASSWORD_OK':
       return ({
         ...state,
         settingsCustomerPasswordError: action.payload

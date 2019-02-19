@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 import { getCookies, verifyCookies, setNewCookies } from '../../../helpers/auth';
-import { validateEmail } from '../../../helpers/form';
-import { getTransaction } from '../transaction/transaction.actions';
+import { validateEmail, validatePhone } from '../../../helpers/form';
+import { getTransaction, createNewTransaction } from '../transaction/transaction.actions';
 import { 
   authSignIn, 
   authPasswordValidation, 
@@ -10,21 +10,19 @@ import {
   authUpdateEmail, 
   authCreateUser, 
   authEmailValidation,
-  getUserProfile,
-  authMigrateAnonymousUser,
 } from '../auth/auth.actions';
 import swal from 'sweetalert';
 
 export const emptyError = 'This section must be filled.'
 export const phoneMinError = 'Phone number is too short, min. 8 characters.'
-const phoneRegisteredError = 'Phone number is already registered. Please sign in.'
 export const passwordMinError = 'Password is too short, min. 8 characters.'
 export const emailInvalidError = 'Invalid email.'
+export const phoneInvalidError = 'Invalid phone number.'
 export const emailRegisteredError = 'Email is already registered. Please sign in.'
 export const loginError = 'The email or password you entered is incorrect. Please try again.'
 export const incorrectPasswordError = 'Incorrect password.'
-export const tooManyRequestError = 'Too many unsuccessful authorisation attempts. Try again later.'
-export const tooManyRegistrationError = 'Too many unsuccessful registration attempts. Try again later.'
+export const tooManyRequestError = 'Too many unsuccessful authorisation attempts.Try again later.'
+export const tooManyRegistrationError = 'Too many unsuccessful registration attempts.Try again later.'
 const oldPasswordError = 'The old password you entered is incorrect.'
 const samePasswordError = `The new password can't be the same with your old password.`
 const notSameNewPasswordError = 'Your new password and its confirmation do not match.'
@@ -76,7 +74,7 @@ export const handleCookies = (purpose, cookies, data) => {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authentication register') {
-        if (customerData.registeredStatus === true) {
+        if (customerId) {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authorization transaction') {
@@ -196,11 +194,9 @@ export const customerRegisterInputValidation = (props) => {
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = props.customerPassword
-    let cookies = props.cookies
-    
-    // To set loading status as true
-    await dispatch(setLoadingStatus(true))
 
+    await dispatch(setLoadingStatus(true))
+    
     // Input is ERROR
     if (name.length <= 0) {
       await dispatch(setRegisterNameInputError(emptyError))
@@ -208,23 +204,12 @@ export const customerRegisterInputValidation = (props) => {
     
     if (phone.length <= 0) {
       await dispatch(setRegisterPhoneInputError(emptyError))
-    } 
-    
-    if (phone.length > 0 && phone.length < 8) {
-      await dispatch(setRegisterPhoneInputError(phoneMinError))
     }
 
-    // Get user data to determine the error status if user registered status is true from database
-    let userByPhone = await dispatch(getCustomerByField('phone', phone))
-
-    let customerExistenceBasedOnPhone = await dispatch(validateCustomerExistence('phone', phone))
-    if (userByPhone.registeredStatus === false) {
-      customerExistenceBasedOnPhone = false
+    let phoneResult = validatePhone(phone)
+    if (phone.length > 0 && phoneResult.status === false) {
+      await dispatch(setRegisterPhoneInputError(phoneInvalidError))
     }
-    if (customerExistenceBasedOnPhone) {
-      dispatch(setRegisterPhoneInputError(phoneRegisteredError))
-    }
-    // console.log('check phone', customerExistenceBasedOnPhone)
 
     if (password.length <= 0) {
       await dispatch(setRegisterPasswordInputError(emptyError))
@@ -237,76 +222,41 @@ export const customerRegisterInputValidation = (props) => {
     if (email.length <= 0) {
       await dispatch(setRegisterEmailInputError(emptyError))
     } 
-    
+
     if (email.length > 0 && validateEmail(email) === false) {
       await dispatch(setRegisterEmailInputError(emailInvalidError))
     }
 
-    // Get user data to determine the error status if user registered status is true from auth    
     let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
-    let authUser = await dispatch(getUserProfile())
-
-    if (authUser) {
-      let userByEmail = await dispatch(getCustomerById(authUser.uid))
-      userByEmail['email'] = authUser.email
-
-      // LOGIC:
-      // 1. If based on authEmailValidation to firebase auth return true, it means the user has been signed in to Auth
-      // 2. Next need to check whether user by email have registeredStatus of true. If false, means user has not registered.
-      // 3. Since we can't check email profile to firebase auth without password access, if userByEmail.email is not the same with email
-      // and from point 1 return true, it means that the user is truely have been registered
-      if (userByEmail.registeredStatus === false) {
-        if (customerExistenceBasedOnEmail === true && userByEmail.email !== email) {
-          customerExistenceBasedOnEmail = true
-        } else {
-          customerExistenceBasedOnEmail = false
-        }
-      }
-    }
+    // console.log('+++', customerExistenceBasedOnEmail)
 
     if (customerExistenceBasedOnEmail === true) {
-      dispatch(setRegisterEmailInputError(emailRegisteredError))
+      await dispatch(setRegisterEmailInputError(emailRegisteredError))
     } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
-      dispatch(setRegisterEmailInputError(tooManyRegistrationError))
+      await dispatch(setRegisterEmailInputError(tooManyRegistrationError))
     }
-    // console.log('check email', customerExistenceBasedOnEmail)
 
     // Input is OK
     if (name.length > 0) {
-      await dispatch(setRegisterNameInputOK(false))
+      await dispatch(setRegisterNameInputError(false))
     } 
     
-    if (phone.length >= 8 && customerExistenceBasedOnPhone === false) {
-      await dispatch(setRegisterPhoneInputOK(false))
+    if (phoneResult.status === true) {
+      await dispatch(setRegisterPhoneInputError(false))
     }
 
     if (password.length >= 8) {
-      await dispatch(setRegisterPasswordInputOK(false))
+      await dispatch(setRegisterPasswordInputError(false))
     } 
     
     if (email.length > 0 && validateEmail(email) && customerExistenceBasedOnEmail === false) {
-      await dispatch(setRegisterEmailInputOK(false))
+      await dispatch(setRegisterEmailInputError(false))
     }
-    
-    if  (customerExistenceBasedOnPhone === false && customerExistenceBasedOnEmail === false) {
-      if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
-        // console.log('pass through')
-        let BUID = getCookies(cookies)
-        if (BUID) {
-          let customerData = verifyCookies(BUID)
-          if (customerData.registeredStatus === false) {
-            dispatch(authMigrateAnonymousUser(props))
-          } else {
-            dispatch(authCreateUser(props))
-          }
-        } else {
-          dispatch(authCreateUser(props))
-        }
-      } else {
-        dispatch(setLoadingStatus(false))
-      }
+
+    if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && customerExistenceBasedOnEmail === false && password.length >= 8  ) {
+      await dispatch(authCreateUser(props, phoneResult.phone, null))
     } else {
-      dispatch(setLoadingStatus(false))
+      await dispatch(setLoadingStatus(false))
     }
   }
 }
@@ -336,35 +286,6 @@ export const setRegisterEmailInputError = (data) => {
 export const setRegisterPasswordInputError = (data) => {
   return {
     type: 'SET_REGISTER_PASSWORD_ERROR',
-    payload: data
-  }
-}
-
-// To handle changes from input text if OK
-const setRegisterNameInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_NAME_OK',
-    payload: data
-  }
-}
-
-const setRegisterPhoneInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_PHONE_OK',
-    payload: data
-  }
-}
-
-const setRegisterEmailInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_EMAIL_OK',
-    payload: data
-  }
-}
-
-const setRegisterPasswordInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_PASSWORD_OK',
     payload: data
   }
 }
@@ -440,7 +361,6 @@ export const customerLoginInputValidation = (props) => {
     } else {
       dispatch(setLoadingStatus(false))
     }
-    
   }
 }
 
@@ -556,8 +476,9 @@ export const customerSettingsInputValidation = (props) => {
       await dispatch(setSettingPhoneInputError(emptyError))
     } 
     
-    if (phone.length > 0 && phone.length < 8) {
-      await dispatch(setSettingPhoneInputError(phoneMinError))
+    let phoneResult = validatePhone(phone)
+    if (phone.length > 0 && phoneResult.status === false) {
+      await dispatch(setRegisterPhoneInputError(phoneInvalidError))
     }
 
     if (email.length <= 0) {
@@ -578,22 +499,22 @@ export const customerSettingsInputValidation = (props) => {
 
     // Input is OK
     if (name.length > 0) {
-      await dispatch(setSettingNameInputOK(false))
+      await dispatch(setSettingNameInputError(false))
     } 
     
-    if (phone.length >= 8) {
-      await dispatch(setSettingPhoneInputOK(false))
+    if (phoneResult.status === true) {
+      await dispatch(setSettingPhoneInputError(false))
     }
     
     if (email.length > 0 && validateEmail(email)) {
-      await dispatch(setSettingEmailInputOK(false))
+      await dispatch(setSettingEmailInputError(false))
     }
 
     if (password.length >= 8) {
-      await dispatch(setSettingPasswordInputOK(false))
+      await dispatch(setSettingPasswordInputError(false))
     }     
 
-    if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
+    if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
       // console.log('pass through')
       let BUID = getCookies(cookies)
       if (BUID) {
@@ -601,7 +522,7 @@ export const customerSettingsInputValidation = (props) => {
 
         let passwordStatus = await dispatch(authPasswordValidation(customerData, password))
         if (passwordStatus === true) {
-          dispatch(authUpdateEmail(customerData, password, email, props))
+          dispatch(authUpdateEmail(customerData, password, email, props, phoneResult.phone))
         } else if (passwordStatus === false) {
           dispatch(setSettingPasswordInputError(incorrectPasswordError))
           dispatch(setLoadingStatus(false))          
@@ -647,89 +568,38 @@ const setSettingPasswordInputError = (data) => {
   }
 }
 
-// To handle changes from input text if OK
-const setSettingNameInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_NAME_OK',
-    payload: data
-  }
-}
-
-const setSettingPhoneInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_PHONE_OK',
-    payload: data
-  }
-}
-
-const setSettingEmailInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_EMAIL_OK',
-    payload: data
-  }
-}
-
-const setSettingPasswordInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_PASSWORD_OK',
-    payload: data
-  }
-}
-
 // To update customer account information
-export const customerUpdateAccount = (customerId, props) => {
+export const customerUpdateAccount = (customerData, props, formattedPhone) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let customerId = customerData.id
+    let picture = customerData.picture
     let name = props.settingsCustomerName
-    let phone = props.settingsCustomerPhone
+    let phone = formattedPhone
     let email = props.settingsCustomerEmail
     let history = props.history
     let cookies = props.cookies
 
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(customerId)
+    let cookieCustomerData = {
+      id: customerId, name, email, phone, picture
+    }
 
-    customerRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let id = doc.id
-        let { picture, registeredStatus } = doc.data()
-        
-        let customerData = {
-          id, name, email, phone, picture, registeredStatus
-        }
-
-        // To handle authorization
-        if (customerId === id) {
-          
-          let customerUpdateRef = firestore.collection('customer').doc(id)
-          
-          customerUpdateRef.update({
-            name,
-            phone,
-          })
-          .then(() => {
-            swal("Account Updated", "", "success")
-            setNewCookies(cookies, customerData)
-            history.push('/account')
-            dispatch(setSettingCustomerPassword(''))
-            dispatch(setLoadingStatus(false))
-          })
-          .catch(err => {
-            console.log('ERROR: Update customer data', err)
-          })
-        } else {
-          dispatch(setAuthorizationStatus(false))
-          dispatch(setLoadingStatus(false))
-        }
-      } else {
-        dispatch(setAuthorizationStatus(false))
-        dispatch(setLoadingStatus(false))
-      }
+    let firestore = getFirestore()          
+    let customerUpdateRef = firestore.collection('customer').doc(customerId)
+    
+    customerUpdateRef.update({
+      name,
+      phone,
+    })
+    .then(() => {
+      swal("Account Updated", "", "success")
+      setNewCookies(cookies, cookieCustomerData)
+      history.push('/account')
+      dispatch(setSettingCustomerPassword(''))
+      dispatch(setLoadingStatus(false))
     })
     .catch(err => {
-      console.log('ERROR: Get customer data to update account information', err)
+      console.log('ERROR: Update customer data', err)
     })
-  
   }
 }
 
@@ -917,94 +787,23 @@ const setNewPasswordConfirmInputOK = (data) => {
 }
 
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------
-// To validate customer existence and ensure each customer only have 1 account before register new account
-export const validateCustomerExistence = (field, value) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-    let customerExistence = false
-
-    await customerRef.where(field, '==', value).get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          customerExistence = true
-        })
-      } else {
-        customerExistence = false
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: validate customer data', err)
-    })
-
-    return customerExistence
-  }
-}
-
-// Get single customer data by field provided
-export const getCustomerByField = (field, value) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-    let user = 'not-found'
-
-    await customerRef.where(field, '==', value).get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          let id = doc.id
-          let data = doc.data()
-          data['id'] = id
-          user = data
-        })
-      } 
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by field', err)
-    })
-
-    return user
-  }
-}
-
-// Get single customer data by ID
-export const getCustomerById = (uid) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(uid)
-    let user = 'not-found'
-
-    await customerRef.get()
-    .then(doc => {
-      let id = doc.id
-      let data = doc.data()
-      data['id'] = id
-      user = data
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by ID', err)
-    })
-
-    return user
-  }
-}
-
 // To create new customer
-export const createNewCustomer = (uid, props) => {
+export const createNewCustomer = (uid, props, formattedPhone, createTransactionStatus) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let name = props.customerName
-    let phone = props.customerPhone
-    let picture = ''
-    let registeredStatus = true
+    let phone = formattedPhone
     let email = props.customerEmail
+    let picture = 'noPicture'
+    let gender = ''
+    let dateOfBirth = ''
     let cookies = props.cookies
 
     let newCustomer = {
       name,
       phone,
       picture,
-      registeredStatus
+      gender,
+      dateOfBirth
     }
 
     let firestore = getFirestore()
@@ -1013,14 +812,22 @@ export const createNewCustomer = (uid, props) => {
     customerRef.set(newCustomer)
     .then(async () => {
       let customerData = {
-        id: uid, name, email, phone, picture, registeredStatus
+        id: uid, name, email, phone, picture
       }
       setNewCookies(cookies, customerData)
       let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeCustomer', { name, email })
       if (sendEmailResult.status === 200) {
-        window.location.assign('/')
+        if (createTransactionStatus === 'continue') {
+          dispatch(createNewTransaction(uid, props))
+        } else {
+          window.location.assign('/')
+        }
       } else {
-        window.location.assign('/')
+        if (createTransactionStatus === 'continue') {
+          dispatch(createNewTransaction(uid, props))
+        } else {
+          window.location.assign('/')
+        }
       }
     })
     .catch(err => {
