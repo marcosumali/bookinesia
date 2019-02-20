@@ -40,6 +40,7 @@ export const getShopData = (shopName) => {
     .then(doc => {
       if (doc.exists) {
         let data = doc.data()
+        data['id'] = doc.id
         dispatch(getShopDataSuccess(data))
       } else {
         dispatch(getShopDataFailed(false))
@@ -151,6 +152,7 @@ export const getBranchData = (shopName, branchName) => {
     .then(doc => {
       if (doc.exists) {
         let data = doc.data()
+        data['id'] = doc.id
         dispatch(getBranchDataSuccess(data))
       } else {
         dispatch(getBranchDataFailed(false))
