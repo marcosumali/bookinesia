@@ -46,9 +46,9 @@ function validatePhone(phone) {
     } else {
       result.status = false
     }
-
-    return result
-  } 
+  }
+  
+  return result
 }
 
 
