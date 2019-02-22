@@ -27,8 +27,6 @@ exports.getUserBasedOnUid = functions.https.onRequest((req, res) => {
         id: userData.uid,
         email: userData.email,
         name: userData.displayName,
-        picture: userData.photoURL,
-        phone: userData.phoneNumber,
       }
       res.status(200).json({
         message: 'Get user based on UID successful',
@@ -57,8 +55,6 @@ exports.getUserBasedOnEmail = functions.https.onRequest((req, res) => {
         id: userData.uid,
         email: userData.email,
         name: userData.displayName,
-        picture: userData.photoURL,
-        phone: userData.phoneNumber,
       }
       res.status(200).json({
         message: 'Get user based on email successful',
@@ -87,8 +83,6 @@ exports.getUserBasedOnPhone = functions.https.onRequest((req, res) => {
         id: userData.uid,
         email: userData.email,
         name: userData.displayName,
-        picture: userData.photoURL,
-        phone: userData.phoneNumber,
       }
       res.status(200).json({
         message: 'Get user based on phone successful',
@@ -120,7 +114,6 @@ exports.adminUpdateUserProfile = functions.https.onRequest((req, res) => {
         id: userData.uid,
         email: userData.email,
         name: userData.displayName,
-        picture: userData.photoURL,
         phone: userData.phoneNumber,
       }
       res.status(200).json({
