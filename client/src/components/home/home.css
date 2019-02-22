@@ -1,122 +1,409 @@
-.First-section {
-  position: absolute;
-  z-index: 0;
-  /* border: 1px solid red; */
+/* -------------------------------- Home Header CSS -------------------------------- */
+.Header-tag-box {
+  margin-top: 1em;
 }
 
-.Second-section {
-  position: absolute;
-  z-index: 0;
-  background-color: #5499c3;
-  /* border: 1px solid blue; */
-}
-
-.Third-section {
-  position: absolute;
-  z-index: 0;
-  /* border: 1px solid red; */
-}
-
-.Header-text-h1 {
-  font-family: Montserrat;
-  font-size: 1.25em;
-  font-weight: normal;
+.Header-tag-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
+  font-weight: bold;
   font-style: normal;
   font-stretch: normal;
-  line-height: 1.2;
+  letter-spacing: normal;
+  color: #F68606;
+  text-transform: capitalize;
+}
+
+.Header-box {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  max-width: 90%;
+}
+
+.Header-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
   letter-spacing: normal;
   color: #5499c3;
 }
 
-.Header-description-box {
-  max-width: 20em;
-  max-height: 1.6em;
+.Header-desc-box {
+  margin-bottom: 1em;
 }
 
-.Header-text {
-  font-family: Montserrat;
-  font-size: 0.75em;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.25;
-  letter-spacing: normal;
-  color: #666666;
-}
-
-.First-section-child {
-  z-index: 1;
-}
-
-.Image-over {
-  z-index: 2;
-  position: absolute;
-  /* margin-top: 53px; */
-}
-
-.Image-under {
-  z-index: 2;
-  position: absolute;
-}
-
-.Icon-border {
-  background-color: #ffffff;
-  border-radius: 50%;
-  height: 7em;
-  width: 7em;
-}
-
-.Icon {
-  height: 4em;
-  width: 4em;
-}
-
-.Icon-text-header {
-  font-family: Montserrat;
-  font-size: 1.25em;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.2;
-  letter-spacing: normal;
-  color: #ffffff;
-}
-
-.Icon-text {
-  font-family: Montserrat;
+.Header-desc-text {
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
-  line-height: 1.2;
   letter-spacing: normal;
-  color: #ffffff;
-  text-align: center;
-  margin-left: 1em;
-  margin-right: 1em;
+  color: #666666;
+  line-height: 175%;
 }
 
-.Section-text-header {
-  font-family: Montserrat;
+.Image-box {
+  height: 80vh;
+}
+
+.Image-home {
+  width: 100%;
+  height: 100%;
+}
+
+.Dot-box {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  margin-top: 2.5em;
+}
+
+.Dot-position {
+  margin-right: 2em;
+  margin-bottom: 1.5em;
+}
+
+.Dot-10-blue {
+  height: 0.625em;
+  width: 0.625em;
+  border-radius: 50%;
+  background-color: #5499c3;
+}
+
+.Dot-10-grey {
+  height: 0.625em;
+  width: 0.625em;
+  border-radius: 50%;
+  background-color: #EAEAEA;
+}
+
+/* For Tablet CSS */
+@media only screen and (min-width: 768px) {
+  .Image-box {
+    height: 60vh;
+  }
+  
+  .Dot-box {
+    position: inherit;
+    margin-top: 0em;
+  }
+
+  .Header-outer-box {
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+  }
+  
+  .Header-inner-box {
+    margin-top: 3em;
+  }
+}
+
+/* For Laptop CSS */
+@media only screen and (min-width: 1440px) {
+  .Image-box {
+    height: 75vh;
+  }
+
+  .Image-home {
+    width: 90%;
+    height: 90%;
+  }
+  .Header-tag-box {
+    margin-top: 1em;
+  }
+  
+  .Header-tag-text {
+    font-size: 1.5em;
+  }
+  
+  .Header-box {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  
+  .Header-text {
+    font-size: 4em;
+  }
+  
+  .Header-desc-box {
+    margin-bottom: 2em;
+  }
+  
+  .Header-desc-text {
+    font-size: 1.5em;
+  }
+
+  .Dot-10-blue {
+    height: 1em;
+    width: 1em;
+  }
+  
+  .Dot-10-grey {
+    height: 1em;
+    width: 1em;
+  }
+}
+
+/* -------------------------------- Home Features CSS -------------------------------- */
+.Feature-box {
+  padding: 2em !important;
+  background-color: #FAFAFA;
+  /* border: 1px solid black; */
+}
+
+.Feature-upper-box {
+  padding-top: 10em !important;
+}
+
+.Feature-bottom-box {
+  padding-bottom: 10em !important;
+}
+
+.Feature-header-box {
+  padding-top: 2em !important;
+  padding-bottom: 2em !important;
+}
+
+.Feature-header-text{
+  font-family: 'Montserrat', sans-serif;
   font-size: 2em;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
-  line-height: 1.2;
-  text-decoration: underline;
   letter-spacing: normal;
+  color: #5499c3;
+  text-transform: capitalize;
+}
+
+.Feature-text-box {
+  padding-bottom: 2em !important;
+}
+
+.Feature-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  color: #666666;
+  text-align: justify;
+  line-height: 200%;
+}
+
+.Beta-text {
+  padding: 0.3125em;
+  background-color: #F68606;
+  color: #ffffff !important;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  color: #666666;
+  border-radius: 0.3125em;
+  margin-left: 1em;
+}
+
+/* For Mobile CSS */
+@media only screen and (max-width: 767px) {
+  .Feature-box {
+    padding: 1em !important;
+  }
+  
+  .Feature-upper-box {
+    padding-top: 7.5em !important;
+  }
+
+  .Feature-bottom-box {
+    padding-bottom: 7.5em !important;
+  }
+
+  .Feature-header-text{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: normal;
+    color: #5499c3;
+    text-transform: capitalize;
+    text-align: center;
+  }
+
+  .Feature-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1em;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: normal;
+    color: #666666;
+    text-align: justify;
+    line-height: 200%;
+  }
+}
+
+/* For Laptop CSS */
+@media only screen and (min-width: 1440px) {
+  .Feature-box {
+    padding: 4em !important;
+    padding-left: 20em !important;
+    padding-right: 20em !important;
+  }
+
+  .Feature-upper-box {
+    padding-top: 10em !important;
+  }
+  
+  .Feature-bottom-box {
+    padding-bottom: 10em !important;
+  }
+
+  .Feature-header-text{
+    font-size: 2.5em;
+  }
+
+  .Feature-text {
+    font-size: 1.25em;
+  }
+}
+
+/* -------------------------------- Home Contact Us CSS -------------------------------- */
+.Contacts-box {
+  background-color: #354467;
   color: #ffffff;
+  padding-top: 2em !important;
+  padding-bottom: 6em !important;
+}
+
+.Contacts-header-box {
+  padding-top: 2em !important;
+  padding-bottom: 1em !important;
+}
+
+.Contacts-header-text{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  text-transform: capitalize;
+}
+
+.Contacts-header-desc-box {
+  padding-bottom: 2em !important;
+}
+
+.Contacts-header-desc-text{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  text-align: center;
+}
+
+.Contacts-info-box {
+  background-color: #ffffff;
+  border-radius: 2.5px;
+  padding: 2em !important;
+  color: #666666;
+}
+
+.Contacts-info-header-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  margin-bottom: 0.25em;
+}
+
+.Contacts-info-desc-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  margin-bottom: 1em;
+  text-align: justify;
+  color: gray;
+  line-height: 200%;
+}
+
+.Contacts-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75em;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  margin-bottom: 1em;
+  text-align: justify;
+  color: #000000;
+  line-height: 200%;
+}
+
+/* For Laptop CSS */
+@media only screen and (min-width: 1440px) {
+  .Contacts-box {
+    padding-top: 7.5em !important;
+    padding-bottom: 10em !important;
+  }
+
+  .Contacts-header-text{
+    font-size: 3em;
+  }
+    
+  .Contacts-header-desc-text{
+    font-size: 1.75em;
+  }
+
+  .Contacts-info-header-text {
+    font-size: 2.5em;
+  }
+  
+  .Contacts-info-desc-text {
+    font-size: 1.25em;
+  }
+  
+  .Contacts-text {
+    font-size: 1.25em;
+  }
+}
+
+/* -------------------------------- Home Registred Shop CSS -------------------------------- */
+.Provider-outer-box {
+  min-height: 100vh;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.Partner-box {
+  margin-top: 4em;
+  margin-bottom: 6em;
+}
+
+.Shop-box {
+  margin-bottom: 8em !important;
 }
 
 .Partner-text-header {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 2em;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
   line-height: 1.2;
-  text-decoration: underline;
-  text-decoration-color: #666666;
   letter-spacing: normal;
   text-align: center;
   color: #5499c3;
@@ -138,7 +425,7 @@
 }
 
 .Home-shop-name {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.25em;
   font-weight: normal;
   font-style: normal;
@@ -146,5 +433,5 @@
   line-height: 1.2;
   letter-spacing: normal;
   text-align: center;
-  color: #5499c3;
+  color: #666666;
 }

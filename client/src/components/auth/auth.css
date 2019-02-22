@@ -1,17 +1,18 @@
 .Auth-header {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.5em;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
   line-height: 1.2;
   text-decoration: underline;
+  text-decoration-color: #5499c3;
   letter-spacing: normal;
-  color: #5499c3;
+  color: #666666;
 }
 
 .Text-auth-info {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: normal;
   font-style: normal;
@@ -33,7 +34,7 @@
 }
 
 .Auth-button-text {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -46,7 +47,7 @@
 }
 
 .Text-error {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75em;
   font-weight: normal;
   font-style: normal;

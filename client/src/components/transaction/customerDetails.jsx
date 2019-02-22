@@ -32,7 +32,10 @@ class customerDetails extends Component {
     this.props.getStaffBasedOnParams(params)
     this.props.getAppointmentBasedOnParams(params)
     this.props.getServicesBasedOnParams(params)
-    this.props.handleCookies('during input', this.props.cookies)
+  }
+
+  componentDidUpdate() {
+    this.props.handleCookies('during input', this.props.cookies, this.props)
   }
 
   passwordVisibility() {
@@ -98,7 +101,7 @@ class customerDetails extends Component {
                   <div className="col s10 No-margin No-padding Barber-booked-details">
                     <div className="col s12 No-margin No-padding Barber-booked-name-box Margin-b-8">
                       <div className="col s2 No-margin No-padding">
-                        <p className="No-margin Confirm-text">Barber</p>
+                        <p className="No-margin Confirm-text">Provider</p>
                       </div>
                       <div className="col s1 No-margin No-padding Container-center">
                         <p className="No-margin Confirm-text">:</p>
@@ -124,9 +127,12 @@ class customerDetails extends Component {
                       </div>
                     </div>
                     <div className="col s12 No-margin No-padding">
-                      {
+                      { 
+                        this.props.selectedAppointment.disableStatus ?
+                        <p className="No-margin Confirm-text-full">The provider has no schedule today. Please go back and select other provider or schedule to continue.</p>
+                        :
                         Number(this.props.selectedAppointment.currentTransaction) >= Number(this.props.selectedAppointment.maxQueue) ?
-                        <p className="No-margin Confirm-text-full">The barber is fully booked. Please go back and select other schedule or barber to continue.</p>
+                        <p className="No-margin Confirm-text-full">The provider is fully booked. Please go back and select other provider or schedule to continue.</p>
                         :
                         <p className="No-margin Confirm-text">Queue No. { Number(this.props.selectedAppointment.currentTransaction)+1 }</p>
                       }
@@ -174,7 +180,7 @@ class customerDetails extends Component {
                 <p className="No-margin Confirm-header">Customer Details:</p>
               </div>
               <div className="col s12 No-margin No-padding">
-                <p className="No-margin Confirm-text Text-justify">Barbershop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</p>
+                <p className="No-margin Confirm-text Text-justify">Shop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</p>
               </div>
               <form className="col s12 No-margin No-padding">
                 {/* Name Input */}
@@ -209,7 +215,7 @@ class customerDetails extends Component {
                   {
                     this.props.customerPhoneError !== false?
                     <div>
-                      <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                      <input id="phone" type="tel" className="Input-error validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                       <label htmlFor="phone" className="Form-text active">Phone No.</label>
                       <span className="Input-info-error">{ this.props.customerPhoneError }</span>
                     </div>
@@ -218,12 +224,12 @@ class customerDetails extends Component {
                       {
                         this.props.customerPhone !== "" ?
                         <div>
-                          <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                          <input id="phone" type="tel" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                           <label htmlFor="phone" className="Form-text active">Phone No.</label>
                         </div>
                         :
                         <div>
-                          <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
+                          <input id="phone" type="tel" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPhone }/>
                           <label htmlFor="phone" className="Form-text">Phone No.</label>
                         </div>
                       }
@@ -261,10 +267,15 @@ class customerDetails extends Component {
                 
                 {/* Password Input */}
                 {
-                  this.props.showPasswordInputStatus ?
+                  this.props.showPasswordInputStatus.message === true ?
                   <div>
-                    <div className="Margin-b-10">
-                      <div className="No-margin Confirm-text Text-justify">We noticed that you have registered and signed out previously, please input your password to authorised the transaction.</div>
+                    <div className="Margin-b-20">
+                      {
+                        this.props.showPasswordInputStatus.user === 'registeredUser' ?
+                        <div className="No-margin Confirm-text Text-justify">We noticed that you have registered and signed out previously, please input your password to authorise the transaction and to be signed in.</div>
+                        :
+                        <div className="No-margin Confirm-text Text-justify">To secure your account, please input your password to register a new Bookinesia account and authorise the transaction.</div>
+                      }
                     </div>
                     <div className="input-field Margin-b-10">
                       {
@@ -275,7 +286,7 @@ class customerDetails extends Component {
                             <label htmlFor="password" className="Form-text active">Password</label>
                             <span className="Input-info-error">{ this.props.customerPasswordError }</span>
                           </div>
-                          <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                          <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                             {
                               this.state.visibilityStatus ?
                               <EyeSvg width="25px" height="22px" color="#666666" />
@@ -293,7 +304,7 @@ class customerDetails extends Component {
                                   <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPassword }/>
                                   <label htmlFor="password" className="Form-text active">Password</label>
                                 </div>
-                                <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                                   {
                                     this.state.visibilityStatus ?
                                     <EyeSvg width="25px" height="22px" color="#666666" />
@@ -308,7 +319,7 @@ class customerDetails extends Component {
                                 <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPassword } />
                                 <label htmlFor="password" className="Form-text">Password</label>
                               </div>
-                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                              <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                                 {
                                   this.state.visibilityStatus ?
                                   <EyeSvg width="25px" height="22px" color="#666666" />
@@ -371,6 +382,7 @@ const mapStateToProps = state => {
     customerPassword: state.cart.customerPassword,
     customerPasswordError: state.cart.customerPasswordError,
     showPasswordInputStatus: state.cart.showPasswordInputStatus,
+    user: state.firebase.profile,
   }
 }
 

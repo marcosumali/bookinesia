@@ -8,6 +8,7 @@ import '../../../assets/css/materialize/form.css';
 import './account.css';
 import { handleCookies, handleSettingInputChanges } from '../../../store/firestore/customer/customer.actions';
 import AccountCircleSvg from '../../svg/accountCircleSvg';
+import AccountSettingsLoading from './accountSettingsLoading';
 import EyeSvg from '../../svg/eyeSvg';
 import EyeOffSvg from '../../svg/eyeOffSvg';
 import AuthButton from '../../button/authButton';
@@ -21,7 +22,12 @@ class accountSettings extends Component {
   }
 
   componentWillMount() {
-    this.props.handleCookies('get account settings', this.props.cookies)
+    this.props.handleCookies('get account settings', this.props.cookies, this.props)
+  }
+
+
+  componentDidUpdate() {
+    this.props.handleCookies('get account settings', this.props.cookies, this.props)
   }
 
   passwordVisibility() {
@@ -43,17 +49,17 @@ class accountSettings extends Component {
     return (
       <div className="row No-margin">
         {
-          this.props.authenticationStatus && this.props.authorizationStatus && this.props.user.registeredStatus ?
+          this.props.authorizationStatus ?
           <div>
             {
-              this.props.userLoading ?
-              <div></div>
+              this.props.userLoading?
+              <AccountSettingsLoading />
               :
               <div>
                 {/* Picture Section */}
                 <div className="col s12 No-margin No-padding Container-center Margin-t-16">
                 {
-                  this.props.user.picture.length <= 0 ?
+                  this.props.user.picture.length <= 0 || this.props.user.picture === 'noPicture' ?
                   <AccountCircleSvg width="5em" height="5em" color="#ffffff" />
                   :
                   <div></div>
@@ -95,7 +101,7 @@ class accountSettings extends Component {
                       {
                         this.props.settingsCustomerPhoneError !== false?
                         <div>
-                          <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                          <input id="phone" type="tel" className="Input-error validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
                           <label htmlFor="phone" className="Form-text active">Phone No.</label>
                           <span className="Input-info-error">{ this.props.settingsCustomerPhoneError }</span>
                         </div>
@@ -104,12 +110,12 @@ class accountSettings extends Component {
                           {
                             this.props.settingsCustomerPhone !== "" ?
                             <div>
-                              <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                              <input id="phone" type="tel" className="validate No-margin valid" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
                               <label htmlFor="phone" className="Form-text active">Phone No.</label>
                             </div>
                             :
                             <div>
-                              <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
+                              <input id="phone" type="tel" className="validate No-margin" onChange={ this.props.handleSettingInputChanges } value={ this.props.settingsCustomerPhone }/>
                               <label htmlFor="phone" className="Form-text">Phone No.</label>
                             </div>
                           }
@@ -237,6 +243,7 @@ const mapStateToProps = (state, ownProps) => {
     settingsCustomerPasswordError: state.user.settingsCustomerPasswordError,
     authenticationStatus: state.user.authenticationStatus,
     authorizationStatus: state.user.authorizationStatus,
+    fbUser: state.firebase.profile,
   }
 }
 

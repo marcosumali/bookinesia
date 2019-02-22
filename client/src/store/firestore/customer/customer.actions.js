@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 import { getCookies, verifyCookies, setNewCookies } from '../../../helpers/auth';
-import { validateEmail } from '../../../helpers/form';
-import { getTransaction } from '../transaction/transaction.actions';
+import { validateEmail, validatePhone } from '../../../helpers/form';
+import { getTransaction, createNewTransaction } from '../transaction/transaction.actions';
 import { 
   authSignIn, 
   authPasswordValidation, 
@@ -10,21 +10,19 @@ import {
   authUpdateEmail, 
   authCreateUser, 
   authEmailValidation,
-  getUserProfile,
-  authMigrateAnonymousUser,
 } from '../auth/auth.actions';
 import swal from 'sweetalert';
 
 export const emptyError = 'This section must be filled.'
 export const phoneMinError = 'Phone number is too short, min. 8 characters.'
-const phoneRegisteredError = 'Phone number is already registered. Please sign in.'
 export const passwordMinError = 'Password is too short, min. 8 characters.'
 export const emailInvalidError = 'Invalid email.'
+export const phoneInvalidError = 'Invalid phone number.'
 export const emailRegisteredError = 'Email is already registered. Please sign in.'
 export const loginError = 'The email or password you entered is incorrect. Please try again.'
 export const incorrectPasswordError = 'Incorrect password.'
-export const tooManyRequestError = 'Too many unsuccessful authorisation attempts. Try again later.'
-export const tooManyRegistrationError = 'Too many unsuccessful registration attempts. Try again later.'
+export const tooManyRequestError = 'Too many unsuccessful authorisation attempts.Try again later.'
+export const tooManyRegistrationError = 'Too many unsuccessful registration attempts.Try again later.'
 const oldPasswordError = 'The old password you entered is incorrect.'
 const samePasswordError = `The new password can't be the same with your old password.`
 const notSameNewPasswordError = 'Your new password and its confirmation do not match.'
@@ -59,15 +57,40 @@ export const handleCookies = (purpose, cookies, data) => {
       // console.log('check BUID', purpose, '===', customerData)
       let customerId = customerData.id
       if (purpose === 'during input') {
-        dispatch(setFormValueBasedOnToken(customerData))
+        // data represent props to get firebase user data
+        let name = data.customerName
+        let phone = data.customerPhone
+        let email = data.customerEmail
+        if (name.length <= 0 && phone.length <= 0 && email.length <= 0) {
+          let profile = data.user 
+          if (profile.isEmpty === false && profile.isLoaded === true) {
+            let combineData = {
+              ...customerData,
+              phone: profile.phone,
+              picture: profile.picture,
+              name: profile.name,
+            }
+            dispatch(setFormValueBasedOnToken(combineData))
+          }
+        }
+
       } else if (purpose === 'get transactions') {
         dispatch(getTransactionsBasedOnCustomerId(customerId))
       } else if (purpose === 'get account') {
-        if (data === '/register') {
-          dispatch(setCustomerDataSuccess(customerData))
-        } else if (data !== '/register') {
-          dispatch(setCustomerDataSuccess(customerData))
-          dispatch(setAuthenticationStatus(true))
+        // Here data represent props to get firebase user profile
+        let user = data.user
+        if (user.length <= 0) {
+          let profile = data.fbUser
+          if (profile.isEmpty === false && profile.isLoaded === true) {
+            let combineData = {
+              ...customerData,
+              phone: profile.phone,
+              picture: profile.picture,
+              name: profile.name,
+              email: profile.email,
+            }
+            dispatch(setCustomerDataSuccess(combineData))
+          }
         }
       } else if (purpose === 'during register') {
         dispatch(setRegisterFormValueBasedOnToken(customerData))
@@ -76,7 +99,7 @@ export const handleCookies = (purpose, cookies, data) => {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authentication register') {
-        if (customerData.registeredStatus === true) {
+        if (customerId) {
           dispatch(setAuthenticationStatus(true))
         }
       } else if (purpose === 'handle authorization transaction') {
@@ -84,7 +107,40 @@ export const handleCookies = (purpose, cookies, data) => {
       } else if (purpose === 'handle authorization success') {
         dispatch(getTransaction(data, customerId))
       } else if (purpose === 'get account settings') {
-        dispatch(setSettingFormValueBasedOnToken(customerData))
+        // Here data represent props to get firebase user profile
+        let user = data.user
+        if (user.length <= 0) {
+          let name = data.settingsCustomerName
+          let phone = data.settingsCustomerPhone
+          let email = data.settingsCustomerEmail
+          if (name.length <= 0 && phone.length <= 0 && email.length <= 0) {
+            let profile = data.fbUser
+            if (profile.isEmpty === false && profile.isLoaded === true) {
+              let combineData = {
+                ...customerData,
+                phone: profile.phone,
+                picture: profile.picture,
+                name: profile.name,
+                email: profile.email, 
+              }
+              dispatch(setSettingFormValueBasedOnToken(combineData))
+            }
+          }
+        } else {
+          let name = data.settingsCustomerName
+          let phone = data.settingsCustomerPhone
+          let email = data.settingsCustomerEmail
+          if (name.length <= 0 && phone.length <= 0 && email.length <= 0) {
+            let combineData = {
+              ...customerData,
+              phone: user.phone,
+              picture: user.picture,
+              name: user.name,
+              email: user.email, 
+            }
+            dispatch(setSettingFormValueBasedOnToken(combineData))
+          }
+        }
       }
     } else {
       dispatch(setAuthenticationStatus(false))
@@ -192,15 +248,11 @@ const setRegisterCustomerPassword = (data) => {
 // To validate customer's input form of inputting customer information
 export const customerRegisterInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.customerName
+    let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = props.customerPassword
-    let cookies = props.cookies
     
-    // To set loading status as true
-    await dispatch(setLoadingStatus(true))
-
     // Input is ERROR
     if (name.length <= 0) {
       await dispatch(setRegisterNameInputError(emptyError))
@@ -208,23 +260,12 @@ export const customerRegisterInputValidation = (props) => {
     
     if (phone.length <= 0) {
       await dispatch(setRegisterPhoneInputError(emptyError))
-    } 
-    
-    if (phone.length > 0 && phone.length < 8) {
-      await dispatch(setRegisterPhoneInputError(phoneMinError))
     }
 
-    // Get user data to determine the error status if user registered status is true from database
-    let userByPhone = await dispatch(getCustomerByField('phone', phone))
-
-    let customerExistenceBasedOnPhone = await dispatch(validateCustomerExistence('phone', phone))
-    if (userByPhone.registeredStatus === false) {
-      customerExistenceBasedOnPhone = false
+    let phoneResult = validatePhone(phone)
+    if (phone.length > 0 && phoneResult.status === false) {
+      await dispatch(setRegisterPhoneInputError(phoneInvalidError))
     }
-    if (customerExistenceBasedOnPhone) {
-      dispatch(setRegisterPhoneInputError(phoneRegisteredError))
-    }
-    // console.log('check phone', customerExistenceBasedOnPhone)
 
     if (password.length <= 0) {
       await dispatch(setRegisterPasswordInputError(emptyError))
@@ -237,76 +278,40 @@ export const customerRegisterInputValidation = (props) => {
     if (email.length <= 0) {
       await dispatch(setRegisterEmailInputError(emptyError))
     } 
-    
+
     if (email.length > 0 && validateEmail(email) === false) {
       await dispatch(setRegisterEmailInputError(emailInvalidError))
     }
 
-    // Get user data to determine the error status if user registered status is true from auth    
     let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
-    let authUser = await dispatch(getUserProfile())
-
-    if (authUser) {
-      let userByEmail = await dispatch(getCustomerById(authUser.uid))
-      userByEmail['email'] = authUser.email
-
-      // LOGIC:
-      // 1. If based on authEmailValidation to firebase auth return true, it means the user has been signed in to Auth
-      // 2. Next need to check whether user by email have registeredStatus of true. If false, means user has not registered.
-      // 3. Since we can't check email profile to firebase auth without password access, if userByEmail.email is not the same with email
-      // and from point 1 return true, it means that the user is truely have been registered
-      if (userByEmail.registeredStatus === false) {
-        if (customerExistenceBasedOnEmail === true && userByEmail.email !== email) {
-          customerExistenceBasedOnEmail = true
-        } else {
-          customerExistenceBasedOnEmail = false
-        }
-      }
-    }
+    // console.log('+++', customerExistenceBasedOnEmail)
 
     if (customerExistenceBasedOnEmail === true) {
-      dispatch(setRegisterEmailInputError(emailRegisteredError))
+      await dispatch(setRegisterEmailInputError(emailRegisteredError))
     } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
-      dispatch(setRegisterEmailInputError(tooManyRegistrationError))
+      await dispatch(setRegisterEmailInputError(tooManyRegistrationError))
     }
-    // console.log('check email', customerExistenceBasedOnEmail)
 
     // Input is OK
     if (name.length > 0) {
-      await dispatch(setRegisterNameInputOK(false))
+      await dispatch(setRegisterNameInputError(false))
     } 
     
-    if (phone.length >= 8 && customerExistenceBasedOnPhone === false) {
-      await dispatch(setRegisterPhoneInputOK(false))
+    if (phoneResult.status === true) {
+      await dispatch(setRegisterPhoneInputError(false))
     }
 
     if (password.length >= 8) {
-      await dispatch(setRegisterPasswordInputOK(false))
+      await dispatch(setRegisterPasswordInputError(false))
     } 
     
     if (email.length > 0 && validateEmail(email) && customerExistenceBasedOnEmail === false) {
-      await dispatch(setRegisterEmailInputOK(false))
+      await dispatch(setRegisterEmailInputError(false))
     }
-    
-    if  (customerExistenceBasedOnPhone === false && customerExistenceBasedOnEmail === false) {
-      if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
-        // console.log('pass through')
-        let BUID = getCookies(cookies)
-        if (BUID) {
-          let customerData = verifyCookies(BUID)
-          if (customerData.registeredStatus === false) {
-            dispatch(authMigrateAnonymousUser(props))
-          } else {
-            dispatch(authCreateUser(props))
-          }
-        } else {
-          dispatch(authCreateUser(props))
-        }
-      } else {
-        dispatch(setLoadingStatus(false))
-      }
-    } else {
-      dispatch(setLoadingStatus(false))
+
+    if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && customerExistenceBasedOnEmail === false && password.length >= 8  ) {
+      await dispatch(setLoadingStatus(true))
+      await dispatch(authCreateUser(props, phoneResult.phone, null))
     }
   }
 }
@@ -336,35 +341,6 @@ export const setRegisterEmailInputError = (data) => {
 export const setRegisterPasswordInputError = (data) => {
   return {
     type: 'SET_REGISTER_PASSWORD_ERROR',
-    payload: data
-  }
-}
-
-// To handle changes from input text if OK
-const setRegisterNameInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_NAME_OK',
-    payload: data
-  }
-}
-
-const setRegisterPhoneInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_PHONE_OK',
-    payload: data
-  }
-}
-
-const setRegisterEmailInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_EMAIL_OK',
-    payload: data
-  }
-}
-
-const setRegisterPasswordInputOK = (data) => {
-  return {
-    type: 'SET_REGISTER_PASSWORD_OK',
     payload: data
   }
 }
@@ -413,42 +389,29 @@ export const customerLoginInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.loginCustomerEmail
     let password = props.loginCustomerPassword
-    
-    // To set loading status as true
-    await dispatch(setLoadingStatus(true))
-
+      
     // Input is ERROR    
     if (email.length <= 0) {
       await dispatch(setLoginEmailInputError(emptyError))
     } 
-    
-    if (email.length > 0 && validateEmail(email) === false) {
-      await dispatch(setLoginEmailInputError(emailInvalidError))
-    }
 
     if (password.length <= 0) {
       await dispatch(setLoginPasswordInputError(emptyError))
     } 
     
-    if (password.length > 0 && password.length < 8) {
-      await dispatch(setLoginPasswordInputError(passwordMinError))
-    }
-
     // Input is OK    
-    if (email.length > 0 && validateEmail(email)) {
+    if (email.length > 0) {
       await dispatch(setLoginEmailInputOK(false))
     }
 
-    if (password.length >= 8) {
+    if (password.length > 0) {
       await dispatch(setLoginPasswordInputOK(false))
     } 
         
-    if (email.length > 0 && validateEmail(email) === true && password.length >= 8) {
+    if (email.length > 0 && password.length > 0) {
+      dispatch(setLoadingStatus(true))
       dispatch(authSignIn(props))
-    } else {
-      dispatch(setLoadingStatus(false))
     }
-    
   }
 }
 
@@ -546,14 +509,11 @@ const setSettingCustomerPassword = (data) => {
 // To validate customer's input form of inputting customer information when updating settings
 export const customerSettingsInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.settingsCustomerName
+    let name = props.settingsCustomerName.toLowerCase()
     let phone = props.settingsCustomerPhone
     let email = props.settingsCustomerEmail
     let password = props.settingsCustomerPassword
     let cookies = props.cookies
-
-    // To set loading status as true
-    await dispatch(setLoadingStatus(true))
 
     // Input is ERROR
     if (name.length <= 0) {
@@ -564,8 +524,9 @@ export const customerSettingsInputValidation = (props) => {
       await dispatch(setSettingPhoneInputError(emptyError))
     } 
     
-    if (phone.length > 0 && phone.length < 8) {
-      await dispatch(setSettingPhoneInputError(phoneMinError))
+    let phoneResult = validatePhone(phone)
+    if (phone.length > 0 && phoneResult.status === false) {
+      await dispatch(setSettingPhoneInputError(phoneInvalidError))
     }
 
     if (email.length <= 0) {
@@ -586,30 +547,32 @@ export const customerSettingsInputValidation = (props) => {
 
     // Input is OK
     if (name.length > 0) {
-      await dispatch(setSettingNameInputOK(false))
+      await dispatch(setSettingNameInputError(false))
     } 
     
-    if (phone.length >= 8) {
-      await dispatch(setSettingPhoneInputOK(false))
+    if (phoneResult.status === true) {
+      await dispatch(setSettingPhoneInputError(false))
     }
     
     if (email.length > 0 && validateEmail(email)) {
-      await dispatch(setSettingEmailInputOK(false))
+      await dispatch(setSettingEmailInputError(false))
     }
 
     if (password.length >= 8) {
-      await dispatch(setSettingPasswordInputOK(false))
+      await dispatch(setSettingPasswordInputError(false))
     }     
 
-    if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
+    if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
       // console.log('pass through')
+      dispatch(setLoadingStatus(true))
+
       let BUID = getCookies(cookies)
       if (BUID) {
         let customerData = verifyCookies(BUID)
 
         let passwordStatus = await dispatch(authPasswordValidation(customerData, password))
         if (passwordStatus === true) {
-          dispatch(authUpdateEmail(customerData, password, email, props))
+          dispatch(authUpdateEmail(customerData, password, email, props, phoneResult.phone))
         } else if (passwordStatus === false) {
           dispatch(setSettingPasswordInputError(incorrectPasswordError))
           dispatch(setLoadingStatus(false))          
@@ -620,8 +583,6 @@ export const customerSettingsInputValidation = (props) => {
       } else {
         dispatch(setLoadingStatus(false))
       }
-    } else {
-      dispatch(setLoadingStatus(false))
     }
   }
 }
@@ -655,89 +616,45 @@ const setSettingPasswordInputError = (data) => {
   }
 }
 
-// To handle changes from input text if OK
-const setSettingNameInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_NAME_OK',
-    payload: data
-  }
-}
-
-const setSettingPhoneInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_PHONE_OK',
-    payload: data
-  }
-}
-
-const setSettingEmailInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_EMAIL_OK',
-    payload: data
-  }
-}
-
-const setSettingPasswordInputOK = (data) => {
-  return {
-    type: 'SET_SETTING_PASSWORD_OK',
-    payload: data
-  }
-}
-
 // To update customer account information
-export const customerUpdateAccount = (customerId, props) => {
+export const customerUpdateAccount = (customerData, props, formattedPhone) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.settingsCustomerName
-    let phone = props.settingsCustomerPhone
+    let customerId = customerData.id
+    let name = props.settingsCustomerName.toLowerCase()
+    let phone = formattedPhone
     let email = props.settingsCustomerEmail
     let history = props.history
     let cookies = props.cookies
+    let picture = props.fbUser.picture
 
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(customerId)
+    let cookieCustomerData = {
+      id: customerId, name, email
+    }
 
-    customerRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let id = doc.id
-        let { picture, registeredStatus } = doc.data()
-        
-        let customerData = {
-          id, name, email, phone, picture, registeredStatus
-        }
+    let combineData = {
+      ...cookieCustomerData,
+      phone,
+      picture,
+    }
 
-        // To handle authorization
-        if (customerId === id) {
-          
-          let customerUpdateRef = firestore.collection('customer').doc(id)
-          
-          customerUpdateRef.update({
-            name,
-            phone,
-          })
-          .then(() => {
-            swal("Account Updated", "", "success")
-            setNewCookies(cookies, customerData)
-            history.push('/account')
-            dispatch(setSettingCustomerPassword(''))
-            dispatch(setLoadingStatus(false))
-          })
-          .catch(err => {
-            console.log('ERROR: Update customer data', err)
-          })
-        } else {
-          dispatch(setAuthorizationStatus(false))
-          dispatch(setLoadingStatus(false))
-        }
-      } else {
-        dispatch(setAuthorizationStatus(false))
-        dispatch(setLoadingStatus(false))
-      }
+    let firestore = getFirestore()          
+    let customerUpdateRef = firestore.collection('customer').doc(customerId)
+    
+    customerUpdateRef.update({
+      name,
+      phone,
+    })
+    .then(() => {
+      setNewCookies(cookies, cookieCustomerData)
+      dispatch(setCustomerDataSuccess(combineData))
+      dispatch(setSettingCustomerPassword(''))
+      dispatch(setLoadingStatus(false))
+      swal("Account Updated", "", "success")
+      history.push('/account')
     })
     .catch(err => {
-      console.log('ERROR: Get customer data to update account information', err)
+      console.log('ERROR: Update customer data', err)
     })
-  
   }
 }
 
@@ -925,94 +842,23 @@ const setNewPasswordConfirmInputOK = (data) => {
 }
 
 // ---------------------------------------------- CUSTOMER ACTION ----------------------------------------------
-// To validate customer existence and ensure each customer only have 1 account before register new account
-export const validateCustomerExistence = (field, value) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-    let customerExistence = false
-
-    await customerRef.where(field, '==', value).get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          customerExistence = true
-        })
-      } else {
-        customerExistence = false
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: validate customer data', err)
-    })
-
-    return customerExistence
-  }
-}
-
-// Get single customer data by field provided
-export const getCustomerByField = (field, value) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-    let user = 'not-found'
-
-    await customerRef.where(field, '==', value).get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          let id = doc.id
-          let data = doc.data()
-          data['id'] = id
-          user = data
-        })
-      } 
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by field', err)
-    })
-
-    return user
-  }
-}
-
-// Get single customer data by ID
-export const getCustomerById = (uid) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(uid)
-    let user = 'not-found'
-
-    await customerRef.get()
-    .then(doc => {
-      let id = doc.id
-      let data = doc.data()
-      data['id'] = id
-      user = data
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by ID', err)
-    })
-
-    return user
-  }
-}
-
 // To create new customer
-export const createNewCustomer = (uid, props) => {
+export const createNewCustomer = (uid, props, formattedPhone, createTransactionStatus) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.customerName
-    let phone = props.customerPhone
-    let picture = ''
-    let registeredStatus = true
+    let name = props.customerName.toLowerCase()
+    let phone = formattedPhone
     let email = props.customerEmail
+    let picture = 'noPicture'
+    let gender = ''
+    let dateOfBirth = ''
     let cookies = props.cookies
 
     let newCustomer = {
       name,
       phone,
       picture,
-      registeredStatus
+      gender,
+      dateOfBirth
     }
 
     let firestore = getFirestore()
@@ -1021,14 +867,22 @@ export const createNewCustomer = (uid, props) => {
     customerRef.set(newCustomer)
     .then(async () => {
       let customerData = {
-        id: uid, name, email, phone, picture, registeredStatus
+        id: uid, name, email
       }
       setNewCookies(cookies, customerData)
       let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeCustomer', { name, email })
       if (sendEmailResult.status === 200) {
-        window.location.assign('/')
+        if (createTransactionStatus === 'continue') {
+          dispatch(createNewTransaction(uid, props))
+        } else {
+          window.location.assign('/')
+        }
       } else {
-        window.location.assign('/')
+        if (createTransactionStatus === 'continue') {
+          dispatch(createNewTransaction(uid, props))
+        } else {
+          window.location.assign('/')
+        }
       }
     })
     .catch(err => {
@@ -1044,14 +898,13 @@ export const getTransactionsBasedOnCustomerId = (customerId) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let transactionRef = firestore.collection('transaction')
-    let transactions = []
 
-    await transactionRef
+    transactionRef
     .where('customerId', '==', customerId)
     .orderBy('createdDate', 'desc')
-    .get()
-    .then(snapshot => {
+    .onSnapshot(snapshot => {
       if (snapshot.empty === false) {
+        let transactions = []
         snapshot.forEach(doc => {
           let data = doc.data()
           let id = doc.id
@@ -1061,32 +914,11 @@ export const getTransactionsBasedOnCustomerId = (customerId) => {
           }
           transactions.push(combineData)
         })
+        dispatch(getTransactionsBasedOnCustomerIdSuccess(transactions))
       } else {
         dispatch(getTransactionsBasedOnCustomerIdFailed(false))
       }
     })
-    .catch(err => {
-      console.log('ERROR: get transactions based on customer id', err)
-    })
-
-    await Promise.all(transactions && transactions.map(async transaction => {
-      let shopId = transaction.shopId
-      let branchId = transaction.branchId
-      let appointmentId = transaction.appointmentId
-
-      let shop = await dispatch(getTransactionShopData(shopId, false))
-      transaction['shop'] = shop
-
-      let branch = await dispatch(getTransactionBranchData(branchId, false))
-      transaction['branch'] = branch
-
-      let appointment = await dispatch(getTransactionAppointmentDataOnce(appointmentId, false))
-      transaction['appointment'] = appointment
-      
-      return ''
-    }))
-
-    await dispatch(getTransactionsBasedOnCustomerIdSuccess(transactions))
   }
 }
 
@@ -1100,88 +932,6 @@ const getTransactionsBasedOnCustomerIdSuccess = (data) => {
 const getTransactionsBasedOnCustomerIdFailed = (data) => {
   return {
     type: 'GET_TRANSACTIONS_CUSTOMER_ID_FAILED',
-    payload: data
-  }
-}
-
-// To get shop data based on shop id
-export const getTransactionShopData = (shopId, dispatchStatus) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let shopRef = firestore.collection('shop').doc(shopId)
-    let shopData = ''
-
-    await shopRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let data = doc.data()
-        shopData = data
-        if (dispatchStatus) {
-          dispatch(getTransactionsShopDataSuccess(data))
-        }
-      } else {
-        dispatch(getTransactionsShopDataFailed(false))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: get shop data in transactions', err)
-    })
-
-    return shopData
-  }
-}
-
-const getTransactionsShopDataSuccess = (data) => {
-  return {
-    type: 'GET_TRANSACTIONS_SHOP_DATA_SUCCESS',
-    payload: data
-  }
-}
-
-const getTransactionsShopDataFailed = (data) => {
-  return {
-    type: 'GET_TRANSACTIONS_SHOP_DATA_FAILED',
-    payload: data
-  }
-}
-
-// To get branch data based on branch id
-export const getTransactionBranchData = (branchId, dispatchStatus) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let branchRef = firestore.collection('branch').doc(branchId)
-    let branchData = ''
-
-    await branchRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let data = doc.data()
-        branchData = data
-        if (dispatchStatus) {
-          dispatch(getTransactionsBranchDataSuccess(data))
-        }
-      } else {
-        dispatch(getTransactionsBranchDataFailed(false))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: get branch data in transactions', err)
-    })
-
-    return branchData
-  }
-}
-
-const getTransactionsBranchDataSuccess = (data) => {
-  return {
-    type: 'GET_TRANSACTIONS_BRANCH_DATA_SUCCESS',
-    payload: data
-  }
-}
-
-const getTransactionsBranchDataFailed = (data) => {
-  return {
-    type: 'GET_TRANSACTIONS_BRANCH_DATA_FAILED',
     payload: data
   }
 }
@@ -1222,27 +972,6 @@ const getTransactionsAppointmentDataFailed = (data) => {
   }
 }
 
-// To get once appointment data based on appointment id
-export const getTransactionAppointmentDataOnce = (appointmentId) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let appointmentRef = firestore.collection('appointment').doc(appointmentId)
-    let appointmentData = ''
-    
-    await appointmentRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let data = doc.data()
-        let id = doc.id
-        data['id'] = id
-        appointmentData = data
-      } 
-    })
-
-    return appointmentData
-  }
-}
-
 // To get transaction data based on transaction id
 export const getTransactionDetails = (transactionId, customerId) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -1260,9 +989,7 @@ export const getTransactionDetails = (transactionId, customerId) => {
         }
         // Check authorization
         if (customerId === data.customerId) {
-          dispatch(getTransactionShopData(data.shopId, true))
-          dispatch(getTransactionBranchData(data.branchId, true))
-          dispatch(getTransactionAppointmentData(data.appointmentId, true))
+          dispatch(getTransactionAppointmentData(data.appointment.id, true))
           dispatch(getTransactionSuccess(combineData))
         } else {
           dispatch(setAuthorizationStatus(false))

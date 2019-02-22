@@ -19,7 +19,7 @@ export default class detailsContent extends Component {
           this.props.content === 'Services' ?
           <ServicesContent />
           :
-          this.props.content === `Barber's Schedule` ?
+          this.props.content === `Provider's Schedule` ?
           <BarberContent />
           :
           this.props.content === 'Location' ?

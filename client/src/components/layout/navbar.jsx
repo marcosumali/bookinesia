@@ -18,11 +18,11 @@ import { getAuthStatus, authSignOut, authRedirectAndSignOut } from '../../store/
 class navbar extends Component {
   componentWillMount() {
     this.props.authRedirectAndSignOut(this.props)
-    this.props.handleCookies('get account', this.props.cookies, window.location.pathname)
   }
-
+  
   componentDidUpdate() {
     this.props.authRedirectAndSignOut(this.props)
+    this.props.handleCookies('get account', this.props.cookies, this.props)
   }
   
   render() {
@@ -31,20 +31,20 @@ class navbar extends Component {
       <div>
         {
           windowInnerWidth < 1024 ?
-          <Navbar className="Nav-box" brand='Bookinesia' right fixed>
+          <Navbar className="Nav-box" brand='Bookinesia' right>
             <div>  
               <div>
                 <NavItem>
                   <div className="Container-center-cross Height-100 Justify-end" style={{ marginTop: '5px' }}>
                     <div className="Margin-r-16 ">
-                      <CloseSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                      <CloseSvg color="#ffffff" width="1.5em" height="1.5em" />
                     </div>
                   </div>
                 </NavItem>
                 <NavItem href="/">
                   <div className="Container-one-line Container-center-cross Height-100">
                     <div className="Margin-r-16 Margin-t-12">
-                      <HomeSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                      <HomeSvg color="#ffffff" width="1.5em" height="1.5em" />
                     </div>
                     <div className="Navbar-text">Home</div>
                   </div>
@@ -55,7 +55,7 @@ class navbar extends Component {
                     <NavItem href="/transactions">
                       <div className="Container-one-line Container-center-cross Height-100">
                         <div className="Margin-r-16 Margin-t-12">
-                          <ShoppingCartSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                          <ShoppingCartSvg color="#ffffff" width="1.5em" height="1.5em" />
                         </div>
                         <div className="Navbar-text">Transaction</div>
                       </div>
@@ -63,7 +63,7 @@ class navbar extends Component {
                     <NavItem href="/account">
                       <div className="Container-one-line Container-center-cross Height-100">
                         <div className="Margin-r-16 Margin-t-12">
-                          <SmileyFaceSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                          <SmileyFaceSvg color="#ffffff" width="1.5em" height="1.5em" />
                         </div>
                         <div className="Navbar-text">Account</div>
                       </div>
@@ -83,9 +83,6 @@ class navbar extends Component {
               </div>
               <div className="Container-center Mobile-bottom">
                 {
-                  this.props.userExists && this.props.user !== "" && this.props.user.registeredStatus === false ?
-                  <RegisterButton />
-                  :
                   this.props.userExists === false ?
                   <div className="Container-center Display-flex Width-100 No-padding">
                     <RegisterButton />
@@ -98,9 +95,9 @@ class navbar extends Component {
             </div>
           </Navbar>
           :
-          <Navbar className="Nav-box" brand='Bookinesia' right fixed>
+          <Navbar className="Nav-box" brand='Bookinesia' right>
             <div>              
-              <div style={{ marginLeft: '10em' }}>
+              <div style={{ marginLeft: '12em' }}>
                 {
                   this.props.userExists && this.props.user !== "" ?
                   <div>
@@ -120,18 +117,13 @@ class navbar extends Component {
               </div>
               <div className="Web-right">
                 {
-                  this.props.userExists && this.props.user !== "" && this.props.user.registeredStatus === false ?                  
-                  <NavItem href="/register">
-                    Not yet registered?
-                  </NavItem>
-                  :
                   this.props.userExists === false ?
                   <div>
                     <NavItem href="/register">
                       Not yet registered?
                     </NavItem>
-                    <NavItem href="/login">
-                      Log In
+                    <NavItem href="/signin">
+                      Sign In
                     </NavItem>
                   </div>
                   :
@@ -155,7 +147,8 @@ const mapStateToProps = (state, ownProps) => {
     userLoading: state.user.userLoading,
     authUser: state.firebase.profile,
     authUserIsLoaded: state.firebase.profile.isLoaded,
-    window: state.user.window
+    window: state.user.window,
+    fbUser: state.firebase.profile
   }
 }
 

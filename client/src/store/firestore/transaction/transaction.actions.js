@@ -1,28 +1,27 @@
-import axios from 'axios';
-
 import { setRouteLink } from '../shop/shop.actions';
-import { validateEmail } from '../../../helpers/form';
-import { setNewCookies, verifyCookies, getCookies } from '../../../helpers/auth';
+import { validateEmail, validatePhone, formatPhone } from '../../../helpers/form';
+import { verifyCookies, getCookies } from '../../../helpers/auth';
 import { 
   setLoadingStatus, 
   setAuthorizationStatus, 
-  validateCustomerExistence, 
-  getCustomerByField, 
-  getCustomerById 
 } from '../customer/customer.actions';
 import { 
-  authSignInAnonymouslyAndCreateNewTransaction, 
   authEmailValidation, 
-  authPasswordValidation 
+  authUserValidation,
+  authCreateUser,
+  authSignInTransaction,
 } from '../auth/auth.actions';
 import { 
   emptyError, 
-  phoneMinError, 
-  emailInvalidError, 
+  emailInvalidError,
+  phoneInvalidError, 
   passwordMinError, 
   incorrectPasswordError, 
   tooManyRequestError 
 } from '../customer/customer.actions';
+import {
+  setCalendarDate,
+} from '../../dashboard/dasboard.actions';
 
 // ---------------------------------------------- GENERAL ACTION ----------------------------------------------
 // To clear transaction state when user go back
@@ -290,7 +289,9 @@ export const getServicesBasedOnParams = (params) => {
             ...data,
             id
           }
-          selectedServices.push(combineData)
+          if (data.disableStatus === false) {
+            selectedServices.push(combineData)
+          }
         } else {
           dispatch(getServicesBasedOnParamsFailed(false))
         }
@@ -335,7 +336,10 @@ export const getStaffServiceDataBasedOnParams = (params) => {
     await Promise.all(servicesCode && servicesCode.map(async serviceCode => {      
       let staffServiceRef = firestore.collection('staffService')
 
-      await staffServiceRef.where('serviceId', '==', `${shopName}-${branchName}-${serviceCode}`).get()
+      await staffServiceRef
+        .where('serviceId', '==', `${shopName}-${branchName}-${serviceCode}`)
+        .where('disableStatus', '==', false)
+        .get()
         .then(snapshot => {
           if (snapshot.empty === false) {
             snapshot.forEach(doc => {
@@ -387,7 +391,8 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
     await Promise.all(competentStaffsId && competentStaffsId.map(async competentStaffId => {
       let staffRef = firestore.collection('staff').doc(competentStaffId)
 
-      await staffRef.get()
+      await staffRef
+        .get()
         .then(doc => {
           if (doc.exists) {
             let data = doc.data()
@@ -396,7 +401,9 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
               ...data,
               id
             }
-            detailCompetentStaffs.push(combineData)
+            if (data.disableStatus === false) {
+              detailCompetentStaffs.push(combineData)
+            }
           } else {
             dispatch(getCompetentStaffsDataFailed(false))
           }
@@ -408,9 +415,15 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
     }))
     await dispatch(getCompetentStaffsDataSuccess(detailCompetentStaffs))
     // To set first staff as initial selected staffs to store
-    await dispatch(setSelectedStaff(detailCompetentStaffs[0], params))
+    await dispatch(setSelectedStaff(detailCompetentStaffs[0]))
     // To set first staff appointments as initial selected staffs to store
-    await dispatch(getSpecificAppointments(detailCompetentStaffs[0], params))
+    let inputDate = new Date(Date.now())
+    let year = inputDate.getFullYear()
+    let month = inputDate.getMonth() + 1
+    let date = inputDate.getDate()
+    let acceptedDate = `${year}-${month}-${date}`
+    await dispatch(setCalendarDate(acceptedDate))
+    await dispatch(getSpecificAppointments(detailCompetentStaffs[0], params, acceptedDate))
   }
 }
 
@@ -430,16 +443,7 @@ const getCompetentStaffsDataFailed = (data) => {
 
 // To set selected staffs to store based on customer request / click 
 // and each time website render action getCompetentStaffsData to set first selected staff during willmount
-export const setSelectedStaff = (selectedStaff, params) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    // To show selected staff to store each time user click staff image
-    dispatch(setSelectedStaffSuccess(selectedStaff))
-    // To show selected staff appointments to store each time user click staff image
-    dispatch(getSpecificAppointments(selectedStaff, params))
-  }
-}
-
-const setSelectedStaffSuccess = (data) => {
+export const setSelectedStaff = (data) => {
   return {
     type: 'SET_SELECTED_STAFFS',
     payload: data
@@ -466,7 +470,11 @@ export const getStaffBasedOnParams = (params) => {
           ...data,
           id
         }
-        dispatch(getStaffBasedOnParamsSuccess(combineData))
+        if (data.disableStatus === false) {
+          dispatch(getStaffBasedOnParamsSuccess(combineData))
+        } else {
+          dispatch(getStaffBasedOnParamsFailed(false))
+        }
       } else {
         dispatch(getStaffBasedOnParamsFailed(false))
       }
@@ -494,17 +502,15 @@ const getStaffBasedOnParamsFailed = (data) => {
 
 // ---------------------------------------------- APPOINTMENT ACTION ----------------------------------------------
 // To get appoinment data for specific service provicer
-export const getSpecificAppointments = (competentStaff, params) => {
+export const getSpecificAppointments = (competentStaff, params, date) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firestore = getFirestore()
     let appointmentRef = firestore.collection('appointment')
-    let appointmentsData = []
 
     appointmentRef
     .where('staffId', '==', `${competentStaff.id}`)
-    .orderBy('date', 'desc')
-    .limit(7)
-    // Query snapshot to handle realtime update data from firestore
+    .where('date', '==', date)
+    .where('disableStatus', '==', false)
     .onSnapshot(function(querySnapshot) {
       if (querySnapshot.empty === false) {
         querySnapshot.forEach(doc => {
@@ -514,13 +520,15 @@ export const getSpecificAppointments = (competentStaff, params) => {
             ...data,
             id
           }
-          appointmentsData.unshift(combineData)
+          dispatch(getSpecificAppointmentsSuccess(combineData))
+          dispatch(setSelectedAppointmentSuccess(combineData))
+          dispatch(setConfirmPageRouteLink(params, competentStaff, combineData))
         })
-        dispatch(getSpecificAppointmentsSuccess(appointmentsData))
-        dispatch(setSelectedAppointment(appointmentsData, 0))
-        dispatch(setConfirmPageRouteLink(params, competentStaff, appointmentsData[0]))
       } else {
-        dispatch(getSpecificAppointmentsFailed(false))
+        let data = {
+          message: 'no-appointment'
+        }
+        dispatch(getSpecificAppointmentsSuccess(data))
       }
     })
   }
@@ -533,42 +541,42 @@ const getSpecificAppointmentsSuccess = (data) => {
   }
 }
 
-const getSpecificAppointmentsFailed = (data) => {
-  return {
-    type: 'GET_SPECIFIC_APPOINTMENTS_DATA_FAILED',
-    payload: data
-  }
-}
-
 // To set appointment index to store and to show appointment based on appoinment index and user's click request
-export const setAppointmentIndex = (status, appointmentsData, appoinmentIndex, params, selectedStaff) => {
+export const setAppointmentIndex = (status, appointmentsData, selectedDate, params, selectedStaff) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    let inputDate = new Date(selectedDate)
     if (status === 'next') {
-      dispatch(setAppointmentIndexSuccess(appoinmentIndex+1))
-      dispatch(setSelectedAppointment(appointmentsData, appoinmentIndex+1))
-      dispatch(setConfirmPageRouteLink(params, selectedStaff, appointmentsData[appoinmentIndex+1]))
+      let tomorrowDate = new Date(inputDate.setDate(inputDate.getDate() + 1))
+      let year = tomorrowDate.getFullYear()
+      let month = tomorrowDate.getMonth() + 1
+      let date = tomorrowDate.getDate()  
+      let acceptedDate = `${year}-${month}-${date}`
+      dispatch(setAppointmentLoading(true))
+      dispatch(setCalendarDate(acceptedDate))
+      dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
     } else if (status === 'previous') {
-      dispatch(setAppointmentIndexSuccess(appoinmentIndex-1))
-      dispatch(setSelectedAppointment(appointmentsData, appoinmentIndex-1))
-      dispatch(setConfirmPageRouteLink(params, selectedStaff, appointmentsData[appoinmentIndex-1]))
+      let yesterdayDate = new Date(inputDate.setDate(inputDate.getDate() - 1))
+      let year = yesterdayDate.getFullYear()
+      let month = yesterdayDate.getMonth() + 1
+      let date = yesterdayDate.getDate()  
+      let acceptedDate = `${year}-${month}-${date}`
+      // Appointment loading to false is embedded in reducers of getSpecificAppointment data success
+      dispatch(setAppointmentLoading(true))
+      dispatch(setCalendarDate(acceptedDate))
+      dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
     }
   }
 }
 
-const setAppointmentIndexSuccess = (data) => {
+
+export const setAppointmentLoading = (data) => {
   return {
-    type: 'SET_APPOINTMENT_INDEX',
+    type: 'SET_APPOINTMENT_LOADING',
     payload: data
   }
 }
 
 // To set appointment data to store based on user's click request from previous action setAppointmentIndex
-export const setSelectedAppointment = (appointmentsData, newAppoinmentIndex) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(setSelectedAppointmentSuccess(appointmentsData[newAppoinmentIndex]))
-  }
-}
-
 const setSelectedAppointmentSuccess = (data) => {
   return {
     type: 'SET_SELECTED_APPOINTMENT',
@@ -677,15 +685,12 @@ const setNoServiceSelectedError = (data) => {
 // To validate customer's input form of inputting customer information for booking new transaction
 export const customerInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.customerName
+    let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = props.customerPassword
     let cookies = props.cookies
     let showPasswordInputStatus = props.showPasswordInputStatus
-
-    // To set loading status to true
-    dispatch(setLoadingStatus(true))
 
     // Input is ERROR
     if (name.length <= 0) {
@@ -696,8 +701,9 @@ export const customerInputValidation = (props) => {
       dispatch(setPhoneInputError(emptyError))
     } 
     
-    if (phone.length > 0 && phone.length < 8) {
-      dispatch(setPhoneInputError(phoneMinError))
+    let phoneResult = validatePhone(phone)
+    if (phone.length > 0 && phoneResult.status === false) {
+      dispatch(setPhoneInputError(phoneInvalidError))
     }
 
     if (email.length <= 0) {
@@ -708,116 +714,103 @@ export const customerInputValidation = (props) => {
       dispatch(setEmailInputError(emailInvalidError))
     }
 
-    if (password.length <= 0) {
-      await dispatch(setPasswordInputError(emptyError))
-    } 
-    
-    if (password.length > 0 && password.length < 8) {
-      await dispatch(setPasswordInputError(passwordMinError))
-    }
-
     // Input is OK
     if (name.length > 0) {
-      dispatch(setNameInputOK(false))
+      dispatch(setNameInputError(false))
     } 
     
-    if (phone.length >= 8) {
-      dispatch(setPhoneInputOK(false))
+    if (phoneResult.status === true) {
+      dispatch(setPhoneInputError(false))
     } 
     
     if (email.length > 0 && validateEmail(email)) {
-      dispatch(setEmailInputOK(false))
+      dispatch(setEmailInputError(false))
     }
+    
+    if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true) {
+      dispatch(setLoadingStatus(true))
 
-    if (password.length >= 8) {
-      await dispatch(setPasswordInputOK(false))
-    } 
-    
-    if (name.length > 0 && phone.length >= 8 && email.length > 0 && validateEmail(email) === true) {
-      if (showPasswordInputStatus === false || (showPasswordInputStatus && password.length >= 8)) {
-        let BUID = getCookies(cookies)
-        if (BUID) {
-          let customerData = verifyCookies(BUID)
-          let customerId = customerData.id
-          dispatch(getCustomerByIdAndCreateNewTransaction(customerId, props))
-        } else {
-          let authUserExistence = await dispatch(authEmailValidation(email))
-          let userExistence = await dispatch(validateCustomerExistence('phone', phone))
-          // console.log('auth exist', authUserExistence, '===', userExistence)
-          if (authUserExistence === 'too-many-requests') {
-            dispatch(setPasswordInputError(tooManyRequestError))
-            dispatch(setLoadingStatus(false))
-          } else {
-            if (authUserExistence && userExistence) {
-              dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
-            } else if (authUserExistence && userExistence === false ) {
-              dispatch(checkAuthUserByEmailAndCreateNewTransaction(props))
-            } else if (authUserExistence === false && userExistence) {
-              let registeredUser = await dispatch(getCustomerByField('phone', phone))
-              let uid = registeredUser.id
-    
-              let authResponseByUID = await  axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnUid', { uid })
-              if (authResponseByUID.status === 200) {
-                let authUser = authResponseByUID.data.user
-                dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))
-              }
-            } else if (authUserExistence === false && userExistence === false) {
-              dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
-            }
-          }
-        }
+      let BUID = getCookies(cookies)
+      if (BUID) {
+        let customerData = verifyCookies(BUID)
+        let customerId = customerData.id
+        dispatch(createNewTransaction(customerId, props))
       } else {
-        dispatch(setLoadingStatus(false))
-      }
-    } else {
-      dispatch(setLoadingStatus(false))
-    }
-  }
-}
-
-
-export const checkAuthUserByEmailAndCreateNewTransaction = (props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let email = props.customerEmail
-
-    let authResponseByEmail = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/getUserBasedOnEmail', { email })
-    if (authResponseByEmail.status === 200) {
-      let authUser = authResponseByEmail.data.user
-      let id = authUser.id
-      let registeredUser = await dispatch(getCustomerById(id))
-      dispatch(checkAuthUserToCreateTransaction(props, authUser, registeredUser))            
-    }
-  }
-}
-
-// To final check auth user is authorised to create new transsaction by inputting password
-export const checkAuthUserToCreateTransaction = (props, authUser, registeredUser) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let showPasswordInputStatus = props.showPasswordInputStatus
-    let password = props.customerPassword
-
-    if (registeredUser.registeredStatus) {
-      if (showPasswordInputStatus) {
-        if (password.length >= 8) {
-          let passwordStatus = await dispatch(authPasswordValidation(authUser, password))
-          if (passwordStatus === true) {
-            dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
-          } else if (passwordStatus === 'too-many-requests') {
-            dispatch(setPasswordInputError(tooManyRequestError))
+        let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
+        // console.log('+++', customerExistenceBasedOnEmail, '==', showPasswordInputStatus)
+        if (customerExistenceBasedOnEmail === true) {
+          if (showPasswordInputStatus.message === false && showPasswordInputStatus.user.length <= 0) {
+            let newStatus = {
+              message: true,
+              user: 'registeredUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
             dispatch(setLoadingStatus(false))
-          } else if (passwordStatus === false) {
-            dispatch(setPasswordInputError(incorrectPasswordError))
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user === 'registeredUser') {
+            if (password.length <= 0) {
+              dispatch(setPasswordInputError(emptyError))
+              dispatch(setLoadingStatus(false))
+            } 
+            if (password.length > 0) {
+              dispatch(setPasswordInputError(false))
+
+              let authUser = await dispatch(authUserValidation(email, password))
+              if (authUser.id) {
+                // Next will sign in user, save new cookies and create new Transaction
+                dispatch(authSignInTransaction(props))
+              } else if (authUser === false) {
+                dispatch(setPasswordInputError(incorrectPasswordError))
+                dispatch(setLoadingStatus(false))
+              } else if (authUser === 'too-many-requests') {
+                dispatch(setPasswordInputError(tooManyRequestError))
+                dispatch(setLoadingStatus(false))
+              }
+            } 
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user !== 'registeredUser') {
+            let newStatus = {
+              message: true,
+              user: 'registeredUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
             dispatch(setLoadingStatus(false))
           }
-        } else {
+        } else if (customerExistenceBasedOnEmail === false) {
+          if (showPasswordInputStatus.message === false && showPasswordInputStatus.user.length <= 0) {
+            let newStatus = {
+              message: true,
+              user: 'newUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
+            dispatch(setLoadingStatus(false))
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user === 'newUser') {
+            if (password.length <= 0) {
+              dispatch(setPasswordInputError(emptyError))
+              dispatch(setLoadingStatus(false))
+            }
+            
+            if (password.length > 0 && password.length < 8) {
+              dispatch(setPasswordInputError(passwordMinError))
+              dispatch(setLoadingStatus(false))
+            }
+
+            if (password.length >= 8) {
+              dispatch(setPasswordInputError(false))
+              // Next will create new user, save cookies and create new transaction
+              dispatch(authCreateUser(props, phoneResult.phone, 'continue'))
+            }
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user !== 'newUser') {
+            let newStatus = {
+              message: true,
+              user: 'newUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
+            dispatch(setLoadingStatus(false))
+          }
+        } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
+          dispatch(setPasswordInputError(tooManyRequestError))
           dispatch(setLoadingStatus(false))
         }
-      } else {
-        dispatch(setShowPasswordInputstatus(true))
-        dispatch(setLoadingStatus(false))
       }
-    } else {
-      dispatch(authUserCreateNewTransaction(authUser, registeredUser, props))
     }
   }
 }
@@ -844,38 +837,9 @@ const setEmailInputError = (data) => {
   }
 }
 
-const setPasswordInputError = (data) => {
+export const setPasswordInputError = (data) => {
   return {
     type: 'SET_CUSTOMER_PASSWORD_ERROR',
-    payload: data
-  }
-}
-
-// To handle changes from input text if OK
-const setNameInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_NAME_OK',
-    payload: data
-  }
-}
-
-const setPhoneInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_PHONE_OK',
-    payload: data
-  }
-}
-
-const setEmailInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_EMAIL_OK',
-    payload: data
-  }
-}
-
-const setPasswordInputOK = (data) => {
-  return {
-    type: 'SET_CUSTOMER_PASSWORD_OK',
     payload: data
   }
 }
@@ -887,127 +851,17 @@ const setShowPasswordInputstatus = (data) => {
   }
 }
 
-// To check customer existence using input from phone form, then save new cookies, and create new transaction
-// OR create new customer and create new transaction
-export const getCustomerByPhoneAndCreateNewTransaction = (props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let customerEmail = props.customerEmail
-    let customerPhone = props.customerPhone
-    let cookies = props.cookies
-
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer')
-
-    customerRef
-    .where('phone', '==', customerPhone)
-    .get()
-    .then(snapshot => {
-      if (snapshot.empty === false) {
-        snapshot.forEach(doc => {
-          let id = doc.id
-          let { name, phone, picture, registeredStatus } = doc.data()
-          let customerData = {
-            id, name, phone, email: customerEmail, picture, registeredStatus
-          }
-          setNewCookies(cookies, customerData)
-          dispatch(createNewTransaction(id, props))
-        })
-      } else {
-        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by phone and create new transaction', err)
-    })
-  }
-}
-
-export const authUserCreateNewTransaction = (authUser, firestoreUser, props) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let cookies = props.cookies
-    let { email } = authUser
-    let { id, name, phone, picture, registeredStatus } = firestoreUser
-    let customerData = {
-      id, name, phone, email, picture, registeredStatus
-    }
-    setNewCookies(cookies, customerData)
-    dispatch(createNewTransaction(id, props))
-  }
-}
-
-// To check customer existence using decoded ID from cookies and create new transaction
-// OR create new customer, save new cookies and create new transaction
-export const getCustomerByIdAndCreateNewTransaction = (customerId, props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(customerId)
-
-    customerRef.get()
-    .then(doc => {
-      if (doc.exists) {
-        let id = doc.id
-        dispatch(createNewTransaction(id, props))
-      } else {
-        dispatch(authSignInAnonymouslyAndCreateNewTransaction(props))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: get customer by Id and create new transaction', err)
-    })
-  }
-}
-
-// To create new customer with registered status false they haven't registered and then create new transaction
-export const createNewCustomerAndCreateNewTransaction = (uid, props) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let cookies = props.cookies
-    let name = props.customerName.toLowerCase()
-    let phone = props.customerPhone
-    let email = props.customerEmail
-    let picture = ''
-    let registeredStatus = false
-
-    let newCustomer = {
-      name,
-      phone,
-      picture,
-      registeredStatus
-    }
-
-    let firestore = getFirestore()
-    let customerRef = firestore.collection('customer').doc(uid)
-
-    customerRef.set(newCustomer)
-    .then(async () => {
-      let customerData = {
-        id: uid, name, phone, email, picture, registeredStatus
-      }
-      setNewCookies(cookies, customerData)
-      let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeGuest', { name, email })
-      if (sendEmailResult.status === 200) {
-        dispatch(createNewTransaction(uid, props))
-      }
-    })
-    .catch(err => {
-      console.log('ERROR: Get and create new customer', err)
-    })
-
-  }
-}
-
 
 // ---------------------------------------------- TRANSACTION ACTION ----------------------------------------------
 export const createNewTransaction = (customerId, props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let params = props.params
-    let shopId = params.shopName
-    let branchId = `${shopId}-${params.branchName}`
+    let shop = props.shop
+    let branch = props.branch
     let service = props.selectedServices
     let staff = props.selectedStaff
     let appointment = props.selectedAppointment
-    let appointmentId = appointment.id
     let name = props.customerName.toLowerCase()
-    let phone = props.customerPhone
+    let phone = formatPhone(props.customerPhone, 'NATIONAL')
     let email = props.customerEmail
     let queueNo = String(Number(appointment.currentTransaction) + 1)
     let startDate = ''
@@ -1023,14 +877,16 @@ export const createNewTransaction = (customerId, props) => {
       type: 'customer',
       id: customerId
     }
+    let paymentMethod = ''
+    let paymentInformation = ''
     let window = props.window
     
     let newTransaction = {
-      shopId,
-      branchId,
+      shop,
+      branch,
       service,
       staff,
-      appointmentId,
+      appointment,
       customerId,
       name,
       phone,
@@ -1042,7 +898,9 @@ export const createNewTransaction = (customerId, props) => {
       createdDate,
       updatedDate,
       createdBy,
-      updatedBy
+      updatedBy,
+      paymentMethod,
+      paymentInformation,
     }
 
     let firestore = getFirestore()
@@ -1054,23 +912,7 @@ export const createNewTransaction = (customerId, props) => {
       .then(async ref => {
         let refId = ref.id
         dispatch(updateAppointmentCurrentTransaction(appointment))
-        let emailData = {
-          name,
-          email,
-          transactionId: refId,
-          date: appointment.date,
-          shopName: params.shopName,
-          shopLogo: props.shop.logo,
-          branchName: params.branchName,
-          queueNo,
-          staffName: staff.name,
-          staffImage: staff.picture,
-          service,
-        }
-        let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailCustomerBookTransaction', emailData)
-        if (sendEmailResult.status === 200) {
-          window.location.assign(`/book/success/${refId}`)
-        }
+        window.location.assign(`/book/success/${refId}`)
       })
       .catch(err => {
         console.log('ERROR: create new transaction', err)

@@ -61,7 +61,7 @@ class registerComponent extends Component {
               <div></div>
               :
               <div className="col s12 No-margin No-padding  Container-center">
-                <div className="Text-auth-info">Have a bookinesia account ? <a className="Text-auth-info-blue" href="/login">Sign In</a></div>
+                <div className="Text-auth-info">Have a bookinesia account ? <a className="Text-auth-info-blue" href="/signin">Sign In</a></div>
               </div>
             }
   
@@ -98,7 +98,7 @@ class registerComponent extends Component {
                 {
                   this.props.customerPhoneError !== false?
                   <div>
-                    <input id="phone" type="number" className="Input-error validate No-margin" onChange={ this.props.handleRegisterInputChanges } value={ this.props.customerPhone }/>
+                    <input id="phone" type="tel" className="Input-error validate No-margin" onChange={ this.props.handleRegisterInputChanges } value={ this.props.customerPhone }/>
                     <label htmlFor="phone" className="Form-text active">Phone No.</label>
                     <span className="Input-info-error">{ this.props.customerPhoneError }</span>
                   </div>
@@ -107,12 +107,12 @@ class registerComponent extends Component {
                     {
                       this.props.customerPhone !== "" ?
                       <div>
-                        <input id="phone" type="number" className="validate No-margin valid" onChange={ this.props.handleRegisterInputChanges } value={ this.props.customerPhone }/>
+                        <input id="phone" type="tel" className="validate No-margin valid" onChange={ this.props.handleRegisterInputChanges } value={ this.props.customerPhone }/>
                         <label htmlFor="phone" className="Form-text active">Phone No.</label>
                       </div>
                       :
                       <div>
-                        <input id="phone" type="number" className="validate No-margin" onChange={ this.props.handleRegisterInputChanges } value={ this.props.customerPhone }/>
+                        <input id="phone" type="tel" className="validate No-margin" onChange={ this.props.handleRegisterInputChanges } value={ this.props.customerPhone }/>
                         <label htmlFor="phone" className="Form-text">Phone No.</label>
                       </div>
                     }
@@ -206,8 +206,7 @@ class registerComponent extends Component {
             </form>
   
             <div className="col s12 No-margin No-padding Text-justify Margin-b-24 Margin-t-20">
-              <div className="Text-auth-info">Barbershop and us will use this contact information to reach out to you and send out notifications.</div>
-              <div className="Text-auth-info">Please ensure you input active contact information.</div>
+              <div className="Text-auth-info">Shop and us will use this contact information to reach out to you and send out notifications. Please ensure you input active contact information.</div>
             </div>
           
             <AuthButton onPage="registerPage" history={ this.props.history } />

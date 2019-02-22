@@ -39,13 +39,25 @@ class contentHours extends Component {
             {
               this.props.branchSchedule && this.props.branchSchedule.map((schedule, index) => {
                 return (
-                  <div className="col s12 Margin-t-b-4" key={ 'schedule' + index }>
+                  <div className="col s12 No-padding Margin-t-b-4" key={ 'schedule' + index }>
                     <div className="row No-margin Container-one-line animated fadeIn">
-                      <p className="col s5 No-padding Card-text No-margin Text-capitalize">{ schedule.day }</p>
-                      <p className="col s2 No-padding Card-text No-margin Text-center">{ schedule.openHours }.{ schedule.openMinutes }</p>
-                      <p className="col s1 No-padding Card-text No-margin Text-center">-</p>
-                      <p className="col s2 No-padding Card-text No-margin Text-center">{ schedule.closeHours }.{ schedule.closeMinutes }</p>
-                      <p className="col s2 No-padding Card-text No-margin Text-center Text-uppercase">{ this.props.branch.timezone }</p>
+                      {
+                        schedule.disableStatus === false ?
+                        <div className="col s12 No-margin No-padding">
+                          <p className="col s5 No-padding Card-text No-margin Text-capitalize">{ schedule.day }</p>
+                          <p className="col s2 No-padding Card-text No-margin Text-center">{ schedule.openHours }.{ schedule.openMinutes }</p>
+                          <p className="col s1 No-padding Card-text No-margin Text-center">-</p>
+                          <p className="col s2 No-padding Card-text No-margin Text-center">{ schedule.closeHours }.{ schedule.closeMinutes }</p>
+                          <p className="col s2 No-padding Card-text No-margin Text-center Text-uppercase">{ this.props.branch.timezone }</p>
+                        </div>
+                        :
+                        <div className="col s12 No-margin No-padding">
+                          <p className="col s5 No-padding Card-text No-margin Text-capitalize">{ schedule.day }</p>
+                          <p className="col s2 No-padding Card-text No-margin Text-center"></p>
+                          <p className="col s1 No-padding Card-text No-margin Text-center"></p>
+                          <p className="col s4 No-padding Card-text-close No-margin Text-capitalize">Closed</p>
+                        </div>
+                      }
                     </div>
                   </div>
                 )

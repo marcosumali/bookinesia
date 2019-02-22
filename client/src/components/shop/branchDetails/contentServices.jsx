@@ -43,10 +43,12 @@ class contentServices extends Component {
                   <div className="col s12 Container-one-line Margin-t-b-4 No-padding animated fadeIn" key={ 'service' + index }>
                     <div className="col s6 No-margin No-padding Self-flex-start">
                       <p className="Card-text No-margin Text-capitalize">{ service.name }</p>
-                      <p className="Card-text No-margin Text-capitalize">{ service.description }</p>
                     </div>
                     <p className="col s2 Card-text No-margin No-padding Self-flex-start Text-center">{ service.duration } min</p>
-                    <p className="col s4 Card-text No-margin No-padding Self-flex-start Text-center Text-capitalize">{ service.currency } { formatMoney(service.price) }</p>
+                    <div className="col s4 Card-text No-margin No-padding Self-flex-start Text-capitalize">
+                      <p className="col s4 No-margin No-padding Text-right">{ service.currency }</p>
+                      <p className="col s8 No-margin No-padding Text-right">{ formatMoney(service.price) }</p>
+                    </div>
                   </div>    
                 )
               }) 

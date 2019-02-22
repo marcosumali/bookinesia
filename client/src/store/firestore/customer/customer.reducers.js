@@ -46,10 +46,10 @@ let initialState = {
   settingsCustomerPhoneError: false,
   settingsCustomerPasswordError: false,
   oldPassword: '',
-  oldPasswordError: false,
   newPassword: '',
-  newPasswordError: false,
   newPasswordConfirm: '',
+  oldPasswordError: false,
+  newPasswordError: false,
   newPasswordConfirmError: false,
   changePasswordErrors: [],
 }
@@ -71,6 +71,13 @@ const customerDataList = (state = { ...initialState }, action) => {
         transaction: '',
         transactionExists: true,
         transactionLoading: true,
+        settingsCustomerNameError: false,
+        settingsCustomerEmailError: false,
+        settingsCustomerPhoneError: false,
+        settingsCustomerPasswordError: false,
+        oldPasswordError: false,
+        newPasswordError: false,
+        newPasswordConfirmError: false,
       })
     case 'SET_COOKIES_FUNCTION':
       return ({
@@ -185,26 +192,6 @@ const customerDataList = (state = { ...initialState }, action) => {
         registerCustomerPhoneError: action.payload
       })
     case 'SET_REGISTER_PASSWORD_ERROR':
-      return ({
-        ...state,
-        registerCustomerPasswordError: action.payload
-      })
-    case 'SET_REGISTER_NAME_OK':
-      return ({
-        ...state,
-        registerCustomerNameError: action.payload
-      })
-    case 'SET_REGISTER_EMAIL_OK':
-      return ({
-        ...state,
-        registerCustomerEmailError: action.payload
-      })
-    case 'SET_REGISTER_PHONE_OK':
-      return ({
-        ...state,
-        registerCustomerPhoneError: action.payload
-      })
-    case 'SET_REGISTER_PASSWORD_OK':
       return ({
         ...state,
         registerCustomerPasswordError: action.payload
@@ -324,26 +311,6 @@ const customerDataList = (state = { ...initialState }, action) => {
         settingsCustomerPhoneError: action.payload
       })
     case 'SET_SETTING_PASSWORD_ERROR':
-      return ({
-        ...state,
-        settingsCustomerPasswordError: action.payload
-      })
-    case 'SET_SETTING_NAME_OK':
-      return ({
-        ...state,
-        settingsCustomerNameError: action.payload
-      })
-    case 'SET_SETTING_EMAIL_OK':
-      return ({
-        ...state,
-        settingsCustomerEmailError: action.payload
-      })
-    case 'SET_SETTING_PHONE_OK':
-      return ({
-        ...state,
-        settingsCustomerPhoneError: action.payload
-      })
-    case 'SET_SETTING_PASSWORD_OK':
       return ({
         ...state,
         settingsCustomerPasswordError: action.payload

@@ -23,7 +23,7 @@ class detailServices extends Component {
     let params = this.props.params
     let shopName = params.shopName
     let branchName = params.branchName
-    this.props.getBranchData(shopName, branchName)
+    // Branch data is collected in branch header component
     this.props.getServicesData(shopName, branchName)
     // Set secondary services in purpose of setting route link:
     // 1). When user refreshes, the route link will be undefined but it's okay since the user will pick atleast one service which will trigger setRouteLink

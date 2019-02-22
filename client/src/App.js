@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { withCookies } from 'react-cookie';
 
+import './App.css';
 import ShopHeaderPage from './pages/shopHeaderPage';
 import BranchHeaderPage from './pages/branchHeaderPage';
 import NavbarPage from './pages/navBarPage';
@@ -66,7 +67,7 @@ class App extends Component {
             render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
           />
           <Route 
-            path="/login" 
+            path="/signin" 
             render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
           />
           <Route 

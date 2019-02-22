@@ -29,7 +29,7 @@ class authButton extends Component {
               </div>
               :
               <div className="Container-center Auth-button-box" onClick={ () => this.props.customerLoginInputValidation(this.props) }>
-                <div className="Auth-button-text">Log In</div>
+                <div className="Auth-button-text">Sign In</div>
               </div>
             }
           </div>
@@ -89,6 +89,7 @@ const mapStateToProps = state => {
     cookies: state.user.cookies,
     loadingStatus: state.user.loadingStatus,
     window: state.user.window,
+    fbUser: state.firebase.profile,
     // Login Section
     loginCustomerPhone: state.user.loginCustomerPhone,
     loginCustomerEmail: state.user.loginCustomerEmail,
