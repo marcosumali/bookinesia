@@ -737,16 +737,16 @@ export const customerInputValidation = (props) => {
         dispatch(createNewTransaction(customerId, props))
       } else {
         let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
-        // console.log('+++', customerExistenceBasedOnEmail)
+        // console.log('+++', customerExistenceBasedOnEmail, '==', showPasswordInputStatus)
         if (customerExistenceBasedOnEmail === true) {
-          if (showPasswordInputStatus.message === false) {
+          if (showPasswordInputStatus.message === false && showPasswordInputStatus.user.length <= 0) {
             let newStatus = {
               message: true,
               user: 'registeredUser',
             }
             dispatch(setShowPasswordInputstatus(newStatus))
             dispatch(setLoadingStatus(false))
-          } else {
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user === 'registeredUser') {
             if (password.length <= 0) {
               dispatch(setPasswordInputError(emptyError))
               dispatch(setLoadingStatus(false))
@@ -766,16 +766,23 @@ export const customerInputValidation = (props) => {
                 dispatch(setLoadingStatus(false))
               }
             } 
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user !== 'registeredUser') {
+            let newStatus = {
+              message: true,
+              user: 'registeredUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
+            dispatch(setLoadingStatus(false))
           }
         } else if (customerExistenceBasedOnEmail === false) {
-          if (showPasswordInputStatus.message === false) {
+          if (showPasswordInputStatus.message === false && showPasswordInputStatus.user.length <= 0) {
             let newStatus = {
               message: true,
               user: 'newUser',
             }
             dispatch(setShowPasswordInputstatus(newStatus))
             dispatch(setLoadingStatus(false))
-          } else if (showPasswordInputStatus.message === true) {
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user === 'newUser') {
             if (password.length <= 0) {
               dispatch(setPasswordInputError(emptyError))
               dispatch(setLoadingStatus(false))
@@ -791,6 +798,13 @@ export const customerInputValidation = (props) => {
               // Next will create new user, save cookies and create new transaction
               dispatch(authCreateUser(props, phoneResult.phone, 'continue'))
             }
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user !== 'newUser') {
+            let newStatus = {
+              message: true,
+              user: 'newUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
+            dispatch(setLoadingStatus(false))
           }
         } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
           dispatch(setPasswordInputError(tooManyRequestError))
