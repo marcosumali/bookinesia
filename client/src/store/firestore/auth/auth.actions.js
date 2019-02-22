@@ -76,7 +76,7 @@ export const authCreateUser = (props, formattedPhone, createTransactionStatus) =
     .then(async response => {
       let uid = response.user.uid
 
-      let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
+      let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.customerName.toLowerCase()))
 
       if (updateProfileName === true) {
         dispatch(createNewCustomer(uid, props, formattedPhone, createTransactionStatus))
@@ -248,7 +248,7 @@ export const authUpdateEmail = (customerData, password, newEmail, props, formatt
     user.reauthenticateAndRetrieveDataWithCredential(credential).then(function() {
       user.updateEmail(newEmail).then(async function() {
         
-        let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.settingsCustomerName))
+        let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.settingsCustomerName.toLowerCase()))
 
         if (updateProfileName === true) {
           dispatch(customerUpdateAccount(customerData, props, formattedPhone))

@@ -620,7 +620,7 @@ const setSettingPasswordInputError = (data) => {
 export const customerUpdateAccount = (customerData, props, formattedPhone) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let customerId = customerData.id
-    let name = props.settingsCustomerName
+    let name = props.settingsCustomerName.toLowerCase()
     let phone = formattedPhone
     let email = props.settingsCustomerEmail
     let history = props.history
@@ -845,7 +845,7 @@ const setNewPasswordConfirmInputOK = (data) => {
 // To create new customer
 export const createNewCustomer = (uid, props, formattedPhone, createTransactionStatus) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.customerName
+    let name = props.customerName.toLowerCase()
     let phone = formattedPhone
     let email = props.customerEmail
     let picture = 'noPicture'
