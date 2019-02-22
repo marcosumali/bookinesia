@@ -16,6 +16,7 @@ export default class inputDateBasic extends Component {
       date = '0' + date      
     }
     let acceptedDate = `${year}-${month}-${date}`
+    
     return (
       <div className={ className }>
         {
@@ -28,7 +29,7 @@ export default class inputDateBasic extends Component {
           id={ inputId }
           className="Input-date"
           type="date"
-          required="required" // to remove clear button (x)
+          required="required" // to remove (x) button
           onChange={ handleChangesDateFunction }
           value={ openingStatus ? acceptedDate: "" }
         />

@@ -10,7 +10,7 @@ input[type=number]  {
 input[type=date] {
   margin: 0px;
   height: 2em;
-  border-bottom: 0px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
 }
 /* [type="date"] {
   background: url(https://firebasestorage.googleapis.com/v0/b/bookinesia-com.appspot.com/o/0.general%2Fcalendar-blue-white-18.png?alt=media&token=2499bdf7-fc64-4fe5-a8af-f2b5e94e6d93) 102% 50% no-repeat;
