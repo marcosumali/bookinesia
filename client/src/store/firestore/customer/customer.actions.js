@@ -526,7 +526,7 @@ export const customerSettingsInputValidation = (props) => {
     
     let phoneResult = validatePhone(phone)
     if (phone.length > 0 && phoneResult.status === false) {
-      await dispatch(setRegisterPhoneInputError(phoneInvalidError))
+      await dispatch(setSettingPhoneInputError(phoneInvalidError))
     }
 
     if (email.length <= 0) {
