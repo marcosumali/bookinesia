@@ -1,4 +1,4 @@
-import { getSpecificAppointments, setAppointmentLoading } from '../firestore/transaction/transaction.actions';
+import { getSpecificAppointments } from '../firestore/transaction/transaction.actions';
 
 // To handle date input
 export const handleBasicDateInput = (e, selectedStaff, params) => {
@@ -13,7 +13,7 @@ export const handleBasicDateInput = (e, selectedStaff, params) => {
     let acceptedDate = `${year}-${month}-${date}`
 
     if (inputId === 'calendarDate') {
-      dispatch(setAppointmentLoading(true))
+      // dispatch(setAppointmentLoading(true)) // TURNOFF: this create error in IOS handling form date
       dispatch(setCalendarDate(acceptedDate))
       dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
     } 

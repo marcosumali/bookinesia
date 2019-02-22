@@ -10,16 +10,25 @@ input[type=number]  {
 input[type=date] {
   margin: 0px;
   height: 2em;
-  border-bottom: 0px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
 }
-[type="date"] {
-  background:#fff url(https://firebasestorage.googleapis.com/v0/b/bookinesia-com.appspot.com/o/0.general%2Fround-calendar_today-24px.png?alt=media&token=fa4e62b6-28c2-4fa0-a27c-22f80f135b9f)  100% 50% no-repeat ;
-}
+/* [type="date"] {
+  background: url(https://firebasestorage.googleapis.com/v0/b/bookinesia-com.appspot.com/o/0.general%2Fcalendar-blue-white-18.png?alt=media&token=2499bdf7-fc64-4fe5-a8af-f2b5e94e6d93) 102% 50% no-repeat;
+} */
 [type="date"]::-webkit-inner-spin-button {
   display: none;
 }
 [type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: url(https://firebasestorage.googleapis.com/v0/b/bookinesia-com.appspot.com/o/0.general%2Fcalendar-blue-white-18.png?alt=media&token=2499bdf7-fc64-4fe5-a8af-f2b5e94e6d93) 102% 50% no-repeat;
+  color: rgba(0, 0, 0, 0);
+  opacity: 1;
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-width: thin;
 }
 
 /* label color */

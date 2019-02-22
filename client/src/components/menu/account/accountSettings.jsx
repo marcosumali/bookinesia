@@ -8,6 +8,7 @@ import '../../../assets/css/materialize/form.css';
 import './account.css';
 import { handleCookies, handleSettingInputChanges } from '../../../store/firestore/customer/customer.actions';
 import AccountCircleSvg from '../../svg/accountCircleSvg';
+import AccountSettingsLoading from './accountSettingsLoading';
 import EyeSvg from '../../svg/eyeSvg';
 import EyeOffSvg from '../../svg/eyeOffSvg';
 import AuthButton from '../../button/authButton';
@@ -21,7 +22,12 @@ class accountSettings extends Component {
   }
 
   componentWillMount() {
-    this.props.handleCookies('get account settings', this.props.cookies)
+    this.props.handleCookies('get account settings', this.props.cookies, this.props)
+  }
+
+
+  componentDidUpdate() {
+    this.props.handleCookies('get account settings', this.props.cookies, this.props)
   }
 
   passwordVisibility() {
@@ -43,17 +49,17 @@ class accountSettings extends Component {
     return (
       <div className="row No-margin">
         {
-          this.props.authenticationStatus && this.props.authorizationStatus ?
+          this.props.authorizationStatus ?
           <div>
             {
-              this.props.userLoading ?
-              <div></div>
+              this.props.userLoading?
+              <AccountSettingsLoading />
               :
               <div>
                 {/* Picture Section */}
                 <div className="col s12 No-margin No-padding Container-center Margin-t-16">
                 {
-                  this.props.user.picture.length <= 0 ?
+                  this.props.user.picture.length <= 0 || this.props.user.picture === 'noPicture' ?
                   <AccountCircleSvg width="5em" height="5em" color="#ffffff" />
                   :
                   <div></div>
@@ -237,6 +243,7 @@ const mapStateToProps = (state, ownProps) => {
     settingsCustomerPasswordError: state.user.settingsCustomerPasswordError,
     authenticationStatus: state.user.authenticationStatus,
     authorizationStatus: state.user.authorizationStatus,
+    fbUser: state.firebase.profile,
   }
 }
 

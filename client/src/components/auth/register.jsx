@@ -61,7 +61,7 @@ class registerComponent extends Component {
               <div></div>
               :
               <div className="col s12 No-margin No-padding  Container-center">
-                <div className="Text-auth-info">Have a bookinesia account ? <a className="Text-auth-info-blue" href="/login">Sign In</a></div>
+                <div className="Text-auth-info">Have a bookinesia account ? <a className="Text-auth-info-blue" href="/signin">Sign In</a></div>
               </div>
             }
   

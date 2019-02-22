@@ -53,7 +53,9 @@ class contentHours extends Component {
                         :
                         <div className="col s12 No-margin No-padding">
                           <p className="col s5 No-padding Card-text No-margin Text-capitalize">{ schedule.day }</p>
-                          <p className="col s7 No-padding Card-text-close No-margin Text-capitalize">Closed</p>
+                          <p className="col s2 No-padding Card-text No-margin Text-center"></p>
+                          <p className="col s1 No-padding Card-text No-margin Text-center"></p>
+                          <p className="col s4 No-padding Card-text-close No-margin Text-capitalize">Closed</p>
                         </div>
                       }
                     </div>

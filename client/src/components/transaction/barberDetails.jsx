@@ -16,7 +16,8 @@ import {
   setServicesIdBasedOnParams, 
   getStaffServiceDataBasedOnParams, 
   setSelectedStaff,
-  setAppointmentIndex 
+  setAppointmentIndex,
+  getSpecificAppointments,
 } from '../../store/firestore/transaction/transaction.actions';
 import { handleBasicDateInput } from '../../store/dashboard/dasboard.actions';
 import { setRouteLink } from '../../store/firestore/shop/shop.actions';
@@ -62,7 +63,7 @@ class detailBarbers extends Component {
                           // Image will be shown with opacity 1 to show that it is the current selected staff
                           <div 
                             className="Barber-img-box Padding-r-4 Container-one-line animated fadeIn" 
-                            onClick={ () => this.props.setSelectedStaff(barber, this.props.params) }
+                            onClick={ () => { this.props.setSelectedStaff(barber); this.props.getSpecificAppointments(barber, this.props.params, this.props.selectedDate) }}
                           >
                             <img className="Circle-img-64" src={ barber.picture } alt="barber" />
                           </div>  
@@ -70,7 +71,7 @@ class detailBarbers extends Component {
                           // Image will be shown with opacity 0.5 to show that it is not the current selected staff
                           <div 
                             className="Barber-img-box Padding-r-4 Container-one-line animated fadeIn" 
-                            onClick={ () => this.props.setSelectedStaff(barber, this.props.params) }
+                            onClick={ () => { this.props.setSelectedStaff(barber); this.props.getSpecificAppointments(barber, this.props.params, this.props.selectedDate) }}
                           >
                             <img className="Circle-img-64 Img-opacity-5" src={ barber.picture } alt="barber" />
                           </div>
@@ -210,7 +211,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setSelectedStaff,
   setAppointmentIndex,
   setRouteLink,
-  handleBasicDateInput
+  handleBasicDateInput,
+  getSpecificAppointments,
 }, dispatch)
 
 

@@ -57,7 +57,7 @@ class navBarPage extends Component {
             <RegisterPage history={ this.props.history }/>
           </div>
           :
-          this.props.match.path === '/login' ?
+          this.props.match.path === '/signin' ?
           <div className="">
             <LoginPage history={ this.props.history }/>
           </div>

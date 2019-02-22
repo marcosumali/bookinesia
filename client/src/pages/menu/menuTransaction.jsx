@@ -17,7 +17,7 @@ class menuTransaction extends Component {
     return (
       <div>
         {
-          this.props.authenticationStatus ?
+          this.props.authorizationStatus ?
           <div>
             <div>
               {
@@ -55,7 +55,7 @@ const mapStateToProps = (state, ownProps) => {
     transactions: state.user.transactions,
     transactionsExists: state.user.transactionsExists,
     transactionsLoading: state.user.transactionsLoading,
-    authenticationStatus: state.user.authenticationStatus,
+    authorizationStatus: state.user.authorizationStatus,
   }
 }
 

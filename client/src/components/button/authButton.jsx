@@ -89,6 +89,7 @@ const mapStateToProps = state => {
     cookies: state.user.cookies,
     loadingStatus: state.user.loadingStatus,
     window: state.user.window,
+    fbUser: state.firebase.profile,
     // Login Section
     loginCustomerPhone: state.user.loginCustomerPhone,
     loginCustomerEmail: state.user.loginCustomerEmail,

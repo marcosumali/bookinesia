@@ -42,7 +42,7 @@ class accountChangePassword extends Component {
     return (
       <div>
         {
-          this.props.authenticationStatus && this.props.authorizationStatus ?
+          this.props.authorizationStatus ?
           <div className="row No-margin">
             <div className="col s12 m8 offset-m2 l4 offset-l4 Form-box-white Padding-10 Margin-t-20">
 

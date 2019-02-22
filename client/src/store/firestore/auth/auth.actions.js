@@ -22,7 +22,6 @@ import {
   setPasswordInputError,
 } from '../transaction/transaction.actions';
 import swal from 'sweetalert';
-import axios from 'axios';
 
 export const loginDisableError = `Your account has been disabled. We're sorry for the inconvenience.`
 
@@ -71,21 +70,15 @@ export const authCreateUser = (props, formattedPhone, createTransactionStatus) =
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.customerEmail
     let password = props.customerPassword
-    let phone = formattedPhone
-    let picture = 'noPicture'
 
     let firebase = getFirebase()
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(async response => {
       let uid = response.user.uid
 
-      let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.customerName))
+      let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.customerName.toLowerCase()))
 
-      let updateProfilePicture = await dispatch(authUpdateUserProfileByField('photoURL', picture))
-
-      let adminUpdateProfile = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/adminUpdateUserProfile', { uid, phone })
-
-      if (updateProfileName === true && updateProfilePicture === true && adminUpdateProfile.status === 200) {
+      if (updateProfileName === true) {
         dispatch(createNewCustomer(uid, props, formattedPhone, createTransactionStatus))
       }
     })
@@ -244,7 +237,6 @@ export const authEmailValidation = (email) => {
 export const authUpdateEmail = (customerData, password, newEmail, props, formattedPhone) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     let firebase = getFirebase()
-    let phone = formattedPhone
 
     let user = firebase.auth().currentUser
     let email = customerData.email
@@ -255,13 +247,10 @@ export const authUpdateEmail = (customerData, password, newEmail, props, formatt
 
     user.reauthenticateAndRetrieveDataWithCredential(credential).then(function() {
       user.updateEmail(newEmail).then(async function() {
-        let customerId = customerData.id
         
-        let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.settingsCustomerName))
+        let updateProfileName = await dispatch(authUpdateUserProfileByField('displayName', props.settingsCustomerName.toLowerCase()))
 
-        let adminUpdateProfile = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/adminUpdateUserProfile', { uid: customerId, phone })
-
-        if (updateProfileName === true && adminUpdateProfile.status === 200) {
+        if (updateProfileName === true) {
           dispatch(customerUpdateAccount(customerData, props, formattedPhone))
         }
 
@@ -336,9 +325,9 @@ export const afterLoginValidation = (uid, email, props, createTransactionStatus)
     .then(doc => {
       if (doc.exists) {
         let id = doc.id
-        let { name, phone, picture } = doc.data()
+        let { name } = doc.data()
         let customerData = {
-          id, name, email, phone, picture
+          id, name, email
         }
         dispatch(setLoginError(''))
         setNewCookies(cookies, customerData)

@@ -67,7 +67,7 @@ class App extends Component {
             render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
           />
           <Route 
-            path="/login" 
+            path="/signin" 
             render={ (props) => (<NavbarPage {...props} cookies={this.props.cookies}/>) } 
           />
           <Route 

@@ -36,7 +36,7 @@ export default class supportDetails extends Component {
 
           <div className="col s12 No-margin No-padding Margin-b-10">
             <div className="col s4 No-margin No-padding">
-              <div className="Contact-text-grey">Phone (WA)</div>
+              <div className="Contact-text-grey">Whatsapp</div>
             </div>
             <div className="col s8 No-margin No-padding">
               <div className="Contact-text-blue">+62 812 99898 120</div>

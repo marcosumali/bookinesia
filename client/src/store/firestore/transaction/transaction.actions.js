@@ -415,7 +415,7 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
     }))
     await dispatch(getCompetentStaffsDataSuccess(detailCompetentStaffs))
     // To set first staff as initial selected staffs to store
-    await dispatch(setSelectedStaff(detailCompetentStaffs[0], params))
+    await dispatch(setSelectedStaff(detailCompetentStaffs[0]))
     // To set first staff appointments as initial selected staffs to store
     let inputDate = new Date(Date.now())
     let year = inputDate.getFullYear()
@@ -443,21 +443,7 @@ const getCompetentStaffsDataFailed = (data) => {
 
 // To set selected staffs to store based on customer request / click 
 // and each time website render action getCompetentStaffsData to set first selected staff during willmount
-export const setSelectedStaff = (selectedStaff, params) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    // To show selected staff to store each time user click staff image
-    dispatch(setSelectedStaffSuccess(selectedStaff))
-    // To show selected staff appointments to store each time user click staff image
-    let inputDate = new Date(Date.now())
-    let year = inputDate.getFullYear()
-    let month = inputDate.getMonth() + 1
-    let date = inputDate.getDate()
-    let acceptedDate = `${year}-${month}-${date}`
-    dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
-  }
-}
-
-const setSelectedStaffSuccess = (data) => {
+export const setSelectedStaff = (data) => {
   return {
     type: 'SET_SELECTED_STAFFS',
     payload: data
@@ -699,15 +685,12 @@ const setNoServiceSelectedError = (data) => {
 // To validate customer's input form of inputting customer information for booking new transaction
 export const customerInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.customerName
+    let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = props.customerPassword
     let cookies = props.cookies
     let showPasswordInputStatus = props.showPasswordInputStatus
-
-    // To set loading status to true
-    dispatch(setLoadingStatus(true))
 
     // Input is ERROR
     if (name.length <= 0) {
@@ -719,7 +702,6 @@ export const customerInputValidation = (props) => {
     } 
     
     let phoneResult = validatePhone(phone)
-
     if (phone.length > 0 && phoneResult.status === false) {
       dispatch(setPhoneInputError(phoneInvalidError))
     }
@@ -746,6 +728,7 @@ export const customerInputValidation = (props) => {
     }
     
     if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true) {
+      dispatch(setLoadingStatus(true))
 
       let BUID = getCookies(cookies)
       if (BUID) {
@@ -754,16 +737,16 @@ export const customerInputValidation = (props) => {
         dispatch(createNewTransaction(customerId, props))
       } else {
         let customerExistenceBasedOnEmail = await dispatch(authEmailValidation(email))
-        // console.log('+++', customerExistenceBasedOnEmail)
+        // console.log('+++', customerExistenceBasedOnEmail, '==', showPasswordInputStatus)
         if (customerExistenceBasedOnEmail === true) {
-          if (showPasswordInputStatus.message === false) {
+          if (showPasswordInputStatus.message === false && showPasswordInputStatus.user.length <= 0) {
             let newStatus = {
               message: true,
               user: 'registeredUser',
             }
             dispatch(setShowPasswordInputstatus(newStatus))
             dispatch(setLoadingStatus(false))
-          } else {
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user === 'registeredUser') {
             if (password.length <= 0) {
               dispatch(setPasswordInputError(emptyError))
               dispatch(setLoadingStatus(false))
@@ -783,16 +766,23 @@ export const customerInputValidation = (props) => {
                 dispatch(setLoadingStatus(false))
               }
             } 
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user !== 'registeredUser') {
+            let newStatus = {
+              message: true,
+              user: 'registeredUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
+            dispatch(setLoadingStatus(false))
           }
         } else if (customerExistenceBasedOnEmail === false) {
-          if (showPasswordInputStatus.message === false) {
+          if (showPasswordInputStatus.message === false && showPasswordInputStatus.user.length <= 0) {
             let newStatus = {
               message: true,
               user: 'newUser',
             }
             dispatch(setShowPasswordInputstatus(newStatus))
             dispatch(setLoadingStatus(false))
-          } else if (showPasswordInputStatus.message === true) {
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user === 'newUser') {
             if (password.length <= 0) {
               dispatch(setPasswordInputError(emptyError))
               dispatch(setLoadingStatus(false))
@@ -808,14 +798,19 @@ export const customerInputValidation = (props) => {
               // Next will create new user, save cookies and create new transaction
               dispatch(authCreateUser(props, phoneResult.phone, 'continue'))
             }
+          } else if (showPasswordInputStatus.message === true && showPasswordInputStatus.user !== 'newUser') {
+            let newStatus = {
+              message: true,
+              user: 'newUser',
+            }
+            dispatch(setShowPasswordInputstatus(newStatus))
+            dispatch(setLoadingStatus(false))
           }
         } else if (customerExistenceBasedOnEmail === 'too-many-requests') {
           dispatch(setPasswordInputError(tooManyRequestError))
           dispatch(setLoadingStatus(false))
         }
       }
-    } else {
-      dispatch(setLoadingStatus(false))
     }
   }
 }
