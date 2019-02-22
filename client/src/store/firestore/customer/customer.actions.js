@@ -57,15 +57,40 @@ export const handleCookies = (purpose, cookies, data) => {
       // console.log('check BUID', purpose, '===', customerData)
       let customerId = customerData.id
       if (purpose === 'during input') {
-        dispatch(setFormValueBasedOnToken(customerData))
+        // data represent props to get firebase user data
+        let name = data.customerName
+        let phone = data.customerPhone
+        let email = data.customerEmail
+        if (name.length <= 0 && phone.length <= 0 && email.length <= 0) {
+          let profile = data.user 
+          if (profile.isEmpty === false && profile.isLoaded === true) {
+            let combineData = {
+              ...customerData,
+              phone: profile.phone,
+              picture: profile.picture,
+              name: profile.name,
+            }
+            dispatch(setFormValueBasedOnToken(combineData))
+          }
+        }
+
       } else if (purpose === 'get transactions') {
         dispatch(getTransactionsBasedOnCustomerId(customerId))
       } else if (purpose === 'get account') {
-        if (data === '/register') {
-          dispatch(setCustomerDataSuccess(customerData))
-        } else if (data !== '/register') {
-          dispatch(setCustomerDataSuccess(customerData))
-          dispatch(setAuthenticationStatus(true))
+        // Here data represent props to get firebase user profile
+        let user = data.user
+        if (user.length <= 0) {
+          let profile = data.fbUser
+          if (profile.isEmpty === false && profile.isLoaded === true) {
+            let combineData = {
+              ...customerData,
+              phone: profile.phone,
+              picture: profile.picture,
+              name: profile.name,
+              email: profile.email,
+            }
+            dispatch(setCustomerDataSuccess(combineData))
+          }
         }
       } else if (purpose === 'during register') {
         dispatch(setRegisterFormValueBasedOnToken(customerData))
@@ -82,7 +107,40 @@ export const handleCookies = (purpose, cookies, data) => {
       } else if (purpose === 'handle authorization success') {
         dispatch(getTransaction(data, customerId))
       } else if (purpose === 'get account settings') {
-        dispatch(setSettingFormValueBasedOnToken(customerData))
+        // Here data represent props to get firebase user profile
+        let user = data.user
+        if (user.length <= 0) {
+          let name = data.settingsCustomerName
+          let phone = data.settingsCustomerPhone
+          let email = data.settingsCustomerEmail
+          if (name.length <= 0 && phone.length <= 0 && email.length <= 0) {
+            let profile = data.fbUser
+            if (profile.isEmpty === false && profile.isLoaded === true) {
+              let combineData = {
+                ...customerData,
+                phone: profile.phone,
+                picture: profile.picture,
+                name: profile.name,
+                email: profile.email, 
+              }
+              dispatch(setSettingFormValueBasedOnToken(combineData))
+            }
+          }
+        } else {
+          let name = data.settingsCustomerName
+          let phone = data.settingsCustomerPhone
+          let email = data.settingsCustomerEmail
+          if (name.length <= 0 && phone.length <= 0 && email.length <= 0) {
+            let combineData = {
+              ...customerData,
+              phone: user.phone,
+              picture: user.picture,
+              name: user.name,
+              email: user.email, 
+            }
+            dispatch(setSettingFormValueBasedOnToken(combineData))
+          }
+        }
       }
     } else {
       dispatch(setAuthenticationStatus(false))
@@ -194,8 +252,6 @@ export const customerRegisterInputValidation = (props) => {
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = props.customerPassword
-
-    await dispatch(setLoadingStatus(true))
     
     // Input is ERROR
     if (name.length <= 0) {
@@ -254,9 +310,8 @@ export const customerRegisterInputValidation = (props) => {
     }
 
     if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && customerExistenceBasedOnEmail === false && password.length >= 8  ) {
+      await dispatch(setLoadingStatus(true))
       await dispatch(authCreateUser(props, phoneResult.phone, null))
-    } else {
-      await dispatch(setLoadingStatus(false))
     }
   }
 }
@@ -334,10 +389,7 @@ export const customerLoginInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let email = props.loginCustomerEmail
     let password = props.loginCustomerPassword
-    
-    // To set loading status as true
-    await dispatch(setLoadingStatus(true))
-
+      
     // Input is ERROR    
     if (email.length <= 0) {
       await dispatch(setLoginEmailInputError(emptyError))
@@ -357,9 +409,8 @@ export const customerLoginInputValidation = (props) => {
     } 
         
     if (email.length > 0 && password.length > 0) {
+      dispatch(setLoadingStatus(true))
       dispatch(authSignIn(props))
-    } else {
-      dispatch(setLoadingStatus(false))
     }
   }
 }
@@ -464,9 +515,6 @@ export const customerSettingsInputValidation = (props) => {
     let password = props.settingsCustomerPassword
     let cookies = props.cookies
 
-    // To set loading status as true
-    await dispatch(setLoadingStatus(true))
-
     // Input is ERROR
     if (name.length <= 0) {
       await dispatch(setSettingNameInputError(emptyError))
@@ -516,6 +564,8 @@ export const customerSettingsInputValidation = (props) => {
 
     if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true && password.length >= 8) {
       // console.log('pass through')
+      dispatch(setLoadingStatus(true))
+
       let BUID = getCookies(cookies)
       if (BUID) {
         let customerData = verifyCookies(BUID)
@@ -533,8 +583,6 @@ export const customerSettingsInputValidation = (props) => {
       } else {
         dispatch(setLoadingStatus(false))
       }
-    } else {
-      dispatch(setLoadingStatus(false))
     }
   }
 }
@@ -572,15 +620,21 @@ const setSettingPasswordInputError = (data) => {
 export const customerUpdateAccount = (customerData, props, formattedPhone) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let customerId = customerData.id
-    let picture = customerData.picture
     let name = props.settingsCustomerName
     let phone = formattedPhone
     let email = props.settingsCustomerEmail
     let history = props.history
     let cookies = props.cookies
+    let picture = props.fbUser.picture
 
     let cookieCustomerData = {
-      id: customerId, name, email, phone, picture
+      id: customerId, name, email
+    }
+
+    let combineData = {
+      ...cookieCustomerData,
+      phone,
+      picture,
     }
 
     let firestore = getFirestore()          
@@ -591,11 +645,12 @@ export const customerUpdateAccount = (customerData, props, formattedPhone) => {
       phone,
     })
     .then(() => {
-      swal("Account Updated", "", "success")
       setNewCookies(cookies, cookieCustomerData)
-      history.push('/account')
+      dispatch(setCustomerDataSuccess(combineData))
       dispatch(setSettingCustomerPassword(''))
       dispatch(setLoadingStatus(false))
+      swal("Account Updated", "", "success")
+      history.push('/account')
     })
     .catch(err => {
       console.log('ERROR: Update customer data', err)
@@ -812,7 +867,7 @@ export const createNewCustomer = (uid, props, formattedPhone, createTransactionS
     customerRef.set(newCustomer)
     .then(async () => {
       let customerData = {
-        id: uid, name, email, phone, picture
+        id: uid, name, email
       }
       setNewCookies(cookies, customerData)
       let sendEmailResult = await axios.post('https://us-central1-bookinesia-com.cloudfunctions.net/sendEmailWelcomeCustomer', { name, email })

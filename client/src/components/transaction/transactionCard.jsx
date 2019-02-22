@@ -18,10 +18,10 @@ export default class transactionCard extends Component {
             <div className="col s12 No-padding Container-one-line Margin-10">
               {
               this.props.section === 'Choose Your Services' ?
-                <ServiceSvg />
+                <ServiceSvg height="1.5em" width="1.5em" color="#5499c3"/>
                 :
                 this.props.section === `Choose Your Provider & Schedule` ?
-                <FaceSvg />
+                <FaceSvg height="1.5em" width="1.5em" color="#5499c3"/>
                 :
                 this.props.section === `Transaction Details` ?
                 <ShoppingCartSvg color="#5499c3" width="24" height="24" />

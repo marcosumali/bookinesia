@@ -22,7 +22,7 @@ class accountDetails extends Component {
     return (
       <div className="row No-margin">
         {
-          this.props.authenticationStatus ?
+          this.props.authorizationStatus ?
           <div>
             {
               this.props.userLoading ?
@@ -127,7 +127,7 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user.user,
     userExists: state.user.userExists,
     userLoading: state.user.userLoading,
-    authenticationStatus: state.user.authenticationStatus,
+    authorizationStatus: state.user.authorizationStatus,
     authUser: state.firebase.profile,
     authUserIsLoaded: state.firebase.profile.isLoaded,
   }

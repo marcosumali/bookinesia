@@ -11,13 +11,13 @@ import { authSignOut, authRedirectAndSignOut } from '../../../store/firestore/au
 class menuHeader extends Component {
   componentWillMount() {
     this.props.authRedirectAndSignOut(this.props)
-    if (this.props.getAccountStatus === 'true') {
-      this.props.handleCookies('get account', this.props.cookies)
-    }
   }
-
+  
   componentDidUpdate() {
     this.props.authRedirectAndSignOut(this.props)
+    if (this.props.getAccountStatus === 'true') {
+      this.props.handleCookies('get account', this.props.cookies, this.props)
+    }
   }
 
   render() {
@@ -52,7 +52,9 @@ const mapStateToProps = (state, ownProps) => {
     cookies: state.user.cookies,
     authUser: state.firebase.profile,
     authUserIsLoaded: state.firebase.profile.isLoaded,
-    window: state.user.window
+    window: state.user.window,
+    user: state.user.user,
+    fbUser: state.firebase.profile,
   }
 }
 

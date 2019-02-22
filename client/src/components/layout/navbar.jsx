@@ -18,11 +18,11 @@ import { getAuthStatus, authSignOut, authRedirectAndSignOut } from '../../store/
 class navbar extends Component {
   componentWillMount() {
     this.props.authRedirectAndSignOut(this.props)
-    this.props.handleCookies('get account', this.props.cookies, window.location.pathname)
   }
-
+  
   componentDidUpdate() {
     this.props.authRedirectAndSignOut(this.props)
+    this.props.handleCookies('get account', this.props.cookies, this.props)
   }
   
   render() {
@@ -37,14 +37,14 @@ class navbar extends Component {
                 <NavItem>
                   <div className="Container-center-cross Height-100 Justify-end" style={{ marginTop: '5px' }}>
                     <div className="Margin-r-16 ">
-                      <CloseSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                      <CloseSvg color="#ffffff" width="1.5em" height="1.5em" />
                     </div>
                   </div>
                 </NavItem>
                 <NavItem href="/">
                   <div className="Container-one-line Container-center-cross Height-100">
                     <div className="Margin-r-16 Margin-t-12">
-                      <HomeSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                      <HomeSvg color="#ffffff" width="1.5em" height="1.5em" />
                     </div>
                     <div className="Navbar-text">Home</div>
                   </div>
@@ -55,7 +55,7 @@ class navbar extends Component {
                     <NavItem href="/transactions">
                       <div className="Container-one-line Container-center-cross Height-100">
                         <div className="Margin-r-16 Margin-t-12">
-                          <ShoppingCartSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                          <ShoppingCartSvg color="#ffffff" width="1.5em" height="1.5em" />
                         </div>
                         <div className="Navbar-text">Transaction</div>
                       </div>
@@ -63,7 +63,7 @@ class navbar extends Component {
                     <NavItem href="/account">
                       <div className="Container-one-line Container-center-cross Height-100">
                         <div className="Margin-r-16 Margin-t-12">
-                          <SmileyFaceSvg color="#ffffff" width="1.5rem" height="1.5rem" />
+                          <SmileyFaceSvg color="#ffffff" width="1.5em" height="1.5em" />
                         </div>
                         <div className="Navbar-text">Account</div>
                       </div>
@@ -122,7 +122,7 @@ class navbar extends Component {
                     <NavItem href="/register">
                       Not yet registered?
                     </NavItem>
-                    <NavItem href="/login">
+                    <NavItem href="/signin">
                       Sign In
                     </NavItem>
                   </div>
@@ -147,7 +147,8 @@ const mapStateToProps = (state, ownProps) => {
     userLoading: state.user.userLoading,
     authUser: state.firebase.profile,
     authUserIsLoaded: state.firebase.profile.isLoaded,
-    window: state.user.window
+    window: state.user.window,
+    fbUser: state.firebase.profile
   }
 }
 

@@ -415,7 +415,7 @@ export const getCompetentStaffsData = (competentStaffsId, params) => {
     }))
     await dispatch(getCompetentStaffsDataSuccess(detailCompetentStaffs))
     // To set first staff as initial selected staffs to store
-    await dispatch(setSelectedStaff(detailCompetentStaffs[0], params))
+    await dispatch(setSelectedStaff(detailCompetentStaffs[0]))
     // To set first staff appointments as initial selected staffs to store
     let inputDate = new Date(Date.now())
     let year = inputDate.getFullYear()
@@ -443,21 +443,7 @@ const getCompetentStaffsDataFailed = (data) => {
 
 // To set selected staffs to store based on customer request / click 
 // and each time website render action getCompetentStaffsData to set first selected staff during willmount
-export const setSelectedStaff = (selectedStaff, params) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    // To show selected staff to store each time user click staff image
-    dispatch(setSelectedStaffSuccess(selectedStaff))
-    // To show selected staff appointments to store each time user click staff image
-    let inputDate = new Date(Date.now())
-    let year = inputDate.getFullYear()
-    let month = inputDate.getMonth() + 1
-    let date = inputDate.getDate()
-    let acceptedDate = `${year}-${month}-${date}`
-    dispatch(getSpecificAppointments(selectedStaff, params, acceptedDate))
-  }
-}
-
-const setSelectedStaffSuccess = (data) => {
+export const setSelectedStaff = (data) => {
   return {
     type: 'SET_SELECTED_STAFFS',
     payload: data
@@ -706,9 +692,6 @@ export const customerInputValidation = (props) => {
     let cookies = props.cookies
     let showPasswordInputStatus = props.showPasswordInputStatus
 
-    // To set loading status to true
-    dispatch(setLoadingStatus(true))
-
     // Input is ERROR
     if (name.length <= 0) {
       dispatch(setNameInputError(emptyError))
@@ -719,7 +702,6 @@ export const customerInputValidation = (props) => {
     } 
     
     let phoneResult = validatePhone(phone)
-
     if (phone.length > 0 && phoneResult.status === false) {
       dispatch(setPhoneInputError(phoneInvalidError))
     }
@@ -746,6 +728,7 @@ export const customerInputValidation = (props) => {
     }
     
     if (name.length > 0 && phoneResult.status === true && email.length > 0 && validateEmail(email) === true) {
+      dispatch(setLoadingStatus(true))
 
       let BUID = getCookies(cookies)
       if (BUID) {
@@ -814,8 +797,6 @@ export const customerInputValidation = (props) => {
           dispatch(setLoadingStatus(false))
         }
       }
-    } else {
-      dispatch(setLoadingStatus(false))
     }
   }
 }

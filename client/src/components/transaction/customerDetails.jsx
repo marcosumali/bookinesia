@@ -32,7 +32,10 @@ class customerDetails extends Component {
     this.props.getStaffBasedOnParams(params)
     this.props.getAppointmentBasedOnParams(params)
     this.props.getServicesBasedOnParams(params)
-    this.props.handleCookies('during input', this.props.cookies)
+  }
+
+  componentDidUpdate() {
+    this.props.handleCookies('during input', this.props.cookies, this.props)
   }
 
   passwordVisibility() {
@@ -283,7 +286,7 @@ class customerDetails extends Component {
                             <label htmlFor="password" className="Form-text active">Password</label>
                             <span className="Input-info-error">{ this.props.customerPasswordError }</span>
                           </div>
-                          <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                          <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                             {
                               this.state.visibilityStatus ?
                               <EyeSvg width="25px" height="22px" color="#666666" />
@@ -301,7 +304,7 @@ class customerDetails extends Component {
                                   <input autoComplete="off" id="password" type="password" className="validate No-margin valid" onChange={ this.props.handleInputChanges } value={ this.props.customerPassword }/>
                                   <label htmlFor="password" className="Form-text active">Password</label>
                                 </div>
-                                <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                                <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                                   {
                                     this.state.visibilityStatus ?
                                     <EyeSvg width="25px" height="22px" color="#666666" />
@@ -316,7 +319,7 @@ class customerDetails extends Component {
                                 <input autoComplete="off" id="password" type="password" className="validate No-margin" onChange={ this.props.handleInputChanges } value={ this.props.customerPassword } />
                                 <label htmlFor="password" className="Form-text">Password</label>
                               </div>
-                              <div className="col s1 No-margin No-padding Margin-t-8" onClick={ () => this.passwordVisibility() }>
+                              <div className="col s1 No-margin No-padding Margin-t-8 Container-center" onClick={ () => this.passwordVisibility() }>
                                 {
                                   this.state.visibilityStatus ?
                                   <EyeSvg width="25px" height="22px" color="#666666" />
@@ -379,6 +382,7 @@ const mapStateToProps = state => {
     customerPassword: state.cart.customerPassword,
     customerPasswordError: state.cart.customerPasswordError,
     showPasswordInputStatus: state.cart.showPasswordInputStatus,
+    user: state.firebase.profile,
   }
 }
 

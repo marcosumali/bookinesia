@@ -46,10 +46,10 @@ let initialState = {
   settingsCustomerPhoneError: false,
   settingsCustomerPasswordError: false,
   oldPassword: '',
-  oldPasswordError: false,
   newPassword: '',
-  newPasswordError: false,
   newPasswordConfirm: '',
+  oldPasswordError: false,
+  newPasswordError: false,
   newPasswordConfirmError: false,
   changePasswordErrors: [],
 }
@@ -71,6 +71,13 @@ const customerDataList = (state = { ...initialState }, action) => {
         transaction: '',
         transactionExists: true,
         transactionLoading: true,
+        settingsCustomerNameError: false,
+        settingsCustomerEmailError: false,
+        settingsCustomerPhoneError: false,
+        settingsCustomerPasswordError: false,
+        oldPasswordError: false,
+        newPasswordError: false,
+        newPasswordConfirmError: false,
       })
     case 'SET_COOKIES_FUNCTION':
       return ({
