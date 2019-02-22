@@ -248,7 +248,7 @@ const setRegisterCustomerPassword = (data) => {
 // To validate customer's input form of inputting customer information
 export const customerRegisterInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.customerName
+    let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = props.customerPassword
@@ -509,7 +509,7 @@ const setSettingCustomerPassword = (data) => {
 // To validate customer's input form of inputting customer information when updating settings
 export const customerSettingsInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.settingsCustomerName
+    let name = props.settingsCustomerName.toLowerCase()
     let phone = props.settingsCustomerPhone
     let email = props.settingsCustomerEmail
     let password = props.settingsCustomerPassword

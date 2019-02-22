@@ -685,7 +685,7 @@ const setNoServiceSelectedError = (data) => {
 // To validate customer's input form of inputting customer information for booking new transaction
 export const customerInputValidation = (props) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let name = props.customerName
+    let name = props.customerName.toLowerCase()
     let phone = props.customerPhone
     let email = props.customerEmail
     let password = props.customerPassword
