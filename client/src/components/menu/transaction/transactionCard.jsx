@@ -10,6 +10,13 @@ import { getTotalTransaction, formatMoney } from '../../../helpers/currency';
 import TransactionStatusDiv from './transactionStatusDiv';
 
 class transactionCard extends Component {
+  addDefaultSrcStaff(ev){
+    ev.target.src = process.env.PUBLIC_URL + '/assets/img/dummyshop-barber.svg'
+  }
+  addDefaultSrcShop(ev){
+    ev.target.src = process.env.PUBLIC_URL + '/assets/img/dummyshop-logo.jpg'
+  }
+
   render() {
     return (
       <div className="col s12 m6 l3 No-margin Container-center Margin-b-32">
@@ -19,7 +26,12 @@ class transactionCard extends Component {
             {/* Transaction Card Header */}
             <div className="Branch-header-container Container-center-cross Padding-10">
               <div className="col s3 Height-100 No-padding No-margin Container-center">
-                <img src={ this.props.transaction.shop.logo } className="No-padding Trans-shop-logo animated fadeIn" alt="Shop-logo" />
+                <img 
+                  src={ this.props.transaction.shop.logo } 
+                  className="No-padding Trans-shop-logo animated fadeIn" 
+                  alt="Shop-logo" 
+                  onError={ this.addDefaultSrcShop }
+                />
               </div>
               <div className="col s9 Height-100 No-margin No-padding Container-center">
                 <div className="col s12 No-padding Container-center">
@@ -43,7 +55,12 @@ class transactionCard extends Component {
 
             <div className="Branch-header-container Container-center-cross Padding-10">
               <div className="col s3 Height-100 No-padding No-margin Container-center">
-                <img src={ this.props.transaction.staff.picture } className="No-padding Staff-image animated fadeIn" alt="Barber-img" />
+                <img 
+                  src={ this.props.transaction.staff.picture } 
+                  className="No-padding Staff-image animated fadeIn" 
+                  alt="Barber-img"
+                  onError={ this.addDefaultSrcStaff }
+                />
               </div>
               <div className="col s9 Height-100 No-margin No-padding Container-center">
                 <div className="col s12 No-padding No-margin Container-center-cross">

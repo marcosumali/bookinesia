@@ -1051,7 +1051,8 @@ export const customerCancelTransaction = (transaction, appointment) => {
         })
         .then(() => {
           appointmentRef.update({
-            maxQueue: newMaxQueue
+            maxQueue: newMaxQueue,
+            updatedDate: new Date(Date.now()),
           })
           .then(() => {
             swal("Canceled!", "Your appointment has been canceled", "success");
