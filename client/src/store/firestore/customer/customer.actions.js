@@ -28,7 +28,29 @@ const samePasswordError = `The new password can't be the same with your old pass
 const notSameNewPasswordError = 'Your new password and its confirmation do not match.'
 
 // ---------------------------------------------- GENERAL ACTION ----------------------------------------------
-export const clearUserState = () => {
+export const clearUserState = (cookies, props) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(clearUserStateAction())
+
+    let BUID = getCookies(cookies)
+    if (BUID) {
+      let customerData = verifyCookies(BUID)
+      let profile = props.fbUser
+      if (profile.isEmpty === false && profile.isLoaded === true) {
+        let combineData = {
+          ...customerData,
+          phone: profile.phone,
+          picture: profile.picture,
+          name: profile.name,
+          email: profile.email, 
+        }
+        dispatch(setSettingFormValueBasedOnToken(combineData))
+      }
+    }
+  }
+}
+
+export const clearUserStateAction = () => {
   return {
     type: 'CLEAR_USER_STATE',
   }
@@ -109,6 +131,7 @@ export const handleCookies = (purpose, cookies, data) => {
       } else if (purpose === 'get account settings') {
         // Here data represent props to get firebase user profile
         let user = data.user
+        // Handle waiting user data from firebase loaded
         if (user.length <= 0) {
           let name = data.settingsCustomerName
           let phone = data.settingsCustomerPhone

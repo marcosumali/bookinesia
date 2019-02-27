@@ -29,7 +29,7 @@ class menuHeader extends Component {
           <div 
             className="col s2 m1 Height-100 No-padding No-margin Container-center" 
             style={{ zIndex: '998' }}
-            onClick={ () => { this.props.history.goBack(); this.props.clearUserState(); } 
+            onClick={ () => { this.props.history.goBack(); this.props.clearUserState(this.props.cookies, this.props); } 
           }>
             <PreviousArrowSvg color="#666666" />
           </div>
@@ -55,6 +55,19 @@ const mapStateToProps = (state, ownProps) => {
     window: state.user.window,
     user: state.user.user,
     fbUser: state.firebase.profile,
+    // Account Settings Needs
+    userExists: state.user.userExists,
+    userLoading: state.user.userLoading,
+    settingsCustomerName: state.user.settingsCustomerName,
+    settingsCustomerEmail: state.user.settingsCustomerEmail,
+    settingsCustomerPhone: state.user.settingsCustomerPhone,
+    settingsCustomerPassword: state.user.settingsCustomerPassword,
+    settingsCustomerNameError: state.user.settingsCustomerNameError,
+    settingsCustomerEmailError: state.user.settingsCustomerEmailError,
+    settingsCustomerPhoneError: state.user.settingsCustomerPhoneError,
+    settingsCustomerPasswordError: state.user.settingsCustomerPasswordError,
+    authenticationStatus: state.user.authenticationStatus,
+    authorizationStatus: state.user.authorizationStatus,
   }
 }
 
