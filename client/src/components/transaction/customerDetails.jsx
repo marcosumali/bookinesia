@@ -119,10 +119,10 @@ class customerDetails extends Component {
                       </div>
                       <div className="col s9 No-margin No-padding">
                         <p className="No-margin Confirm-text Text-capitalize">
-                          { returnWhatDay(Number(new Date(this.props.selectedAppointment.date).getDay())) },
-                          &nbsp;{ new Date(this.props.selectedAppointment.date).getDate() }
-                          &nbsp;{ returnWhatMonth(Number(new Date(this.props.selectedAppointment.date).getMonth())) }
-                          &nbsp;{ new Date(this.props.selectedAppointment.date).getFullYear() }
+                          { returnWhatDay(Number(new Date(this.props.selectedAppointment.date.split('-')[0], this.props.selectedAppointment.date.split('-')[1]-1, this.props.selectedAppointment.date.split('-')[2]).getDay())) },
+                          &nbsp;{ new Date(this.props.selectedAppointment.date.split('-')[0], this.props.selectedAppointment.date.split('-')[1]-1, this.props.selectedAppointment.date.split('-')[2]).getDate() }
+                          &nbsp;{ returnWhatMonth(Number(new Date(this.props.selectedAppointment.date.split('-')[0], this.props.selectedAppointment.date.split('-')[1]-1, this.props.selectedAppointment.date.split('-')[2]).getMonth())) }
+                          &nbsp;{ new Date(this.props.selectedAppointment.date.split('-')[0], this.props.selectedAppointment.date.split('-')[1]-1, this.props.selectedAppointment.date.split('-')[2]).getFullYear() }
                         </p>
                       </div>
                     </div>

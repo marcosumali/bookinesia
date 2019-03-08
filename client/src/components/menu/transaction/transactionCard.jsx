@@ -37,10 +37,10 @@ class transactionCard extends Component {
                 <div className="col s12 No-padding Container-center">
                   <div className="col s12 No-padding No-margin">
                     <p className="No-margin Branch-header-date Text-capitalize animated fadeIn">
-                      { returnWhatDay(Number(new Date(this.props.transaction.appointment.date).getDay())) },
-                      &nbsp;{ new Date(this.props.transaction.appointment.date).getDate() }
-                      &nbsp;{ returnWhatMonth(Number(new Date(this.props.transaction.appointment.date).getMonth())) }
-                      &nbsp;{ new Date(this.props.transaction.appointment.date).getFullYear() }
+                      { returnWhatDay(Number(new Date(this.props.transaction.appointment.date.split('-')[0], this.props.transaction.appointment.date.split('-')[1]-1, this.props.transaction.appointment.date.split('-')[2]).getDay())) },
+                      &nbsp;{ new Date(this.props.transaction.appointment.date.split('-')[0], this.props.transaction.appointment.date.split('-')[1]-1, this.props.transaction.appointment.date.split('-')[2]).getDate() }
+                      &nbsp;{ returnWhatMonth(Number(new Date(this.props.transaction.appointment.date.split('-')[0], this.props.transaction.appointment.date.split('-')[1]-1, this.props.transaction.appointment.date.split('-')[2]).getMonth())) }
+                      &nbsp;{ new Date(this.props.transaction.appointment.date.split('-')[0], this.props.transaction.appointment.date.split('-')[1]-1, this.props.transaction.appointment.date.split('-')[2]).getFullYear() }
                     </p>
                   </div>
                   <div className="col s12 No-padding No-margin">
