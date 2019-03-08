@@ -151,10 +151,10 @@ class transactionDetails extends Component {
                           </div>
                           <div className="col s8 No-margin No-padding">
                             <div className="Content-text-gray Text-capitalize">
-                              { returnWhatDay(Number(new Date(this.props.appointment.date).getDay())) },
-                              &nbsp;{ new Date(this.props.appointment.date).getDate() }
-                              &nbsp;{ returnWhatMonth(Number(new Date(this.props.appointment.date).getMonth())) }
-                              &nbsp;{ new Date(this.props.appointment.date).getFullYear() }
+                              { returnWhatDay(Number(new Date(this.props.appointment.date.split('-')[0], this.props.appointment.date.split('-')[1]-1, this.props.appointment.date.split('-')[2]).getDay())) },
+                              &nbsp;{ new Date(this.props.appointment.date.split('-')[0], this.props.appointment.date.split('-')[1]-1, this.props.appointment.date.split('-')[2]).getDate() }
+                              &nbsp;{ returnWhatMonth(Number(new Date(this.props.appointment.date.split('-')[0], this.props.appointment.date.split('-')[1]-1, this.props.appointment.date.split('-')[2]).getMonth())) }
+                              &nbsp;{ new Date(this.props.appointment.date.split('-')[0], this.props.appointment.date.split('-')[1]-1, this.props.appointment.date.split('-')[2]).getFullYear() }
                             </div>
                           </div>
                         </div>
