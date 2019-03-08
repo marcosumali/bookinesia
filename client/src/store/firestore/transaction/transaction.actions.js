@@ -1,6 +1,7 @@
 import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail, validatePhone, formatPhone } from '../../../helpers/form';
 import { verifyCookies, getCookies } from '../../../helpers/auth';
+import { returnAcceptedDate } from '../../../helpers/date';
 import { 
   setLoadingStatus, 
   setAuthorizationStatus, 
@@ -544,7 +545,7 @@ const getSpecificAppointmentsSuccess = (data) => {
 // To set appointment index to store and to show appointment based on appoinment index and user's click request
 export const setAppointmentIndex = (status, appointmentsData, selectedDate, params, selectedStaff) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let inputDate = new Date(selectedDate)
+    let inputDate = new Date(returnAcceptedDate(selectedDate))
     if (status === 'next') {
       let tomorrowDate = new Date(inputDate.setDate(inputDate.getDate() + 1))
       let year = tomorrowDate.getFullYear()
