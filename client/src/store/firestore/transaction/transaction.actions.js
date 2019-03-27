@@ -632,7 +632,7 @@ const getAppointmentBasedOnParamsFailed = (data) => {
   }
 }
 
-export const updateAppointmentCurrentTransaction = (appointmentData) => {
+export const updateAppointmentCurrentTransaction = (appointmentData, window, refId) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let appoinmentId = appointmentData.id
     let currentTransaction = Number(appointmentData.currentTransaction)
@@ -648,6 +648,7 @@ export const updateAppointmentCurrentTransaction = (appointmentData) => {
     })
     .then(() => {
       // console.log('Document successfully updated !')
+      window.location.assign(`/book/success/${refId}`)
     })
     .catch(err => {
       console.log('ERROR: update appointment current transaction', err)
@@ -912,8 +913,7 @@ export const createNewTransaction = (customerId, props) => {
       transactionRef.add(newTransaction)
       .then(async ref => {
         let refId = ref.id
-        dispatch(updateAppointmentCurrentTransaction(appointment))
-        window.location.assign(`/book/success/${refId}`)
+        dispatch(updateAppointmentCurrentTransaction(appointment, window, refId))
       })
       .catch(err => {
         console.log('ERROR: create new transaction', err)
