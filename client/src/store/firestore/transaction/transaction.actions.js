@@ -1,6 +1,7 @@
 import { setRouteLink } from '../shop/shop.actions';
 import { validateEmail, validatePhone, formatPhone } from '../../../helpers/form';
 import { verifyCookies, getCookies } from '../../../helpers/auth';
+import { returnAcceptedDate } from '../../../helpers/date';
 import { 
   setLoadingStatus, 
   setAuthorizationStatus, 
@@ -544,7 +545,7 @@ const getSpecificAppointmentsSuccess = (data) => {
 // To set appointment index to store and to show appointment based on appoinment index and user's click request
 export const setAppointmentIndex = (status, appointmentsData, selectedDate, params, selectedStaff) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    let inputDate = new Date(selectedDate)
+    let inputDate = new Date(returnAcceptedDate(selectedDate))
     if (status === 'next') {
       let tomorrowDate = new Date(inputDate.setDate(inputDate.getDate() + 1))
       let year = tomorrowDate.getFullYear()
@@ -631,7 +632,7 @@ const getAppointmentBasedOnParamsFailed = (data) => {
   }
 }
 
-export const updateAppointmentCurrentTransaction = (appointmentData) => {
+export const updateAppointmentCurrentTransaction = (appointmentData, window, refId) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     let appoinmentId = appointmentData.id
     let currentTransaction = Number(appointmentData.currentTransaction)
@@ -647,6 +648,7 @@ export const updateAppointmentCurrentTransaction = (appointmentData) => {
     })
     .then(() => {
       // console.log('Document successfully updated !')
+      window.location.assign(`/book/success/${refId}`)
     })
     .catch(err => {
       console.log('ERROR: update appointment current transaction', err)
@@ -911,8 +913,7 @@ export const createNewTransaction = (customerId, props) => {
       transactionRef.add(newTransaction)
       .then(async ref => {
         let refId = ref.id
-        dispatch(updateAppointmentCurrentTransaction(appointment))
-        window.location.assign(`/book/success/${refId}`)
+        dispatch(updateAppointmentCurrentTransaction(appointment, window, refId))
       })
       .catch(err => {
         console.log('ERROR: create new transaction', err)

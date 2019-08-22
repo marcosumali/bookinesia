@@ -77,7 +77,7 @@ class branchCard extends Component {
                           </div>
                           <div className="col s4 No-padding Book-button-container Container-end">
                             <Link to={ `/book/now/${branch.shopId}/${branch.name}` }>
-                              <div className="Book-button-box Container-center">
+                              <div className="Book-button-box Container-nowrap-center">
                                 <p className="Book-button-text No-margin">Book Now</p>
                               </div>
                             </Link>
