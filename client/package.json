@@ -8,7 +8,7 @@
     "firebase": "^5.5.7",
     "firebase-admin": "^6.1.0",
     "google-maps-react": "^2.0.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "jsonwebtoken": "^8.4.0",
     "libphonenumber-js": "^1.7.8",
     "prop-types": "^15.6.2",
